@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>SRAtoCount.R</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+</head>
+
+<body>
+<!-- Automatically generated by RStudio [12861c30b10411e1afa60800200c9a66] -->
+
+<h3>SRAtoCount.R</h3>
+
+<p>zhuob &mdash; <em>Aug 20, 2014, 12:35 PM</em></p>
+
+<pre><code class="r">library(Rsubread)
+library(edgeR)
+</code></pre>
+
+<pre><code>Warning: package &#39;edgeR&#39; was built under R version 3.1.1
+</code></pre>
+
+<pre><code>Loading required package: limma
+</code></pre>
+
+<pre><code class="r">library(limma)
+
+datafile &lt;- &quot;GSE30795&quot;
+
+setwd(&quot;/Users/Bin/Disk1/protocol/Rsubread&quot;)
+read.file &lt;- paste(datafile, &quot;SraRunInfo.csv&quot;, sep=&quot;&quot; )
+RunInfo &lt;- read.csv(read.file, stringsAsFactors=F)
+(fs &lt;- basename(RunInfo$download_path))
+</code></pre>
+
+<pre><code>[1] &quot;SRR314813.sra&quot; &quot;SRR314814.sra&quot; &quot;SRR314815.sra&quot; &quot;SRR314816.sra&quot;
+[5] &quot;SRR314817.sra&quot; &quot;SRR314818.sra&quot;
+</code></pre>
+
+<pre><code class="r">filepath &lt;- RunInfo$download_path
+fsname &lt;- RunInfo$SampleName
+fastq.name &lt;- RunInfo$Run
+layout &lt;- RunInfo$LibraryLayout
+
+if (&quot;PAIRED&quot; %in% layout)
+  {
+  stop(&quot;Paired End&quot;)
+}
+
+
+for (i in 1:length(fs))
+{
+  download.file(url= filepath[i], destfile = paste(&quot;/Users/Bin/Disk1/protocol/Rsubread/&quot;, fs[i], sep=&quot;&quot;))
+}
+</code></pre>
+
+<pre><code>Warning: downloaded length 807089056 != reported length 1517028286
+Warning: downloaded length 1456712838 != reported length 1818104224
+</code></pre>
+
+<pre><code class="r">for (i in 1:length(fs))
+{
+  path=&quot;/Users/Bin/Disk1/protocol/software/sratoolkit.2.3.5-2-mac64/bin/&quot;
+  fastq &lt;- paste(path, &quot;fastq-dump --split-3&quot;, sep=&quot;&quot;)
+
+  fileSRA &lt;- paste(&quot;/Users/Bin/Disk1/protocol/Rsubread/&quot;, fs[i], sep=&quot;&quot;)
+  cmd &lt;- paste(fastq, fileSRA)
+  cat(cmd, &quot;\n&quot;)
+  system(cmd)
+}
+</code></pre>
+
+<pre><code>/Users/Bin/Disk1/protocol/software/sratoolkit.2.3.5-2-mac64/bin/fastq-dump --split-3 /Users/Bin/Disk1/protocol/Rsubread/SRR314813.sra 
+/Users/Bin/Disk1/protocol/software/sratoolkit.2.3.5-2-mac64/bin/fastq-dump --split-3 /Users/Bin/Disk1/protocol/Rsubread/SRR314814.sra 
+/Users/Bin/Disk1/protocol/software/sratoolkit.2.3.5-2-mac64/bin/fastq-dump --split-3 /Users/Bin/Disk1/protocol/Rsubread/SRR314815.sra 
+/Users/Bin/Disk1/protocol/software/sratoolkit.2.3.5-2-mac64/bin/fastq-dump --split-3 /Users/Bin/Disk1/protocol/Rsubread/SRR314816.sra 
+/Users/Bin/Disk1/protocol/software/sratoolkit.2.3.5-2-mac64/bin/fastq-dump --split-3 /Users/Bin/Disk1/protocol/Rsubread/SRR314817.sra 
+/Users/Bin/Disk1/protocol/software/sratoolkit.2.3.5-2-mac64/bin/fastq-dump --split-3 /Users/Bin/Disk1/protocol/Rsubread/SRR314818.sra 
+</code></pre>
+
+<pre><code class="r"># ref &lt;- system.file(&quot;abrab_index&quot;,&quot;Arabidopsis_thaliana.TAIR10.22.dna.toplevel.fa&quot;,package=&quot;Rsubread&quot;)
+# buildindex(basename=&quot;./reference_index&quot;,reference=ref)
+
+
+buildindex(base=&quot;arab_index&quot;, reference=&quot;Arabidopsis_thaliana.TAIR10.22.dna.toplevel.fa&quot;)
+</code></pre>
+
+<pre><code>
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ &lt;|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 1.14.2
+
+//=========================== indexBuilder setting ===========================\\
+||                                                                            ||
+||                Index name : arab_index                                     ||
+||               Index space : base-space                                     ||
+||                    Memory : 8000 Mbytes                                    ||
+||          Repeat threshold : 24 repeats                                     ||
+||  Distance to next subread : 3                                              ||
+||                                                                            ||
+||               Input files : 1 file in total                                ||
+||                             o Arabidopsis_thaliana.TAIR10.22.dna.tople ... ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//================================= Running ==================================\\
+||                                                                            ||
+|| Check the integrity of provided reference sequences ...                    ||
+|| There were 469 notes for reference sequences.                              ||
+|| The notes can be found in the log file, &#39;arab_index.log&#39;.                  ||
+|| Scan uninformative subreads in reference sequences ...                     ||
+||    8%,   0 mins elapsed, rate=4084.9k bps/s, total=119m                    ||
+||   16%,   0 mins elapsed, rate=5274.8k bps/s, total=119m                    ||
+||   24%,   0 mins elapsed, rate=5827.3k bps/s, total=119m                    ||
+||   33%,   0 mins elapsed, rate=6276.8k bps/s, total=119m                    ||
+||   41%,   0 mins elapsed, rate=6586.5k bps/s, total=119m                    ||
+||   49%,   0 mins elapsed, rate=6731.9k bps/s, total=119m                    ||
+||   58%,   0 mins elapsed, rate=6912.7k bps/s, total=119m                    ||
+||   66%,   0 mins elapsed, rate=7014.6k bps/s, total=119m                    ||
+||   74%,   0 mins elapsed, rate=7132.5k bps/s, total=119m                    ||
+||   83%,   0 mins elapsed, rate=7173.6k bps/s, total=119m                    ||
+||   91%,   0 mins elapsed, rate=7241.9k bps/s, total=119m                    ||
+|| 5328 uninformative subreads were found.                                    ||
+|| These subreads were excluded from index building.                          ||
+|| Build the index...                                                         ||
+||    8%,   0 mins elapsed, rate=2039.5k bps/s, total=119m                    ||
+||   16%,   0 mins elapsed, rate=2970.9k bps/s, total=119m                    ||
+||   24%,   0 mins elapsed, rate=3508.9k bps/s, total=119m                    ||
+||   33%,   0 mins elapsed, rate=3863.1k bps/s, total=119m                    ||
+||   41%,   0 mins elapsed, rate=4108.4k bps/s, total=119m                    ||
+||   49%,   0 mins elapsed, rate=4295.9k bps/s, total=119m                    ||
+||   58%,   0 mins elapsed, rate=4432.4k bps/s, total=119m                    ||
+||   66%,   0 mins elapsed, rate=4540.7k bps/s, total=119m                    ||
+||   74%,   0 mins elapsed, rate=4627.9k bps/s, total=119m                    ||
+||   83%,   0 mins elapsed, rate=4702.3k bps/s, total=119m                    ||
+||   91%,   0 mins elapsed, rate=4772.5k bps/s, total=119m                    ||
+|| Save current index block...                                                ||
+||  [ 0.0% finished ]                                                         ||
+||  [ 10.0% finished ]                                                        ||
+||  [ 20.0% finished ]                                                        ||
+||  [ 30.0% finished ]                                                        ||
+||  [ 40.0% finished ]                                                        ||
+||  [ 50.0% finished ]                                                        ||
+||  [ 60.0% finished ]                                                        ||
+||  [ 70.0% finished ]                                                        ||
+||  [ 80.0% finished ]                                                        ||
+||  [ 90.0% finished ]                                                        ||
+||  [ 100.0% finished ]                                                       ||
+||                                                                            ||
+||                      Total running time: 0.8 minutes.                      ||
+||                  Index arab_index was successfully built!                  ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+</code></pre>
+
+<pre><code class="r">for (i in fastq.name)
+{
+    file1 &lt;- paste(i, &quot;.fastq&quot;, sep=&quot;&quot;)
+    out &lt;- paste(i, &quot;.bam&quot;, sep=&quot;&quot;)
+
+    align(index=&quot;arab_index&quot;, readfile1=file1, input_format =&quot;FASTQ&quot;,  output_file=out)
+   remove.file &lt;- paste(&quot;/Users/Bin/Disk1/protocol/Rsubread/&quot;, file1, sep=&quot;&quot;)
+    cmd &lt;- paste(&quot;rm&quot;, file1)
+   system(cmd)
+}
+</code></pre>
+
+<pre><code>
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ &lt;|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 1.14.2
+
+//========================== subread-align setting ===========================\\
+||                                                                            ||
+||           Function : Read alignment                                        ||
+||            Threads : 1                                                     ||
+||         Input file : SRR314813.fastq                                       ||
+||        Output file : SRR314813.bam (BAM)                                   ||
+||         Index name : arab_index                                            ||
+||       Phred offset : 33                                                    ||
+||                                                                            ||
+||          Min votes : 3                                                     ||
+||         Max indels : 5                                                     ||
+||  # of Best mapping : 1                                                     ||
+||     Unique mapping : yes                                                   ||
+||   Hamming distance : yes                                                   ||
+||     Quality scores : no                                                    ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//====================== Running (20-Aug-2014 15:32:22) ======================\\
+||                                                                            ||
+|| The input file contains base space reads.                                  ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||    0% completed,   0 mins elapsed, total=29880k reads, rate=14.1k/s        ||
+||    6% completed,   2 mins elapsed, total=29166k reads, rate=14.3k/s        ||
+||   12% completed,   4 mins elapsed, total=29047k reads, rate=14.3k/s        ||
+||   18% completed,   6 mins elapsed, total=29006k reads, rate=14.3k/s        ||
+||   24% completed,   8 mins elapsed, total=28957k reads, rate=14.3k/s        ||
+||   30% completed,  10 mins elapsed, total=28909k reads, rate=14.3k/s        ||
+|| Detect indels...                                                           ||
+||   30% completed,  10 mins elapsed, total=28909k reads, rate=14.0k/s        ||
+||   31% completed,  11 mins elapsed, total=28909k reads, rate=13.8k/s        ||
+||   31% completed,  11 mins elapsed, total=28909k reads, rate=13.5k/s        ||
+||   32% completed,  11 mins elapsed, total=28909k reads, rate=13.3k/s        ||
+||   32% completed,  12 mins elapsed, total=28909k reads, rate=13.1k/s        ||
+||   33% completed,  12 mins elapsed, total=28909k reads, rate=12.9k/s        ||
+||   34% completed,  12 mins elapsed, total=28909k reads, rate=12.7k/s        ||
+||   34% completed,  13 mins elapsed, total=28909k reads, rate=12.5k/s        ||
+||   35% completed,  13 mins elapsed, total=28909k reads, rate=12.4k/s        ||
+|| Realign reads...                                                           ||
+||   36% completed,  14 mins elapsed, total=28909k reads, rate=11.7k/s        ||
+||   36% completed,  15 mins elapsed, total=28909k reads, rate=11.4k/s        ||
+||   37% completed,  16 mins elapsed, total=28909k reads, rate=11.2k/s        ||
+||   37% completed,  16 mins elapsed, total=28909k reads, rate=10.9k/s        ||
+||   38% completed,  17 mins elapsed, total=28909k reads, rate=10.6k/s        ||
+||   38% completed,  17 mins elapsed, total=28909k reads, rate=10.4k/s        ||
+||   39% completed,  18 mins elapsed, total=28909k reads, rate=10.1k/s        ||
+||   39% completed,  19 mins elapsed, total=28909k reads, rate=9.9k/s         ||
+||   40% completed,  19 mins elapsed, total=28909k reads, rate=9.7k/s         ||
+|| 14680064 reads were processed. Save the mapping results for them...        ||
+||   41% completed,  21 mins elapsed, total=28909k reads, rate=9.5k/s         ||
+||   42% completed,  21 mins elapsed, total=28909k reads, rate=9.4k/s         ||
+||   43% completed,  22 mins elapsed, total=28909k reads, rate=9.3k/s         ||
+||   44% completed,  23 mins elapsed, total=28909k reads, rate=9.2k/s         ||
+||   45% completed,  24 mins elapsed, total=28909k reads, rate=9.2k/s         ||
+||   46% completed,  24 mins elapsed, total=28909k reads, rate=9.1k/s         ||
+||   47% completed,  25 mins elapsed, total=28909k reads, rate=9.0k/s         ||
+||   48% completed,  26 mins elapsed, total=28909k reads, rate=9.0k/s         ||
+||   49% completed,  26 mins elapsed, total=28909k reads, rate=8.9k/s         ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||   50% completed,  27 mins elapsed, total=28909k reads, rate=8.9k/s         ||
+||   56% completed,  29 mins elapsed, total=28879k reads, rate=9.3k/s         ||
+||   62% completed,  31 mins elapsed, total=28858k reads, rate=9.6k/s         ||
+||   68% completed,  33 mins elapsed, total=28840k reads, rate=9.8k/s         ||
+||   74% completed,  35 mins elapsed, total=28807k reads, rate=10.1k/s        ||
+|| Detect indels...                                                           ||
+||   80% completed,  37 mins elapsed, total=28807k reads, rate=10.3k/s        ||
+||   81% completed,  38 mins elapsed, total=28807k reads, rate=10.2k/s        ||
+||   81% completed,  38 mins elapsed, total=28807k reads, rate=10.2k/s        ||
+||   82% completed,  38 mins elapsed, total=28807k reads, rate=10.2k/s        ||
+||   82% completed,  39 mins elapsed, total=28807k reads, rate=10.1k/s        ||
+||   83% completed,  39 mins elapsed, total=28807k reads, rate=10.1k/s        ||
+||   83% completed,  39 mins elapsed, total=28807k reads, rate=10.1k/s        ||
+||   84% completed,  40 mins elapsed, total=28807k reads, rate=10.0k/s        ||
+||   84% completed,  40 mins elapsed, total=28807k reads, rate=10.0k/s        ||
+|| Realign reads...                                                           ||
+||   85% completed,  41 mins elapsed, total=28807k reads, rate=9.8k/s         ||
+||   86% completed,  42 mins elapsed, total=28807k reads, rate=9.7k/s         ||
+||   86% completed,  43 mins elapsed, total=28807k reads, rate=9.6k/s         ||
+||   87% completed,  43 mins elapsed, total=28807k reads, rate=9.6k/s         ||
+||   87% completed,  44 mins elapsed, total=28807k reads, rate=9.5k/s         ||
+||   88% completed,  45 mins elapsed, total=28807k reads, rate=9.4k/s         ||
+||   88% completed,  45 mins elapsed, total=28807k reads, rate=9.3k/s         ||
+||   89% completed,  46 mins elapsed, total=28807k reads, rate=9.3k/s         ||
+||   89% completed,  46 mins elapsed, total=28807k reads, rate=9.2k/s         ||
+|| 14103106 reads were processed. Save the mapping results for them...        ||
+||   91% completed,  48 mins elapsed, total=28807k reads, rate=9.1k/s         ||
+||   92% completed,  48 mins elapsed, total=28807k reads, rate=9.1k/s         ||
+||   93% completed,  49 mins elapsed, total=28807k reads, rate=9.0k/s         ||
+||   94% completed,  50 mins elapsed, total=28807k reads, rate=9.0k/s         ||
+||   95% completed,  50 mins elapsed, total=28807k reads, rate=9.0k/s         ||
+||   96% completed,  51 mins elapsed, total=28807k reads, rate=8.9k/s         ||
+||   97% completed,  52 mins elapsed, total=28807k reads, rate=8.9k/s         ||
+||   98% completed,  52 mins elapsed, total=28807k reads, rate=8.9k/s         ||
+||   99% completed,  53 mins elapsed, total=28807k reads, rate=8.9k/s         ||
+||                                                                            ||
+||                          Completed successfully.                           ||
+||                                                                            ||
+\\============================================================================//
+
+//================================= Summary ==================================\\
+||                                                                            ||
+||          Processed : 28783170 reads                                        ||
+||             Mapped : 25313798 reads (87.9%)                                ||
+||             Indels : 50012                                                 ||
+||                                                                            ||
+||       Running time : 54.3 minutes                                          ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ &lt;|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 1.14.2
+
+//========================== subread-align setting ===========================\\
+||                                                                            ||
+||           Function : Read alignment                                        ||
+||            Threads : 1                                                     ||
+||         Input file : SRR314814.fastq                                       ||
+||        Output file : SRR314814.bam (BAM)                                   ||
+||         Index name : arab_index                                            ||
+||       Phred offset : 33                                                    ||
+||                                                                            ||
+||          Min votes : 3                                                     ||
+||         Max indels : 5                                                     ||
+||  # of Best mapping : 1                                                     ||
+||     Unique mapping : yes                                                   ||
+||   Hamming distance : yes                                                   ||
+||     Quality scores : no                                                    ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//====================== Running (20-Aug-2014 16:26:42) ======================\\
+||                                                                            ||
+|| The input file contains base space reads.                                  ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||    0% completed,   0 mins elapsed, total=32573k reads, rate=14.2k/s        ||
+||    6% completed,   2 mins elapsed, total=31774k reads, rate=14.5k/s        ||
+||   12% completed,   4 mins elapsed, total=31647k reads, rate=14.5k/s        ||
+||   18% completed,   6 mins elapsed, total=31606k reads, rate=14.4k/s        ||
+||   24% completed,   8 mins elapsed, total=31538k reads, rate=14.4k/s        ||
+|| Detect indels...                                                           ||
+||   28% completed,  10 mins elapsed, total=31538k reads, rate=14.1k/s        ||
+||   28% completed,  10 mins elapsed, total=31538k reads, rate=13.9k/s        ||
+||   29% completed,  11 mins elapsed, total=31538k reads, rate=13.6k/s        ||
+||   29% completed,  11 mins elapsed, total=31538k reads, rate=13.4k/s        ||
+||   30% completed,  12 mins elapsed, total=31538k reads, rate=13.2k/s        ||
+||   30% completed,  12 mins elapsed, total=31538k reads, rate=13.0k/s        ||
+||   31% completed,  12 mins elapsed, total=31538k reads, rate=12.8k/s        ||
+||   31% completed,  13 mins elapsed, total=31538k reads, rate=12.6k/s        ||
+||   32% completed,  13 mins elapsed, total=31538k reads, rate=12.4k/s        ||
+|| Realign reads...                                                           ||
+||   33% completed,  14 mins elapsed, total=31538k reads, rate=11.9k/s        ||
+||   33% completed,  15 mins elapsed, total=31538k reads, rate=11.7k/s        ||
+||   33% completed,  15 mins elapsed, total=31538k reads, rate=11.5k/s        ||
+||   34% completed,  16 mins elapsed, total=31538k reads, rate=11.3k/s        ||
+||   34% completed,  16 mins elapsed, total=31538k reads, rate=11.1k/s        ||
+||   35% completed,  17 mins elapsed, total=31538k reads, rate=10.9k/s        ||
+||   35% completed,  17 mins elapsed, total=31538k reads, rate=10.7k/s        ||
+||   36% completed,  18 mins elapsed, total=31538k reads, rate=10.6k/s        ||
+||   36% completed,  18 mins elapsed, total=31538k reads, rate=10.4k/s        ||
+|| 14680064 reads were processed. Save the mapping results for them...        ||
+||   38% completed,  19 mins elapsed, total=31538k reads, rate=10.2k/s        ||
+||   39% completed,  20 mins elapsed, total=31538k reads, rate=10.0k/s        ||
+||   40% completed,  21 mins elapsed, total=31538k reads, rate=9.9k/s         ||
+||   40% completed,  21 mins elapsed, total=31538k reads, rate=9.8k/s         ||
+||   41% completed,  22 mins elapsed, total=31538k reads, rate=9.8k/s         ||
+||   42% completed,  23 mins elapsed, total=31538k reads, rate=9.7k/s         ||
+||   43% completed,  23 mins elapsed, total=31538k reads, rate=9.6k/s         ||
+||   44% completed,  24 mins elapsed, total=31538k reads, rate=9.5k/s         ||
+||   45% completed,  25 mins elapsed, total=31538k reads, rate=9.4k/s         ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||   46% completed,  26 mins elapsed, total=31507k reads, rate=9.4k/s         ||
+||   52% completed, 119 mins elapsed, total=31472k reads, rate=2.3k/s         ||
+||   58% completed, 223 mins elapsed, total=31448k reads, rate=1.4k/s         ||
+||   64% completed, 225 mins elapsed, total=31430k reads, rate=1.5k/s         ||
+||   70% completed, 227 mins elapsed, total=31402k reads, rate=1.6k/s         ||
+|| Detect indels...                                                           ||
+||   75% completed, 229 mins elapsed, total=31402k reads, rate=1.7k/s         ||
+||   75% completed, 229 mins elapsed, total=31402k reads, rate=1.7k/s         ||
+||   76% completed, 230 mins elapsed, total=31402k reads, rate=1.7k/s         ||
+||   76% completed, 230 mins elapsed, total=31402k reads, rate=1.7k/s         ||
+||   76% completed, 231 mins elapsed, total=31402k reads, rate=1.7k/s         ||
+||   77% completed, 231 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   77% completed, 231 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   78% completed, 232 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   78% completed, 232 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+|| Realign reads...                                                           ||
+||   79% completed, 233 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   80% completed, 234 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   80% completed, 234 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   81% completed, 235 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   81% completed, 235 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   82% completed, 236 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   82% completed, 236 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   83% completed, 237 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+||   83% completed, 238 mins elapsed, total=31402k reads, rate=1.8k/s         ||
+|| 14680064 reads were processed. Save the mapping results for them...        ||
+||   84% completed, 239 mins elapsed, total=31402k reads, rate=1.9k/s         ||
+||   85% completed, 239 mins elapsed, total=31402k reads, rate=1.9k/s         ||
+||   86% completed, 240 mins elapsed, total=31402k reads, rate=1.9k/s         ||
+||   87% completed, 241 mins elapsed, total=31402k reads, rate=1.9k/s         ||
+||   88% completed, 242 mins elapsed, total=31402k reads, rate=1.9k/s         ||
+||   89% completed, 242 mins elapsed, total=31402k reads, rate=1.9k/s         ||
+||   90% completed, 243 mins elapsed, total=31402k reads, rate=1.9k/s         ||
+||   91% completed, 244 mins elapsed, total=31402k reads, rate=2.0k/s         ||
+||   92% completed, 244 mins elapsed, total=31402k reads, rate=2.0k/s         ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||   93% completed, 245 mins elapsed, total=31380k reads, rate=2.0k/s         ||
+|| Detect indels...                                                           ||
+||   97% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   97% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   97% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   97% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   97% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   97% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   97% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   97% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+|| Realign reads...                                                           ||
+||   98% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 247 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+|| 2001998 reads were processed. Save the mapping results for them...         ||
+||   98% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   98% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   99% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   99% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   99% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   99% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   99% completed, 248 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   99% completed, 249 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||   99% completed, 249 mins elapsed, total=31380k reads, rate=2.1k/s         ||
+||                                                                            ||
+||                          Completed successfully.                           ||
+||                                                                            ||
+\\============================================================================//
+
+//================================= Summary ==================================\\
+||                                                                            ||
+||          Processed : 31362126 reads                                        ||
+||             Mapped : 27991659 reads (89.3%)                                ||
+||             Indels : 54862                                                 ||
+||                                                                            ||
+||       Running time : 249.2 minutes                                         ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ &lt;|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 1.14.2
+
+//========================== subread-align setting ===========================\\
+||                                                                            ||
+||           Function : Read alignment                                        ||
+||            Threads : 1                                                     ||
+||         Input file : SRR314815.fastq                                       ||
+||        Output file : SRR314815.bam (BAM)                                   ||
+||         Index name : arab_index                                            ||
+||       Phred offset : 33                                                    ||
+||                                                                            ||
+||          Min votes : 3                                                     ||
+||         Max indels : 5                                                     ||
+||  # of Best mapping : 1                                                     ||
+||     Unique mapping : yes                                                   ||
+||   Hamming distance : yes                                                   ||
+||     Quality scores : no                                                    ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//====================== Running (20-Aug-2014 20:35:55) ======================\\
+||                                                                            ||
+|| The input file contains base space reads.                                  ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||    0% completed,   0 mins elapsed, total=30097k reads, rate=14.5k/s        ||
+||    6% completed,   2 mins elapsed, total=29357k reads, rate=14.3k/s        ||
+||   12% completed,   4 mins elapsed, total=29245k reads, rate=14.3k/s        ||
+||   18% completed,   6 mins elapsed, total=29207k reads, rate=14.3k/s        ||
+||   24% completed,   8 mins elapsed, total=29156k reads, rate=14.3k/s        ||
+|| Detect indels...                                                           ||
+||   30% completed,  10 mins elapsed, total=29156k reads, rate=14.0k/s        ||
+||   31% completed,  11 mins elapsed, total=29156k reads, rate=13.7k/s        ||
+||   31% completed,  11 mins elapsed, total=29156k reads, rate=13.5k/s        ||
+||   32% completed,  11 mins elapsed, total=29156k reads, rate=13.3k/s        ||
+||   32% completed,  12 mins elapsed, total=29156k reads, rate=13.1k/s        ||
+||   33% completed,  12 mins elapsed, total=29156k reads, rate=12.9k/s        ||
+||   33% completed,  12 mins elapsed, total=29156k reads, rate=12.7k/s        ||
+||   34% completed,  13 mins elapsed, total=29156k reads, rate=12.5k/s        ||
+||   34% completed,  13 mins elapsed, total=29156k reads, rate=12.4k/s        ||
+|| Realign reads...                                                           ||
+||   35% completed,  14 mins elapsed, total=29156k reads, rate=11.8k/s        ||
+||   36% completed,  15 mins elapsed, total=29156k reads, rate=11.6k/s        ||
+||   36% completed,  15 mins elapsed, total=29156k reads, rate=11.4k/s        ||
+||   37% completed,  16 mins elapsed, total=29156k reads, rate=11.2k/s        ||
+||   37% completed,  16 mins elapsed, total=29156k reads, rate=11.0k/s        ||
+||   38% completed,  17 mins elapsed, total=29156k reads, rate=10.8k/s        ||
+||   38% completed,  17 mins elapsed, total=29156k reads, rate=10.6k/s        ||
+||   39% completed,  18 mins elapsed, total=29156k reads, rate=10.5k/s        ||
+||   39% completed,  18 mins elapsed, total=29156k reads, rate=10.3k/s        ||
+|| 14680064 reads were processed. Save the mapping results for them...        ||
+||   41% completed,  19 mins elapsed, total=29156k reads, rate=10.1k/s        ||
+||   42% completed,  20 mins elapsed, total=29156k reads, rate=10.0k/s        ||
+||   43% completed,  21 mins elapsed, total=29156k reads, rate=9.9k/s         ||
+||   44% completed,  22 mins elapsed, total=29156k reads, rate=9.8k/s         ||
+||   45% completed,  22 mins elapsed, total=29156k reads, rate=9.7k/s         ||
+||   46% completed,  23 mins elapsed, total=29156k reads, rate=9.6k/s         ||
+||   47% completed,  24 mins elapsed, total=29156k reads, rate=9.5k/s         ||
+||   48% completed,  24 mins elapsed, total=29156k reads, rate=9.4k/s         ||
+||   49% completed,  25 mins elapsed, total=29156k reads, rate=9.4k/s         ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||   50% completed,  26 mins elapsed, total=29111k reads, rate=9.3k/s         ||
+||   56% completed,  28 mins elapsed, total=29082k reads, rate=9.7k/s         ||
+||   62% completed,  30 mins elapsed, total=29062k reads, rate=10.0k/s        ||
+||   68% completed,  32 mins elapsed, total=29046k reads, rate=10.2k/s        ||
+||   74% completed,  34 mins elapsed, total=29013k reads, rate=10.5k/s        ||
+|| Detect indels...                                                           ||
+||   80% completed,  41 mins elapsed, total=29013k reads, rate=9.5k/s         ||
+||   81% completed,  41 mins elapsed, total=29013k reads, rate=9.4k/s         ||
+||   81% completed,  41 mins elapsed, total=29013k reads, rate=9.4k/s         ||
+||   82% completed,  42 mins elapsed, total=29013k reads, rate=9.4k/s         ||
+||   82% completed,  42 mins elapsed, total=29013k reads, rate=9.4k/s         ||
+||   83% completed,  43 mins elapsed, total=29013k reads, rate=9.3k/s         ||
+||   83% completed,  43 mins elapsed, total=29013k reads, rate=9.3k/s         ||
+||   84% completed,  43 mins elapsed, total=29013k reads, rate=9.3k/s         ||
+||   84% completed,  44 mins elapsed, total=29013k reads, rate=9.3k/s         ||
+|| Realign reads...                                                           ||
+||   85% completed,  45 mins elapsed, total=29013k reads, rate=9.1k/s         ||
+||   86% completed,  45 mins elapsed, total=29013k reads, rate=9.1k/s         ||
+||   86% completed,  46 mins elapsed, total=29013k reads, rate=9.0k/s         ||
+||   87% completed,  46 mins elapsed, total=29013k reads, rate=9.0k/s         ||
+||   87% completed,  47 mins elapsed, total=29013k reads, rate=8.9k/s         ||
+||   88% completed,  47 mins elapsed, total=29013k reads, rate=8.9k/s         ||
+||   88% completed,  48 mins elapsed, total=29013k reads, rate=8.8k/s         ||
+||   89% completed,  49 mins elapsed, total=29013k reads, rate=8.8k/s         ||
+||   89% completed,  49 mins elapsed, total=29013k reads, rate=8.7k/s         ||
+|| 14308140 reads were processed. Save the mapping results for them...        ||
+||   91% completed,  50 mins elapsed, total=29013k reads, rate=8.7k/s         ||
+||   92% completed,  51 mins elapsed, total=29013k reads, rate=8.6k/s         ||
+||   93% completed,  52 mins elapsed, total=29013k reads, rate=8.6k/s         ||
+||   94% completed,  52 mins elapsed, total=29013k reads, rate=8.6k/s         ||
+||   95% completed,  53 mins elapsed, total=29013k reads, rate=8.6k/s         ||
+||   96% completed,  54 mins elapsed, total=29013k reads, rate=8.6k/s         ||
+||   97% completed,  54 mins elapsed, total=29013k reads, rate=8.5k/s         ||
+||   98% completed,  55 mins elapsed, total=29013k reads, rate=8.5k/s         ||
+||   99% completed,  56 mins elapsed, total=29013k reads, rate=8.5k/s         ||
+||                                                                            ||
+||                          Completed successfully.                           ||
+||                                                                            ||
+\\============================================================================//
+
+//================================= Summary ==================================\\
+||                                                                            ||
+||          Processed : 28988204 reads                                        ||
+||             Mapped : 25873191 reads (89.3%)                                ||
+||             Indels : 57636                                                 ||
+||                                                                            ||
+||       Running time : 57.1 minutes                                          ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ &lt;|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 1.14.2
+
+//========================== subread-align setting ===========================\\
+||                                                                            ||
+||           Function : Read alignment                                        ||
+||            Threads : 1                                                     ||
+||         Input file : SRR314816.fastq                                       ||
+||        Output file : SRR314816.bam (BAM)                                   ||
+||         Index name : arab_index                                            ||
+||       Phred offset : 33                                                    ||
+||                                                                            ||
+||          Min votes : 3                                                     ||
+||         Max indels : 5                                                     ||
+||  # of Best mapping : 1                                                     ||
+||     Unique mapping : yes                                                   ||
+||   Hamming distance : yes                                                   ||
+||     Quality scores : no                                                    ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//====================== Running (20-Aug-2014 21:33:00) ======================\\
+||                                                                            ||
+|| The input file contains base space reads.                                  ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||    0% completed,   0 mins elapsed, total=28951k reads, rate=14.4k/s        ||
+||    6% completed,   2 mins elapsed, total=28259k reads, rate=14.3k/s        ||
+||   12% completed,   4 mins elapsed, total=28143k reads, rate=14.3k/s        ||
+||   18% completed,   6 mins elapsed, total=28102k reads, rate=14.1k/s        ||
+||   24% completed,   8 mins elapsed, total=28059k reads, rate=13.4k/s        ||
+||   30% completed,  10 mins elapsed, total=28012k reads, rate=13.1k/s        ||
+|| Detect indels...                                                           ||
+||   31% completed,  11 mins elapsed, total=28012k reads, rate=12.8k/s        ||
+||   32% completed,  12 mins elapsed, total=28012k reads, rate=12.6k/s        ||
+||   33% completed,  12 mins elapsed, total=28012k reads, rate=12.4k/s        ||
+||   33% completed,  12 mins elapsed, total=28012k reads, rate=12.2k/s        ||
+||   34% completed,  13 mins elapsed, total=28012k reads, rate=11.9k/s        ||
+||   34% completed,  13 mins elapsed, total=28012k reads, rate=11.8k/s        ||
+||   35% completed,  14 mins elapsed, total=28012k reads, rate=11.6k/s        ||
+||   35% completed,  14 mins elapsed, total=28012k reads, rate=11.5k/s        ||
+||   36% completed,  14 mins elapsed, total=28012k reads, rate=11.4k/s        ||
+|| Realign reads...                                                           ||
+||   37% completed,  15 mins elapsed, total=28012k reads, rate=10.9k/s        ||
+||   37% completed,  16 mins elapsed, total=28012k reads, rate=10.7k/s        ||
+||   38% completed,  17 mins elapsed, total=28012k reads, rate=10.5k/s        ||
+||   38% completed,  17 mins elapsed, total=28012k reads, rate=10.3k/s        ||
+||   39% completed,  18 mins elapsed, total=28012k reads, rate=10.1k/s        ||
+||   39% completed,  18 mins elapsed, total=28012k reads, rate=9.9k/s         ||
+||   40% completed,  19 mins elapsed, total=28012k reads, rate=9.8k/s         ||
+||   40% completed,  19 mins elapsed, total=28012k reads, rate=9.6k/s         ||
+||   41% completed,  20 mins elapsed, total=28012k reads, rate=9.5k/s         ||
+|| 14680064 reads were processed. Save the mapping results for them...        ||
+||   42% completed,  21 mins elapsed, total=28012k reads, rate=9.3k/s         ||
+||   44% completed,  22 mins elapsed, total=28012k reads, rate=9.2k/s         ||
+||   45% completed,  23 mins elapsed, total=28012k reads, rate=9.1k/s         ||
+||   46% completed,  23 mins elapsed, total=28012k reads, rate=9.1k/s         ||
+||   47% completed,  24 mins elapsed, total=28012k reads, rate=9.0k/s         ||
+||   48% completed,  25 mins elapsed, total=28012k reads, rate=8.9k/s         ||
+||   49% completed,  25 mins elapsed, total=28012k reads, rate=8.9k/s         ||
+||   50% completed,  26 mins elapsed, total=28012k reads, rate=8.8k/s         ||
+||   51% completed,  27 mins elapsed, total=28012k reads, rate=8.8k/s         ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||   52% completed,  27 mins elapsed, total=28005k reads, rate=8.7k/s         ||
+||   58% completed,  29 mins elapsed, total=27978k reads, rate=9.1k/s         ||
+||   64% completed,  31 mins elapsed, total=27957k reads, rate=9.4k/s         ||
+||   70% completed,  45 mins elapsed, total=27936k reads, rate=7.3k/s         ||
+||   76% completed,  47 mins elapsed, total=27905k reads, rate=7.5k/s         ||
+|| Detect indels...                                                           ||
+||   81% completed,  49 mins elapsed, total=27905k reads, rate=7.7k/s         ||
+||   81% completed,  49 mins elapsed, total=27905k reads, rate=7.7k/s         ||
+||   82% completed,  49 mins elapsed, total=27905k reads, rate=7.7k/s         ||
+||   82% completed,  50 mins elapsed, total=27905k reads, rate=7.7k/s         ||
+||   83% completed,  50 mins elapsed, total=27905k reads, rate=7.7k/s         ||
+||   83% completed,  50 mins elapsed, total=27905k reads, rate=7.7k/s         ||
+||   84% completed,  51 mins elapsed, total=27905k reads, rate=7.6k/s         ||
+||   84% completed,  51 mins elapsed, total=27905k reads, rate=7.6k/s         ||
+||   85% completed,  51 mins elapsed, total=27905k reads, rate=7.6k/s         ||
+|| Realign reads...                                                           ||
+||   86% completed,  53 mins elapsed, total=27905k reads, rate=7.6k/s         ||
+||   86% completed,  53 mins elapsed, total=27905k reads, rate=7.5k/s         ||
+||   87% completed,  54 mins elapsed, total=27905k reads, rate=7.5k/s         ||
+||   87% completed,  54 mins elapsed, total=27905k reads, rate=7.4k/s         ||
+||   88% completed,  55 mins elapsed, total=27905k reads, rate=7.4k/s         ||
+||   88% completed,  55 mins elapsed, total=27905k reads, rate=7.4k/s         ||
+||   89% completed,  56 mins elapsed, total=27905k reads, rate=7.3k/s         ||
+||   89% completed,  56 mins elapsed, total=27905k reads, rate=7.3k/s         ||
+||   90% completed,  57 mins elapsed, total=27905k reads, rate=7.3k/s         ||
+|| 13205993 reads were processed. Save the mapping results for them...        ||
+||   91% completed,  58 mins elapsed, total=27905k reads, rate=7.2k/s         ||
+||   92% completed,  59 mins elapsed, total=27905k reads, rate=7.2k/s         ||
+||   93% completed,  59 mins elapsed, total=27905k reads, rate=7.2k/s         ||
+||   94% completed,  60 mins elapsed, total=27905k reads, rate=7.2k/s         ||
+||   95% completed,  61 mins elapsed, total=27905k reads, rate=7.2k/s         ||
+||   96% completed,  61 mins elapsed, total=27905k reads, rate=7.2k/s         ||
+||   97% completed,  62 mins elapsed, total=27905k reads, rate=7.2k/s         ||
+||   98% completed,  63 mins elapsed, total=27905k reads, rate=7.2k/s         ||
+||   99% completed,  63 mins elapsed, total=27905k reads, rate=7.2k/s         ||
+||                                                                            ||
+||                          Completed successfully.                           ||
+||                                                                            ||
+\\============================================================================//
+
+//================================= Summary ==================================\\
+||                                                                            ||
+||          Processed : 27886057 reads                                        ||
+||             Mapped : 24490508 reads (87.8%)                                ||
+||             Indels : 54481                                                 ||
+||                                                                            ||
+||       Running time : 64.4 minutes                                          ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ &lt;|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 1.14.2
+
+//========================== subread-align setting ===========================\\
+||                                                                            ||
+||           Function : Read alignment                                        ||
+||            Threads : 1                                                     ||
+||         Input file : SRR314817.fastq                                       ||
+||        Output file : SRR314817.bam (BAM)                                   ||
+||         Index name : arab_index                                            ||
+||       Phred offset : 33                                                    ||
+||                                                                            ||
+||          Min votes : 3                                                     ||
+||         Max indels : 5                                                     ||
+||  # of Best mapping : 1                                                     ||
+||     Unique mapping : yes                                                   ||
+||   Hamming distance : yes                                                   ||
+||     Quality scores : no                                                    ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//====================== Running (20-Aug-2014 22:37:23) ======================\\
+||                                                                            ||
+|| The input file contains base space reads.                                  ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||    0% completed,   0 mins elapsed, total=34856k reads, rate=15.1k/s        ||
+||    6% completed,   2 mins elapsed, total=33983k reads, rate=15.0k/s        ||
+||   12% completed,   4 mins elapsed, total=33859k reads, rate=15.0k/s        ||
+||   18% completed,   6 mins elapsed, total=33811k reads, rate=15.0k/s        ||
+||   24% completed,   9 mins elapsed, total=33735k reads, rate=15.0k/s        ||
+|| Detect indels...                                                           ||
+||   26% completed,  10 mins elapsed, total=33735k reads, rate=14.7k/s        ||
+||   26% completed,  10 mins elapsed, total=33735k reads, rate=14.4k/s        ||
+||   27% completed,  10 mins elapsed, total=33735k reads, rate=14.1k/s        ||
+||   27% completed,  11 mins elapsed, total=33735k reads, rate=13.9k/s        ||
+||   28% completed,  11 mins elapsed, total=33735k reads, rate=13.6k/s        ||
+||   28% completed,  12 mins elapsed, total=33735k reads, rate=13.4k/s        ||
+||   29% completed,  12 mins elapsed, total=33735k reads, rate=13.2k/s        ||
+||   29% completed,  12 mins elapsed, total=33735k reads, rate=13.0k/s        ||
+||   30% completed,  13 mins elapsed, total=33735k reads, rate=12.8k/s        ||
+|| Realign reads...                                                           ||
+||   30% completed,  14 mins elapsed, total=33735k reads, rate=12.3k/s        ||
+||   31% completed,  14 mins elapsed, total=33735k reads, rate=12.0k/s        ||
+||   31% completed,  15 mins elapsed, total=33735k reads, rate=11.8k/s        ||
+||   32% completed,  15 mins elapsed, total=33735k reads, rate=11.6k/s        ||
+||   32% completed,  16 mins elapsed, total=33735k reads, rate=11.4k/s        ||
+||   33% completed,  16 mins elapsed, total=33735k reads, rate=11.2k/s        ||
+||   33% completed,  17 mins elapsed, total=33735k reads, rate=11.0k/s        ||
+||   33% completed,  17 mins elapsed, total=33735k reads, rate=10.8k/s        ||
+||   34% completed,  18 mins elapsed, total=33735k reads, rate=10.7k/s        ||
+|| 14680064 reads were processed. Save the mapping results for them...        ||
+||   35% completed,  19 mins elapsed, total=33735k reads, rate=10.4k/s        ||
+||   36% completed,  20 mins elapsed, total=33735k reads, rate=10.3k/s        ||
+||   37% completed,  20 mins elapsed, total=33735k reads, rate=10.1k/s        ||
+||   38% completed,  21 mins elapsed, total=33735k reads, rate=10.0k/s        ||
+||   39% completed,  22 mins elapsed, total=33735k reads, rate=9.9k/s         ||
+||   40% completed,  22 mins elapsed, total=33735k reads, rate=9.9k/s         ||
+||   40% completed,  23 mins elapsed, total=33735k reads, rate=9.8k/s         ||
+||   41% completed,  24 mins elapsed, total=33735k reads, rate=9.7k/s         ||
+||   42% completed,  24 mins elapsed, total=33735k reads, rate=9.6k/s         ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||   43% completed,  25 mins elapsed, total=33718k reads, rate=9.5k/s         ||
+||   49% completed,  27 mins elapsed, total=33678k reads, rate=10.0k/s        ||
+||   55% completed,  30 mins elapsed, total=33652k reads, rate=10.4k/s        ||
+||   61% completed,  32 mins elapsed, total=33633k reads, rate=10.7k/s        ||
+||   67% completed,  34 mins elapsed, total=33610k reads, rate=10.9k/s        ||
+|| Detect indels...                                                           ||
+||   70% completed,  35 mins elapsed, total=33610k reads, rate=11.0k/s        ||
+||   70% completed,  36 mins elapsed, total=33610k reads, rate=10.9k/s        ||
+||   71% completed,  36 mins elapsed, total=33610k reads, rate=10.9k/s        ||
+||   71% completed,  36 mins elapsed, total=33610k reads, rate=10.8k/s        ||
+||   71% completed,  37 mins elapsed, total=33610k reads, rate=10.8k/s        ||
+||   72% completed,  37 mins elapsed, total=33610k reads, rate=10.8k/s        ||
+||   72% completed,  38 mins elapsed, total=33610k reads, rate=10.7k/s        ||
+||   73% completed,  38 mins elapsed, total=33610k reads, rate=10.7k/s        ||
+||   73% completed,  38 mins elapsed, total=33610k reads, rate=10.6k/s        ||
+|| Realign reads...                                                           ||
+||   74% completed,  39 mins elapsed, total=33610k reads, rate=10.5k/s        ||
+||   74% completed,  40 mins elapsed, total=33610k reads, rate=10.4k/s        ||
+||   75% completed,  41 mins elapsed, total=33610k reads, rate=10.3k/s        ||
+||   75% completed,  41 mins elapsed, total=33610k reads, rate=10.2k/s        ||
+||   76% completed,  42 mins elapsed, total=33610k reads, rate=10.2k/s        ||
+||   76% completed,  42 mins elapsed, total=33610k reads, rate=10.1k/s        ||
+||   77% completed,  43 mins elapsed, total=33610k reads, rate=10.0k/s        ||
+||   77% completed,  43 mins elapsed, total=33610k reads, rate=9.9k/s         ||
+||   78% completed,  44 mins elapsed, total=33610k reads, rate=9.9k/s         ||
+|| 14680064 reads were processed. Save the mapping results for them...        ||
+||   79% completed,  45 mins elapsed, total=33610k reads, rate=9.8k/s         ||
+||   80% completed,  46 mins elapsed, total=33610k reads, rate=9.7k/s         ||
+||   81% completed,  46 mins elapsed, total=33610k reads, rate=9.7k/s         ||
+||   81% completed,  47 mins elapsed, total=33610k reads, rate=9.7k/s         ||
+||   82% completed,  48 mins elapsed, total=33610k reads, rate=9.6k/s         ||
+||   83% completed,  48 mins elapsed, total=33610k reads, rate=9.6k/s         ||
+||   84% completed,  49 mins elapsed, total=33610k reads, rate=9.5k/s         ||
+||   85% completed,  50 mins elapsed, total=33610k reads, rate=9.5k/s         ||
+||   86% completed,  51 mins elapsed, total=33610k reads, rate=9.5k/s         ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||   87% completed,  51 mins elapsed, total=33596k reads, rate=9.4k/s         ||
+||   93% completed,  54 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+|| Detect indels...                                                           ||
+||   95% completed,  54 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+||   95% completed,  54 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+||   95% completed,  54 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+||   95% completed,  55 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+||   95% completed,  55 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+||   95% completed,  55 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+||   95% completed,  55 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+||   95% completed,  55 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+||   96% completed,  55 mins elapsed, total=33564k reads, rate=9.7k/s         ||
+|| Realign reads...                                                           ||
+||   96% completed,  55 mins elapsed, total=33564k reads, rate=9.6k/s         ||
+||   96% completed,  56 mins elapsed, total=33564k reads, rate=9.6k/s         ||
+||   96% completed,  56 mins elapsed, total=33564k reads, rate=9.6k/s         ||
+||   96% completed,  56 mins elapsed, total=33564k reads, rate=9.6k/s         ||
+||   96% completed,  56 mins elapsed, total=33564k reads, rate=9.6k/s         ||
+||   96% completed,  56 mins elapsed, total=33564k reads, rate=9.6k/s         ||
+||   97% completed,  56 mins elapsed, total=33564k reads, rate=9.6k/s         ||
+||   97% completed,  56 mins elapsed, total=33564k reads, rate=9.5k/s         ||
+||   97% completed,  57 mins elapsed, total=33564k reads, rate=9.5k/s         ||
+|| 4196855 reads were processed. Save the mapping results for them...         ||
+||   97% completed,  57 mins elapsed, total=33564k reads, rate=9.5k/s         ||
+||   97% completed,  57 mins elapsed, total=33564k reads, rate=9.5k/s         ||
+||   98% completed,  57 mins elapsed, total=33564k reads, rate=9.5k/s         ||
+||   98% completed,  58 mins elapsed, total=33564k reads, rate=9.5k/s         ||
+||   98% completed,  58 mins elapsed, total=33564k reads, rate=9.5k/s         ||
+||   98% completed,  58 mins elapsed, total=33564k reads, rate=9.5k/s         ||
+||   99% completed,  58 mins elapsed, total=33564k reads, rate=9.5k/s         ||
+||   99% completed,  58 mins elapsed, total=33564k reads, rate=9.4k/s         ||
+||   99% completed,  59 mins elapsed, total=33564k reads, rate=9.4k/s         ||
+||                                                                            ||
+||                          Completed successfully.                           ||
+||                                                                            ||
+\\============================================================================//
+
+//================================= Summary ==================================\\
+||                                                                            ||
+||          Processed : 33556983 reads                                        ||
+||             Mapped : 28393068 reads (84.6%)                                ||
+||             Indels : 55425                                                 ||
+||                                                                            ||
+||       Running time : 59.3 minutes                                          ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ &lt;|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 1.14.2
+
+//========================== subread-align setting ===========================\\
+||                                                                            ||
+||           Function : Read alignment                                        ||
+||            Threads : 1                                                     ||
+||         Input file : SRR314818.fastq                                       ||
+||        Output file : SRR314818.bam (BAM)                                   ||
+||         Index name : arab_index                                            ||
+||       Phred offset : 33                                                    ||
+||                                                                            ||
+||          Min votes : 3                                                     ||
+||         Max indels : 5                                                     ||
+||  # of Best mapping : 1                                                     ||
+||     Unique mapping : yes                                                   ||
+||   Hamming distance : yes                                                   ||
+||     Quality scores : no                                                    ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//====================== Running (20-Aug-2014 23:36:43) ======================\\
+||                                                                            ||
+|| The input file contains base space reads.                                  ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||    0% completed,   0 mins elapsed, total=28862k reads, rate=14.9k/s        ||
+||    6% completed,   1 mins elapsed, total=28153k reads, rate=15.0k/s        ||
+||   12% completed,   3 mins elapsed, total=28043k reads, rate=15.0k/s        ||
+||   18% completed,   5 mins elapsed, total=28007k reads, rate=15.0k/s        ||
+||   24% completed,   7 mins elapsed, total=27965k reads, rate=15.0k/s        ||
+||   30% completed,   9 mins elapsed, total=27920k reads, rate=14.9k/s        ||
+|| Detect indels...                                                           ||
+||   32% completed,  10 mins elapsed, total=27920k reads, rate=14.6k/s        ||
+||   32% completed,  10 mins elapsed, total=27920k reads, rate=14.3k/s        ||
+||   33% completed,  10 mins elapsed, total=27920k reads, rate=14.1k/s        ||
+||   33% completed,  11 mins elapsed, total=27920k reads, rate=13.8k/s        ||
+||   34% completed,  11 mins elapsed, total=27920k reads, rate=13.6k/s        ||
+||   34% completed,  12 mins elapsed, total=27920k reads, rate=13.4k/s        ||
+||   35% completed,  12 mins elapsed, total=27920k reads, rate=13.2k/s        ||
+||   35% completed,  12 mins elapsed, total=27920k reads, rate=13.0k/s        ||
+||   36% completed,  13 mins elapsed, total=27920k reads, rate=12.8k/s        ||
+|| Realign reads...                                                           ||
+||   37% completed,  14 mins elapsed, total=27920k reads, rate=12.2k/s        ||
+||   37% completed,  14 mins elapsed, total=27920k reads, rate=12.0k/s        ||
+||   38% completed,  15 mins elapsed, total=27920k reads, rate=11.8k/s        ||
+||   38% completed,  15 mins elapsed, total=27920k reads, rate=11.6k/s        ||
+||   39% completed,  16 mins elapsed, total=27920k reads, rate=11.4k/s        ||
+||   39% completed,  16 mins elapsed, total=27920k reads, rate=11.2k/s        ||
+||   40% completed,  17 mins elapsed, total=27920k reads, rate=11.1k/s        ||
+||   41% completed,  17 mins elapsed, total=27920k reads, rate=10.9k/s        ||
+||   41% completed,  17 mins elapsed, total=27920k reads, rate=10.7k/s        ||
+|| 14680064 reads were processed. Save the mapping results for them...        ||
+||   43% completed,  19 mins elapsed, total=27920k reads, rate=10.5k/s        ||
+||   44% completed,  19 mins elapsed, total=27920k reads, rate=10.3k/s        ||
+||   45% completed,  20 mins elapsed, total=27920k reads, rate=10.2k/s        ||
+||   46% completed,  21 mins elapsed, total=27920k reads, rate=10.1k/s        ||
+||   47% completed,  21 mins elapsed, total=27920k reads, rate=10.0k/s        ||
+||   48% completed,  22 mins elapsed, total=27920k reads, rate=9.9k/s         ||
+||   49% completed,  23 mins elapsed, total=27920k reads, rate=9.8k/s         ||
+||   50% completed,  24 mins elapsed, total=27920k reads, rate=9.7k/s         ||
+||   51% completed,  24 mins elapsed, total=27920k reads, rate=9.7k/s         ||
+|| Load the 1-th index block...                                               ||
+|| Map reads...                                                               ||
+||   52% completed,  25 mins elapsed, total=27913k reads, rate=9.6k/s         ||
+||   58% completed,  27 mins elapsed, total=27886k reads, rate=10.0k/s        ||
+||   64% completed,  29 mins elapsed, total=27866k reads, rate=10.3k/s        ||
+||   70% completed,  31 mins elapsed, total=27849k reads, rate=10.5k/s        ||
+||   76% completed,  33 mins elapsed, total=27816k reads, rate=10.8k/s        ||
+|| Detect indels...                                                           ||
+||   81% completed,  34 mins elapsed, total=27816k reads, rate=10.9k/s        ||
+||   81% completed,  35 mins elapsed, total=27816k reads, rate=10.9k/s        ||
+||   82% completed,  35 mins elapsed, total=27816k reads, rate=10.8k/s        ||
+||   82% completed,  35 mins elapsed, total=27816k reads, rate=10.8k/s        ||
+||   83% completed,  36 mins elapsed, total=27816k reads, rate=10.7k/s        ||
+||   83% completed,  36 mins elapsed, total=27816k reads, rate=10.7k/s        ||
+||   84% completed,  36 mins elapsed, total=27816k reads, rate=10.7k/s        ||
+||   84% completed,  37 mins elapsed, total=27816k reads, rate=10.6k/s        ||
+||   85% completed,  37 mins elapsed, total=27816k reads, rate=10.6k/s        ||
+|| Realign reads...                                                           ||
+||   86% completed,  38 mins elapsed, total=27816k reads, rate=10.4k/s        ||
+||   86% completed,  38 mins elapsed, total=27816k reads, rate=10.4k/s        ||
+||   87% completed,  39 mins elapsed, total=27816k reads, rate=10.3k/s        ||
+||   87% completed,  39 mins elapsed, total=27816k reads, rate=10.2k/s        ||
+||   88% completed,  40 mins elapsed, total=27816k reads, rate=10.2k/s        ||
+||   88% completed,  40 mins elapsed, total=27816k reads, rate=10.1k/s        ||
+||   89% completed,  41 mins elapsed, total=27816k reads, rate=10.1k/s        ||
+||   89% completed,  41 mins elapsed, total=27816k reads, rate=10.0k/s        ||
+||   90% completed,  41 mins elapsed, total=27816k reads, rate=10.0k/s        ||
+|| 13118264 reads were processed. Save the mapping results for them...        ||
+||   91% completed,  43 mins elapsed, total=27816k reads, rate=9.9k/s         ||
+||   92% completed,  43 mins elapsed, total=27816k reads, rate=9.8k/s         ||
+||   93% completed,  44 mins elapsed, total=27816k reads, rate=9.8k/s         ||
+||   94% completed,  44 mins elapsed, total=27816k reads, rate=9.7k/s         ||
+||   95% completed,  45 mins elapsed, total=27816k reads, rate=9.7k/s         ||
+||   96% completed,  46 mins elapsed, total=27816k reads, rate=9.7k/s         ||
+||   97% completed,  46 mins elapsed, total=27816k reads, rate=9.6k/s         ||
+||   98% completed,  47 mins elapsed, total=27816k reads, rate=9.6k/s         ||
+||   99% completed,  48 mins elapsed, total=27816k reads, rate=9.6k/s         ||
+||                                                                            ||
+||                          Completed successfully.                           ||
+||                                                                            ||
+\\============================================================================//
+
+//================================= Summary ==================================\\
+||                                                                            ||
+||          Processed : 27798328 reads                                        ||
+||             Mapped : 24109543 reads (86.7%)                                ||
+||             Indels : 46873                                                 ||
+||                                                                            ||
+||       Running time : 48.7 minutes                                          ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+</code></pre>
+
+<pre><code class="r">bamfile &lt;- paste(fastq.name, &quot;.bam&quot;, sep=&quot;&quot;)
+
+## The options for featureCounts are discussed here. see #78
+# http://seqanswers.com/forums/showthread.php?t=30258&amp;page=4-
+
+fc &lt;- featureCounts(files=bamfile, annot.ext=&quot;Arabidopsis_thaliana.TAIR10.22.gtf&quot;,
+                    isGTFAnnotationFile=T)
+</code></pre>
+
+<pre><code>
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ &lt;|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 1.14.2
+
+//========================== featureCounts setting ===========================\\
+||                                                                            ||
+||             Input files : 6 BAM files                                      ||
+||                           S SRR314813.bam                                  ||
+||                           S SRR314814.bam                                  ||
+||                           S SRR314815.bam                                  ||
+||                           S SRR314816.bam                                  ||
+||                           S SRR314817.bam                                  ||
+||                           S SRR314818.bam                                  ||
+||                                                                            ||
+||             Output file : ./.Rsubread_featureCounts_pid896                 ||
+||             Annotations : Arabidopsis_thaliana.TAIR10.22.gtf (GTF)         ||
+||                                                                            ||
+||                 Threads : 1                                                ||
+||                   Level : meta-feature level                               ||
+||              Paired-end : no                                               ||
+||         Strand specific : no                                               ||
+||      Multimapping reads : not counted                                      ||
+|| Multi-overlapping reads : not counted                                      ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//================================= Running ==================================\\
+||                                                                            ||
+|| Load annotation file Arabidopsis_thaliana.TAIR10.22.gtf ...                ||
+||    Features : 217183                                                       ||
+||    Meta-features : 33602                                                   ||
+||    Chromosomes : 7                                                         ||
+||                                                                            ||
+|| Process BAM file SRR314813.bam...                                          ||
+||    Single-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 28783170                                                  ||
+||    Successfully assigned reads : 23533428 (81.8%)                          ||
+||    Running time : 0.88 minutes                                             ||
+||                                                                            ||
+|| Process BAM file SRR314814.bam...                                          ||
+||    Single-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 31362126                                                  ||
+||    Successfully assigned reads : 26641797 (84.9%)                          ||
+||    Running time : 0.98 minutes                                             ||
+||                                                                            ||
+|| Process BAM file SRR314815.bam...                                          ||
+||    Single-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 28988204                                                  ||
+||    Successfully assigned reads : 24283087 (83.8%)                          ||
+||    Running time : 0.89 minutes                                             ||
+||                                                                            ||
+|| Process BAM file SRR314816.bam...                                          ||
+||    Single-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 27886057                                                  ||
+||    Successfully assigned reads : 22876417 (82.0%)                          ||
+||    Running time : 0.86 minutes                                             ||
+||                                                                            ||
+|| Process BAM file SRR314817.bam...                                          ||
+||    Single-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 33556983                                                  ||
+||    Successfully assigned reads : 26651030 (79.4%)                          ||
+||    Running time : 1.03 minutes                                             ||
+||                                                                            ||
+|| Process BAM file SRR314818.bam...                                          ||
+||    Single-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 27798328                                                  ||
+||    Successfully assigned reads : 22580934 (81.2%)                          ||
+||    Running time : 0.85 minutes                                             ||
+||                                                                            ||
+||                         Read assignment finished.                          ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+</code></pre>
+
+<pre><code class="r">cun &lt;- fc$counts
+cun &lt;- data.frame(cun[order(row.names(cun)),])
+colnames(cun) &lt;- fsname
+
+dest.path &lt;- &quot;/Users/Bin/Dropbox/Zhuo/Research/Project2014/Data/arab/Rsubread/&quot;
+
+dest.file &lt;- paste(dest.path, datafile, &quot;.Rsubread.txt&quot;, sep=&quot;&quot;)
+write.table(cun, dest.file)
+</code></pre>
+
+</body>
+
+</html>
+
