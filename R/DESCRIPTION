@@ -1,0 +1,21 @@
+Package: stablegene
+Type: Package
+Title: Estimate random components of gene under various conditions
+Description: This package is designed to estimate variance components across
+    biological sample, treatment and experiments. The genes are ranked by their
+    summed variance components.
+Authors@R: "First Last <first.last@example.com> [aut, cre]"
+Version: 0.0.4
+Date: 2014-09-25
+License: GPL-2
+Depends:
+    R (>= 3.1.1)
+Imports:
+    NBPSeq (>= 0.3.7)
+X.edgeR.....3.2.4..: edgeR (>= 3.6.8)
+X.reshape2.....1.4..: reshape2 (>= 1.4)
+X.ggplot2.....0.9.2..: ggplot2 (>= 1.0.0)
+X.plyr.....1.8.1..: plyr (>= 1.8.1)
+X.grid.: grid
+LazyData: yes
+LazyLoad: yes
