@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2013)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: stable.aux
+The style file: apalike.bst
+Database file #1: mybib.bib
+Warning--empty journal in bates2012lme4
+Warning--empty journal in mccullagh1989generalized
+You've used 18 entries,
+            1935 wiz_defined-function locations,
+            579 strings with 7336 characters,
+and the built_in function-call counts, 7795 in all, are:
+= -- 717
+> -- 454
+< -- 4
++ -- 166
+- -- 160
+* -- 745
+:= -- 1408
+add.period$ -- 51
+call.type$ -- 18
+change.case$ -- 165
+chr.to.int$ -- 18
+cite$ -- 20
+duplicate$ -- 246
+empty$ -- 469
+format.name$ -- 186
+if$ -- 1452
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 18
+newline$ -- 90
+num.names$ -- 54
+pop$ -- 140
+preamble$ -- 1
+purify$ -- 166
+quote$ -- 0
+skip$ -- 186
+stack$ -- 0
+substring$ -- 454
+swap$ -- 15
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 106
+warning$ -- 2
+while$ -- 57
+width$ -- 0
+write$ -- 226
+(There were 2 warnings)
