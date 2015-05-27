@@ -12,7 +12,7 @@
 \usepackage{float}  % PUT FIGURE HERE
 \usepackage{multirow}
 \usepackage{booktabs} % Create TABS
- \usepackage{array,arydshln}  % CREATE DASH LINE
+% \usepackage{array,arydshln}  % CREATE DASH LINE
 \title{Identification of stably expressed genes from Arabidopsis RNA-Seq data}
 \date{} % Today's date or a custom date
 
@@ -70,45 +70,45 @@ more than half of the genes (\cite{loven2012revisiting}, \cite{wu2013use}),
 many of the existing normalization methods (???) may be unreliable. 
 
 \textbf{How to find stably expressed genes}
-In microarray studies, the so-called "housekeeping genes" (HKGs) are often
-used as reference genes for normalization. HKGs are typically constitutive
-genes that maintain basic cellular function, and therefore are expected to
-express at relatively constant levels in non-pathological situations.
-However, many studies have shown that HKGs are not necessarily stably
-expressed (a review can be found in \cite{huggett2005real} and reference therein). 
-For example, in the microarray analysis of classical model plant
-\textit{Arabidopsis thaliana} (Arabidopsis), \cite{czechowski2005genome}
-showed that traditional HKGs such as ACT2, TUB6, EF-1$\alpha$ are not
-stably expressed, and thus not good reference genes for normalization.  A
-similar idea is to use spike-in genes, but \cite{risso2014nat} showed that
-spike-in genes are not necessarily stably expressed and thus may not help
-normalization. HKGs or spike-in genes are therefore not a given prior for
-reference genes, and careful evaluation should be performed when they are
-being used in normalization. (??? simplify, make concise)
-
+In early microarray studies, the so-called "housekeeping genes" (HKGs) are
+often considered as reference genes for normalization (REF). HKGs are
+typically constitutive genes that maintain basic cellular function, and
+therefore are expected to express at relatively constant levels in
+non-pathological situations.  However, many studies have shown that HKGs are
+not necessarily stably expressed (a review can be found in
+\cite{huggett2005real} and reference therein).  For example, in the microarray
+analysis of the model plant \textit{Arabidopsis thaliana} (Arabidopsis),
+\cite{czechowski2005genome} showed that traditional HKGs such as ACT2, TUB6,
+EF-1$\alpha$ are not stably expressed, and thus not good reference genes for
+normalization.  A similar idea is to use spike-in genes, but
+\cite{risso2014nat} showed that spike-in genes are not necessarily stably
+expressed and thus may not help normalization.  HKGs or spike-in genes thus
+cannot be taken as granted as stably expressed genes for count normalization
+purpose.
+ 
+% and careful evaluation should be performed when they are being used in
+% normalization. (??? simplify, make concise)
 
 \textbf{Numerically finding stably expressed genes.}
 % Why would we bother to study them under RNA-Seq since there are related works in microarray} (some sentense are needed to connect the two paragraphs)
-For microarray data, a more reliable approach to identify stably expressed
-genes is examining the variation of measured expression levels across a large
-number of microarray data sets. For example,  
-\cite{czechowski2005genome} measured the expression stability of each gene
-using the coefficient of variation (CV). Genes with lower CVs are considered
-as more stably expressed. By investigating 721 arrays under 323 conditions
-throughout development, \cite{czechowski2005genome} suggested stably expressed
-(reference) genes under different experimental conditions for Arabidopsis.
+For microarray data, an alternative approach is to numerically find stably
+expressed genes by quantifying the variation of measured expression levels
+across a large number of microarray data sets. 
+For example,  \cite{czechowski2005genome}
+measured the expression stability of each gene using the coefficient of
+variation (CV). Genes with lower CVs are considered as more stably expressed.
+By investigating 721 arrays under 323 conditions throughout development,
+\cite{czechowski2005genome} suggested stably expressed (reference) genes under
+different experimental conditions for Arabidopsis.
 \cite{stamova2009identification} used a different algorithm, geNORM
 \citep{vandesompele2002accurate}, to find stably expressed genes based on 526
 human blood samples. 
-%and  validated a subset of most stably expressed genes they identified.  
-%  Similar studies were carried out for Arabidopsis seed
- \citet{dekkers2012identification}, 
- \citet{gur2009identification}, 
- and 
- \citet{frericks2008toolbox} 
- screened a large number of microarray data sets to identify stably
- expressed genes in Arabidopsis seed, breast tumor tissues, and mice (???)
-respectively.
+%and  validated a subset of most stably expressed genes they identified.
+%Similar studies were carried out for Arabidopsis seed
+ \citet{dekkers2012identification}, \citet{gur2009identification}, and
+ \citet{frericks2008toolbox} screened a large number of microarray data sets
+ to identify stably expressed genes in Arabidopsis seed, breast tumor tissues,
+ and mice (???) respectively.
 % Similar studies were carried out for Arabidopsis seed
 % \citep{dekkers2012identification}, breast tumor
 % tissues\citep{gur2009identification}, mouse (universal)
@@ -116,29 +116,31 @@ respectively.
 Validation experiments (\cite{czechowski2005genome},
 \cite{dekkers2012identification}, \cite{huggett2005real},
 \cite{stamova2009identification}) showed that these genes are more stably
-expressed than traditional HKGs.  ??? Typically, large sets of microarray data
-are compiled for a given experimental condition, and stably expressed genes
-are validated and recommended for potential use. ???
+expressed than traditional HKGs.  
+
+% Typically, large sets of microarray data are compiled for a given experimental
+% condition, and stably expressed genes are validated and recommended for
+% potential use. 
 
 
 \textbf{What is our goal and the approach} 
 % RNA-Seq is superior to microarray technology because
 % of its high-throughput, pricise measurement, as well as sensitivity for gene
 % expressed at both low and very high levels \citep{wang2009rna}. 
-In this paper, we discuss identifying stably expressed genes from a large
+In this paper, we discuss numerically identifying stably expressed genes from a large
 number of RNA-Seq data sets.
 The exponential growth in RNA-Seq study accumulates a large amount of
 Arabidopsis data under a variety of experimental/enviromental conditions. We
 use generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} to
-identify stably expressed genes for Arabidopsis RNA-Seq data. We validated
-those stably expressed genes by two widely used methods  "geNORM"
+identify stably expressed genes for Arabidopsis RNA-Seq data. 
+We also applied two widely used methods "geNORM"
 \citep{vandesompele2002accurate} and  "NormFinder"
-\citep{andersen2004normalization}. We found that the rankings of genes in
-terms of expression stability are consistent among different approaches. Using
-GLMM will also allow us to quantify the sources of variation of gene
-expression.  For each gene, we use three random effect terms to quantify
-\textit{between-sample}, \textit{between-treatment} and \textit{between-lab}
-variation. 
+\citep{andersen2004normalization} on log-transformed RNA-Seq count data.
+We found that the rankings of stably expressed genes provided by the different
+methods are consistent (rank correlation $> 0.97$).  Using GLMM will also
+allow us to quantify the sources of variation of gene expression. For each
+gene, we use three random effect terms to quantify \textit{between-sample},
+\textit{between-treatment} and \textit{between-lab} variation. 
 
 \cite{andersen2004normalization} used a linear mixed model to estimate
 expression variation in microarray experiments. The variation of
@@ -147,36 +149,53 @@ inter-group variation for each gene. The stability of that gene in future
 experiment is determined by the posterior distribution of error terms after a
 Bayesian argument. Genes in a given data set are then ranked by the averaged
 stability values, which are defined by absolute value of posterior mean plus
-one standard deviation. 
-RNA-Seq are non-normal count data, in this paper, we thus choose to use GLMMs to
-estimate variance components.
+one standard deviation.  RNA-Seq are non-normal count data, in this paper, we
+thus choose to use GLMMs to estimate variance components.
 
-(???) Furthermore, new biological insights \dots
-Stably expressed genes are likely to be involved in basal metabolic or ‘housekeeping’ functions, such as  kinase activity, nucleotide binding and protein modification processes.
-\cite{sekhon2011genome} and \cite{wang2010dynamic} showed that stably expressed genes are involved in biological processes included cellular processes, transport, protein modification, translation and signal transduction by Gene Ontology enrichment analysis. Besides, in expression
+(???) Furthermore, new biological insights (REFs) \dots Stably expressed genes
+are likely to be involved in basal metabolic or ‘housekeeping’ functions, such
+as  kinase activity, nucleotide binding and protein modification processes.
+\cite{sekhon2011genome} and \cite{wang2010dynamic} showed that stably
+expressed genes are involved in biological processes included cellular
+processes, transport, protein modification, translation and signal
+transduction by Gene Ontology enrichment analysis. Besides, in expression
 study, a high correlation between translational signiture and mRNA level is
 found in human stably expressed genes\citep{line2013translational}. In that
 paper, an significant increase in mRNA variation prediction was obtained by
 selecting genes that are stably expressed in more than 1 tissue.\\
 
-(Limitation and scope)
-\cite{hruz2011refgenes} pointed out that
-universally stably expressed genes may not exist and that a subset of stably
-expressed genes from a specific biological context has less variability than
-those identified across varying tissues and conditions. Many studies have shown that genes with stable expression level  in one experiment are subject to
-change, either under varying experimental protocols, or different organs of a
-given species (\cite{reid2006optimized}, \cite{hong2010identification}).
-It is not surprising when \cite{dekkers2012identification} identified another set of 50
+(Limitation and scope) \cite{hruz2011refgenes} pointed out that universally
+stably expressed genes may not exist and that a subset of stably expressed
+genes from a specific biological context has less variability than those
+identified across varying tissues and conditions. Many studies have shown that
+genes with stable expression level  in one experiment are subject to change,
+either under varying experimental protocols, or different organs of a given
+species (\cite{reid2006optimized}, \cite{hong2010identification}).  It is not
+surprising when \cite{dekkers2012identification} identified another set of 50
 stable genes specifically for Arabidopsis seed from an analysis of 151 arrays,
-which shared 3 only genes with top 100 in \cite{czechowski2005genome}.  
-In this paper, we will analyze gene expression stability both across tissue
-types and within tissue types.
+which shared 3 only genes with top 100 in \cite{czechowski2005genome}.  In
+this paper, we will analyze gene expression stability both across tissue types
+and within tissue types.
 
 % For this reason, we expect that stably expressed genes identified by GLMM  are
 % more robust and show less sensitivity toward varying treatments (???).
 
-
-{\bf Further discussion} Previous studies showed that normalization are needed to account for nuisance effects, including \textit{between-sample} effects, e.g., sequencing depths, flow-cell/library preparation effects (\cite{bullard2010evaluation}, \cite{robinson2010scaling}), as well as \textit{gene-specific} effects, e.g.,  gene length or GC-contents (\cite{risso2011gc}, \cite{hansen2012removing}). A number of normalization approaches are proposed to address different types of unwanted nuisance effects (\cite{dillies2013comprehensive}, \cite{risso2014nat}). Different from global-scaling normalization, \cite{risso2014nat}  proposed a regression-based normalization-remove unwanted variation (RUV).  In that paper, they regressed the read counts on the known covariates of interest (e.g. treatment effects) and unknown factors of nuisance effects. The factors of nuisance effects are estimated from a subset of data, and are then adjusted for in DE analysis. In RUVg approach, they are estimated through a factor analysis. A main assumption for RUVg is that a set of stably expressed genes can be identified first	.
+{\bf Further discussion} Previous studies showed that normalization are needed
+to account for nuisance effects, including \textit{between-sample} effects,
+e.g., sequencing depths, flow-cell/library preparation effects
+(\cite{bullard2010evaluation}, \cite{robinson2010scaling}), as well as
+\textit{gene-specific} effects, e.g.,  gene length or GC-contents
+(\cite{risso2011gc}, \cite{hansen2012removing}). A number of normalization
+approaches are proposed to address different types of unwanted nuisance
+effects (\cite{dillies2013comprehensive}, \cite{risso2014nat}). Different from
+global-scaling normalization, \cite{risso2014nat}  proposed a regression-based
+normalization-remove unwanted variation (RUV).  In that paper, they regressed
+the read counts on the known covariates of interest (e.g. treatment effects)
+and unknown factors of nuisance effects. The factors of nuisance effects are
+estimated from a subset of data, and are then adjusted for in DE analysis. In
+RUVg approach, they are estimated through a factor analysis. A main assumption
+for RUVg is that a set of stably expressed genes can be identified first
+.
 
 \section{Data}
  We obtained 165 biological samples of Arabidopsis  from 18 experiments from \textit{Gene Expression Omnibus} (GEO) at \textit{National Center for Biotechnology Information}  ( NCBI, \url{http://www.ncbi.nlm.nih.gov/}).  A brief description of the experiments can be found in supplementary material. More details for each experiment are also accessible at NCBI via the unique accession number provided.
