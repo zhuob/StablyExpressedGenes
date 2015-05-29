@@ -70,8 +70,8 @@ more than half of the genes (\cite{loven2012revisiting}, \cite{wu2013use}),
 many of the existing normalization methods (???) may be unreliable. 
 
 \textbf{How to find stably expressed genes}
-In early microarray studies, the so-called "housekeeping genes" (HKGs) are
-often considered as reference genes for normalization (REF). HKGs are
+In pre-genomic era, the so-called "housekeeping genes" (HKGs) are
+often considered as candidates of reference genes for normalization (\cite{bustin2002quantification}, \cite{andersen2004normalization}). HKGs are
 typically constitutive genes that maintain basic cellular function, and
 therefore are expected to express at relatively constant levels in
 non-pathological situations.  However, many studies have shown that HKGs are
@@ -108,7 +108,7 @@ human blood samples.
  \citet{dekkers2012identification}, \citet{gur2009identification}, and
  \citet{frericks2008toolbox} screened a large number of microarray data sets
  to identify stably expressed genes in Arabidopsis seed, breast tumor tissues,
- and mice (???) respectively.
+ and mice respectively.
 % Similar studies were carried out for Arabidopsis seed
 % \citep{dekkers2012identification}, breast tumor
 % tissues\citep{gur2009identification}, mouse (universal)
@@ -168,13 +168,11 @@ selecting genes that are stably expressed in more than 1 tissue.\\
 stably expressed genes may not exist and that a subset of stably expressed
 genes from a specific biological context has less variability than those
 identified across varying tissues and conditions. Many studies have shown that
-genes with stable expression level  in one experiment are subject to change,
+genes with stable expression levels  in one experiment are subject to change,
 either under varying experimental protocols, or different organs of a given
 species (\cite{reid2006optimized}, \cite{hong2010identification}).  It is not
-surprising when \cite{dekkers2012identification} identified another set of 50
-stable genes specifically for Arabidopsis seed from an analysis of 151 arrays,
-which shared 3 only genes with top 100 in \cite{czechowski2005genome}.  In
-this paper, we will analyze gene expression stability both across tissue types
+surprising that top 100 stably expressed genes in \cite{czechowski2005genome} shared only 3 genes with top 50  specifically for Arabidopsis seed identified by \cite{dekkers2012identification}.
+In this paper, we will analyze gene expression stability both across tissue types
 and within tissue types.
 
 % For this reason, we expect that stably expressed genes identified by GLMM  are
@@ -200,18 +198,49 @@ for RUVg is that a set of stably expressed genes can be identified first
 \section{Data}
  We obtained 165 biological samples of Arabidopsis  from 18 experiments from \textit{Gene Expression Omnibus} (GEO) at \textit{National Center for Biotechnology Information}  ( NCBI, \url{http://www.ncbi.nlm.nih.gov/}).  A brief description of the experiments can be found in supplementary material. More details for each experiment are also accessible at NCBI via the unique accession number provided.
  
-\textbf{From FASTQ to Read Count} Read counts were obtained by processing zipped FASTQ data in three steps. First, Sequence Read Archive (SRA) format files of Arabidopsis samples were retrieved from GEO, and then converted to FASTQ files using \verb"SRA Toolkit"(version 2.3.5-2). Next, the reference genome of Arabidopsis was downloaded  through the Ensembl plants FTP server (\url{http://plants.ensembl.org/info/data/ftp/index. html}). As suggested by \cite{anders2013count},  "FASTA(DNA)" link rather than "FASTA(cDNA)" was selected because samples were aligned to the genome, not the transcriptome. The index  was built subsequently for reference genome.  Lastly, Short reads in FASTQ were  aligned to reference genome by  \verb"align()" and read counts were summarized by \verb"featureCounts()" in R package \verb"Rsubread" (version 1.14.2,  \cite{liao2013subread}). We used default options except that the annotation file is set to be \verb"Arabidopsis_thaliana.TAIR10.22.gtf".  The multi-mapping or multi-overlapping reads were not counted.  
+\textbf{From FASTQ to Read Count} Read counts were obtained by processing
+zipped FASTQ data in three steps. First, Sequence Read Archive (SRA) format
+files of Arabidopsis samples were retrieved from GEO, and then converted to
+FASTQ files using \verb"SRA Toolkit"(version 2.3.5-2). Next, the reference
+genome of Arabidopsis was downloaded  through the Ensembl plants FTP server
+(\url{http://plants.ensembl.org/info/data/ftp/index. html}). As suggested by
+\cite{anders2013count},  "FASTA(DNA)" link rather than "FASTA(cDNA)" was
+selected because samples were aligned to the genome, not the transcriptome.
+The index  was built subsequently for reference genome.  Lastly, Short reads
+in FASTQ were  aligned to reference genome by  \verb"align()" and read counts
+were summarized by \verb"featureCounts()" in R package \verb"Rsubread"
+(version 1.14.2,  \cite{liao2013subread}). We used default options except that
+the annotation file is set to be \verb"Arabidopsis_thaliana.TAIR10.22.gtf".
+The multi-mapping or multi-overlapping reads were not counted.  
 
 
-  
-\textbf{Group them into 3 categories} The 18 labs were grouped and managed into three data sets by tissue type.  \cite{czechowski2005genome}, \cite{hruz2011refgenes}, and \cite{dekkers2012identification} showed that transcriptomes vary across different tissue types or development stages. For this reason, we prepared three read counts matrices, formed in the way that rows denote gene and columns indexes biological sample. \textbf{Set 1} consists of 72 biological samples that came from 9 labs of Arabidopsis seedling (aged 2 days to 10 days) experiment under 29 treatments (different in terms of environmental conditions or genotypes, same thereafter); \textbf{Set 2} has a sample size of 39 from 5 distinct tissue type experiments (flower, leaf, seed, carpel and hypocolty) with 16 treatments; \textbf{Set 3} consists of 5 lab experiments conducted specifically for leaf, with a total number of 60 biological samples among 28 different treatments. Note that  Set 2 and Set 3 overlap with each other by lab experiment GSE48235 (6 samples). Samples within each group were merged by their unique gene IDs, and then stored in the read count matrices.
-  \\
+\textbf{Consider there subsets} 
+We first want to identify stably-expressed genes among ** seedling samples
+from ** labs.
+
+
+
+The 18 labs were grouped and managed into three data sets by tissue type.
+\cite{czechowski2005genome}, \cite{hruz2011refgenes}, and
+\cite{dekkers2012identification} showed that transcriptomes vary across
+different tissue types or development stages. For this reason, we prepared
+three read counts matrices, formed in the way that rows denote gene and
+columns indexes biological sample. \textbf{Set 1} consists of 72 biological
+samples that came from 9 labs of Arabidopsis seedling (aged 2 days to 10 days)
+experiment under 29 treatments (different in terms of environmental conditions
+or genotypes, same thereafter); \textbf{Set 2} has a sample size of 39 from 5
+distinct tissue type experiments (flower, leaf, seed, carpel and hypocolty)
+with 16 treatments; \textbf{Set 3} consists of 5 lab experiments conducted
+specifically for leaf, with a total number of 60 biological samples among 28
+different treatments. Note that  Set 2 and Set 3 overlap with each other by
+lab experiment GSE48235 (6 samples). Samples within each group were merged by
+their unique gene IDs, and then stored in the read count matrices.  \\
 
 
 
 
 \section{Methods}
-\textbf{Remove lowly-expressed genes} Prior to normalization, we removed non-informative rows, such as features that were not of interest or those that had low overall counts, as suggested by \cite{anders2013count}. Filtering non-informative genes is helpful not only because rows with small read counts provides little information about expression level,  but also that such rows will cause convergence failure in the regression models. In practice,  we found selecting genes by a mean count of at least 3 would effectively avoid computational issue.  By removing genes with less than 3 reads per sample, we obtained a matrix of 22334 genes by 72 samples for set 1, 25239 by 39 for set 2, and 21290 by 60  for set 3.  
+\subsection{Remove lowly-expressed genes} Prior to normalization, we removed non-informative rows, such as features that were not of interest or those that had low overall counts, as suggested by \cite{anders2013count}. Filtering non-informative genes is helpful not only because rows with small read counts provides little information about expression level,  but also that such rows will cause convergence failure in the regression models. In practice,  we found selecting genes by a mean count of at least 3 would effectively avoid computational issue.  By removing genes with less than 3 reads per sample, we obtained a matrix of 22334 genes by 72 samples for set 1, 25239 by 39 for set 2, and 21290 by 60  for set 3.  
 
 \begin{table}[h]
 \centering
@@ -226,19 +255,67 @@ Set 3 &5 &28  &60  & 21290\\ \hline
 %\textbf{Moved from introduction part, or better to put it in discussion part?}
 %\cite{czechowski2005genome} and \cite{dekkers2012identification} adopted similar approach for statistical analysis for identifying stably expressed genes, and both used Arabidopsis microarray data. Briefly, for each gene the mean expression and the standard deviation (SD) over all biological samples are calculated, and the coefficients of variation (CV), which is the ratio of SD to mean expression, are obtained. Genes with lower CVs are expected to be more stably expressed. This simple approach, however, does not provide us any information about possible sources, except the amounts,  of variation.  \textbf{Since it is often observed that genes with higher expression levels tend to have smaller dispersion, this simple approach will inevitably choose those genes. [Hruz 2011] Selection Bias}\\ 
 
-\textbf{Structure of regression model} The statistical analysis is carried out by Poisson regression with random effects.  The Poisson regression model would be appropriate to analyze read count data for the purpose of identifying stably expressed genes. Since the experimental data were collected from different labs in a random manner, we use random terms to account for the lab effects, as well as the treatment effects nested in each lab. We further specify another random effect term to address variation among biological samples. 
+\subsection{Count Normalization}
+Briefly, a pseudo-reference sample is created by taking the geometric mean across samples for each gene. Then the normalization factor for sample $j$ is estimated as the median of the fold-changes between sample $j$ and reference sample over all genes.
 
-\textbf{Technical details} Let $Y_{ijkl}$ denote the read count for $i$th gene in $j$th observational unit of $k$th treatment group in $l$th experiment (lab) and index $i$ is suppressed herein since only one gene is evaluated at a time by regression model. We assume that the read counts follow a Poisson distribution,  
-  \[Y_{jkl}\sim \text{Poisson}(\mu_{jkl})\]
-  We further allow the mean $\mu_{jkl}$ to vary across samples and experimental conditions (treatments, organs, etc.)[We need to be clear about which component capture what kind of variation, ecotype? treatment? growing conditions? age?] by specifying the following model 
-  \begin{equation}\label{q1}
-   \log( \mu_{jkl}) = \xi + \log(R_{jkl}N_{jkl})+ \alpha_l + \beta_{k(l)} + \epsilon_{jkl} 
-  \end{equation}
- %   \[ \log( \mu_{ijk}) = \xi + \log(R_{ijk}N_{ijk})+ \alpha_k + \beta_{j(k)} + \epsilon_{ijk} \]
+The term $\log(R_{jkl}N_{jkl})$ serves as an offset, where  $ R_{jkl}$ is library size and  $N_{jkl}$ is the normalization factor calculated by DESeq normalization \citep{anders2010differential}. 
+
+\subsection{Poisson log-linear mixed-effects regression model} 
+% (Each individual count is model as a Poisson distribution. The count mean is
+% modeled through a log-linear mixed-effects regression model.)
+
+Let $Y_{ijkl}$ denote the read count for $i$th gene
+in $j$th observational unit of $k$th treatment group in $l$th experiment (lab)
+and index $i$ is suppressed herein since only one gene is evaluated at a time
+by regression model. We assume that each read count follow a Poisson
+distribution,  
+\[Y_{jkl}\sim \text{Poisson}(\mu_{jkl}).\] 
+We use a log-linear Poisson regression model to capture 
+the variation of $\mu_{jkl}$ across samples and experimental conditions (treatments,
+organs, etc.),
+\begin{equation}\label{q1}
+    \log( \mu_{jkl}) = \xi + \log(R_{jkl}N_{jkl})+ \alpha_l + \beta_{k(l)} + \epsilon_{jkl} 
+\end{equation}
+where $\alpha$'s are the effects for labs,  $\beta$'s are treatment effects
+nested in labs, and $\epsilon$'s are the effects for biological samples. 
+The term $\log(R_{jkl}N_{jkl})$ are the normalization factors discussed in
+subsection (REF).
+
+[Why treat lab-effect as random-effect] We view the collected data sets as a random sample from the pool of all
+Arabidopsis RNA-Seq experiments. \dots generalized inference \dots
+For the same reason, we also consider the treatment effects as random effects
+in the sense the treatment effect will be different in future experiments.
+
+It is assumed that $\alpha$'s, $\beta$'s and $\epsilon$'s are mutually
+independent, and  
+%   \[ \log( \mu_{ijk}) = \xi + \log(R_{ijk}N_{ijk})+ \alpha_k + \beta_{j(k)} + \epsilon_{ijk} \]
   \[\alpha_l\sim N(0, \sigma^2_1),\] 
   \[\beta_{k(l)}\sim N(0, \sigma^2_2),\]
-   \[\epsilon_{jkl}\sim N(0, \sigma_0^2)\]
-  where $\alpha$'s  are the random effect for labs,  $\beta$'s are treatment effect nested in labs, and $\epsilon$'s are the random effects for biological samples. It is also assumed that $\alpha$'s, $\beta$'s and $\epsilon$'s are mutually independent. The term $\log(R_{jkl}N_{jkl})$ serves as an offset, where  $ R_{jkl}$ is library size and  $N_{jkl}$ is the normalization factor calculated by DESeq normalization \citep{anders2010differential}. Briefly, a pseudo-reference sample is created by taking the geometric mean across samples for each gene. Then the normalization factor for sample $j$ is estimated as the median of the fold-changes between sample $j$ and reference sample over all genes.
+   \[\epsilon_{jkl}\sim N(0, \sigma_0^2).\]
+$\sigma_0^2$, $\sigma_1^2$, $\sigma_1^2$ are called variance-components. They capture the
+between-sample, between-treatment variation and between-lab variation
+correspondingly.
+[We need to be clear about which component capture what kind of
+variation, ecotype? treatment? growing conditions? age?] 
+The between-sample variation capture extra-Poisson variation in read counts
+within a treatment group. It plays a similar role as the dispersion parameter
+in a negative binomial model (REFs).
+
+
+
+\subsection*{ Estimation of
+Variance Components
+and
+Identification of Stably Expressed Genes 
+}
+
+We estimate the variance components from (\ref{q1}) for each gene using
+likelihood-based methods (details provided below).  The
+genes are then ranked  in ascending order by their magnitude of total
+variation, quantified by $\sigma^2 = \sigma^2_0 + \sigma_1^2 + \sigma_2^2$.
+Top ranked genes are considered to be most stable in terms of expression
+value. 
+
 
 The joint density function of $\bm Y=(Y_{jkl})'$ given $\bm \mu= (\mu_{jkl})'$ is 
   \[f(\bm Y|\bm \mu )=\prod_{ j, k,l}f(y_{jkl}|\mu_{jkl})=\prod_{j,k,l}\frac{[\mu_{jkl}]^{y_{jkl}}\exp(-\mu_{jkl})}{y_{jkl}!}\]
@@ -262,7 +339,6 @@ where the integral in (\ref{q2}) can be approximated by Gaussian-Hermite (GH) qu
 
  %\citep{mcculloch2001generalized}.
  %Model (\ref{q1}) allows us to take into account the design structure for each data set. We assume that genes are mutually independent [Maybe we don't need it here.]. 
- We then estimate the variance components from (\ref{q1}) for each gene.  The genes are then ranked  in ascending order by their magnitude of total variation, quantified by $\sigma^2 = \sigma^2_0 + \sigma_1^2 + \sigma_2^2$. Top ranked genes are considered to be most stable in terms of expression value. 
   
  \section{Results}
  
