@@ -24,7 +24,7 @@ generateReadCount <- function(size, N, n.stable, mu1, mu2, mu3)
 }
 
 
-## case 1 : a lot of upregulating genes 
+## case 1 : 80% of upregulating genes 
 
 size <- 40 # number of samples
 N <- 100 # number of genes
