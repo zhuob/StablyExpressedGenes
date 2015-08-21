@@ -11,6 +11,7 @@ arab <- readRDS("/Users/Bin/Dropbox/Zhuo/Research/Project2014/data/seedling.colu
 seedling <- arab$count
 var.s <- arab$var.comp
 
+#
 
 # FIVE GENES FROM CZECHOWSKI
 figA <- c("At3g18780", "At5g12250","At5g60390","At4g05320","At1g13440")
