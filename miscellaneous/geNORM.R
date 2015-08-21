@@ -35,8 +35,12 @@ mu1 <- rep(20, N-n.stable) + 2*rnorm(N-n.stable)
 mu2 <- rep(40, N-n.stable) + 2*rnorm(N-n.stable)
 mu3 <- 30
 
-
-readCount <- generateReadCount(size, N, n.stable, mu1, mu2, mu3)
+readCount <- matrix(NA, ncol=3, nrow =5)
+readCount[, 1] <- 1
+readCount[, 2] <- 2
+readCount[, 3] <- 3
+readCount[5,] = 1
+# readCount <- generateReadCount(size, N, n.stable, mu1, mu2, mu3)
 
 geneNorm <- stabMeasureM(t(readCount), log=F, na.rm=T)
 rank.gene <- rank(geneNorm)
@@ -94,25 +98,29 @@ sum(stable.rank$gene[1:n.stable] < n.stable)
 
 
 ######### calculate the ranks for all genes 
-
+library(NormqPCR)
 setwd("/home/stats/zhuob/data/computing")
 dat <- readRDS("seedling.columbia.rds")
 
 count <- dat$count
-xne2 <- stabMeasureM(t(count +1), log=F, na.rm= T)
-Gene <- names(xne2)
-gene.rank <- rank(xne2)
+# xne2 <- stabMeasureM(t(count +1), log=F, na.rm= T)
+# Gene <- names(xne2)
+# gene.rank <- rank(xne2)
+# 
+# Mvalue <- data.frame( Mval = xne2)
+# Mvalue$rank = gene.rank
 
-Mvalue <- data.frame( Mval = xne2)
-Mvalue$rank = gene.rank
-saveRDS(Mvalue, "Mvalue.rds")
 
+#saveRDS(Mvalue, "Mvalue.rds")
+calcuRho <- stabMeasureRho(x = t(dat$count[, ]+1),log=F, group = dat$trt)
+saveRDS(calcuRho, "Rhovalue.rds")
 
 
 
 ### ####
 ## rank of M valuse
 ####
+
 
 Mvalue <- readRDS("/Users/Bin/Dropbox/Zhuo/Research/Project2014/data/Mvalue.rds")
 Mvalue$Gene <-row.names(Mvalue)
