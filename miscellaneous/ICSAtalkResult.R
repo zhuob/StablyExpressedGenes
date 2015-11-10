@@ -10,7 +10,7 @@ source("/Users/Bin/Dropbox/Zhuo/Research/Project2014/StablyExpressedGenes/R/R/pl
 arab <- readRDS("/Users/Bin/Dropbox/Zhuo/Research/Project2014/data/seedling.columbia.rds")
 seedling <- arab$count
 var.s <- arab$var.comp
-
+lab <- arab$lab
 #
 
 # FIVE GENES FROM CZECHOWSKI
@@ -29,15 +29,18 @@ nb.data <- prepare.nb.data(seedling, norm.factors=norm.factors)
 off.set <- as.numeric(nb.data$eff.lib.sizes)
 
 
-plot.gene(figA, seedling, 1, 1e4, "Traditional HKGs")
-plot.gene(figB, seedling, 1, 1e4, "Stably expressed genes identified by Czechowski et. al.")
+plot.gene(figA, lab, seedling, 1, 1e4, "Traditional HKGs")
+plot.gene(figB, lab, seedling, 1, 1e4, "Stably expressed genes identified by Czechowski et. al.")
 
 random.gene <- sample(1:100, 5)
 genelist <- var.s$Gene[var.s$Rank %in% random.gene]
-plot.gene(genelist, seedling, 1, 1e4, "Stable Genes identified from RNA-Seq data")
+plot.gene(genelist,lab, seedling, 1, 1e4, "Stable Genes identified from RNA-Seq data")
 
 
-
+###  if you want the expression values of top 100 genes
+genelist <- var.s$Gene[var.s$Rank <= 100]
+top.rank.gene1 <- row.names(seedling) %in% genelist
+top.rank.gene <- seedling[top.rank.gene1, ]
 
 
 
@@ -95,7 +98,7 @@ ref.100 <- read.table("Czechowski100.txt", header=T)
 ref.50 <- read.table("Dekkers50.txt", header=T)
 
 
-Rhovalue$rank <- rank(Rhovalue)
+#Rhovalue$rank <- rank(Rhovalue)
 colnames(Rhovalue) <- c("Rho", "rank")
 gene.geNORM <- rownames(Mvalue[which(Mvalue$rank <= 100),])
 gene.NormFinder <- rownames(Mvalue[which(Rhovalue$rank <= 100),])
@@ -118,6 +121,33 @@ for ( i in 1: length(rank.seq))
   Normfinder[i] <- round(length(intersect(gene.s, gene.NormFinder))/length(gene.NormFinder), 3)
   
   }
+
+## the overlap between geNorm and our method, top 1000 genes
+nrank <- 1000
+gene.geNORM <- rownames(Mvalue[which(Mvalue$rank <= nrank),])
+gene.s <- var.s$Gene[var.s$Rank <= nrank]
+
+length(intersect(gene.geNORM, gene.s))
+
+rank_us <- var.s[var.s$Gene %in% gene.geNORM, ]$Rank
+id1 <- tail(sort(rank_us), 5)
+NotIn_Us <- var.s$Gene[var.s$Rank %in% id1]
+# NotIn_Us <- setdiff(gene.geNORM, gene.s)[1:5]  # in genorm not in our model
+plot.gene(NotIn_Us, lab, seedling, 1, 1e4, "Top in geNorm but not our model")
+## what are the read counts of those unstabl genes
+un1 <- seedling[row.names(seedling) %in% NotIn_Us, ]
+
+
+
+rank_geNorm <- Mvalue[row.names(Mvalue) %in% gene.s, ]$rank
+id2 <- tail(sort(rank_geNorm), 5) # the worst 5 in geNorm of top 1000 in ours
+NotIn_geNorm <- var.s$Gene[var.s$Rank %in% id2]
+# NotIn_genorm <- setdiff(gene.s, gene.geNORM)[1:5]  # in our model not in genorm
+plot.gene(NotIn_geNorm, lab, seedling, 1, 1e4, "Top in our Model")
+un2 <- seedling[row.names(seedling) %in% NotIn_geNorm, ]
+
+
+
 
 pct.data <- data.frame(rank=rank.seq, l.num, cze.num, dek.num, genorm, Normfinder)
 colnames(pct.data) <- c("Rank", "Leaf(prelimilary)", 
@@ -201,7 +231,8 @@ mgg + geom_density(size = 1.5) +
 # STACKED BAR PLOT
 #######################################################
 library(plyr)
-gene.ids <- sample(1:dim(var.s)[1], 20)
+# gene.ids <- sample(1:dim(var.s)[1], 20)
+ gene.ids <- sample(1:100, 20)
 colnames(var.s.percent)
 mdata <- melt(var.s.percent[var.s$Rank %in% gene.ids, c(1:4)], id=c("Gene"))
 
@@ -210,13 +241,15 @@ mdata <- mdata[id, ]
 
 
 library(scales)
-ggplot(mdata,aes(x = Gene, y = value,fill = variable)) + 
-  geom_bar(position = "fill",stat = "identity") + 
-  theme(axis.text.x = element_text(size=10,angle = 90, hjust = 1)) +
-  labs( y="percentage of total variance") +
-   scale_y_continuous(labels = percent_format())
+# ggplot(mdata,aes(x = Gene, y = value,fill = variable)) + 
+#   geom_bar(position = "fill",stat = "identity") + 
+#   theme(axis.text.x = element_text(size=10,angle = 90, hjust = 1)) +
+#   labs( y="percentage of total variance") +
+#    scale_y_continuous(labels = percent_format())
 
 
+
+colnames(var.s)[2:4] <- c("sample", "treatment", "experiment") 
 
 mdata <- melt(var.s[var.s$Rank %in% gene.ids, c(1:4)], id=c("Gene"))
 
@@ -264,12 +297,6 @@ rho <- readRDS("Rhovalue.rds")
 gene.ids <- which(rho$rank <= 1000)
 range(apply(seedling[gene.ids, ], 1, mean))
 cor(rho$rank, var.s$Rank)
-
-
-
-
-
-
 
 
 
