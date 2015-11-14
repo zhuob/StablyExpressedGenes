@@ -12,7 +12,7 @@
 \usepackage{float}  % PUT FIGURE HERE
 \usepackage{multirow}
 \usepackage{booktabs} % Create TABS
-% \usepackage{array,arydshln}  % CREATE DASH LINE
+ \usepackage{array,arydshln}  % CREATE DASH LINE
 \title{Identification of stably expressed genes from Arabidopsis RNA-Seq data}
 \date{} % Today's date or a custom date
 
@@ -115,7 +115,6 @@ understanding the sources and nature of the RNA-Seq count variation.
 
 \section{Introduction}
 
-<<<<<<< HEAD
 \textbf{(overview)}
 RNA sequencing (RNA-Seq) has become the technology of choice for transcriptome
 profiling over the last few years. The exponential growth in RNA-Seq study has
@@ -218,113 +217,6 @@ expressed according numerical measures either.
 % genes for count normalization purpose.  and careful evaluation should be
 % performed when they are being used in normalization. (??? simplify, make
 % concise)
-=======
-\textbf{(Why is normalization important)}
-RNA sequencing (RNA-Seq) has become the technology of choice for transcriptome
-profiling over the last few years. A key task of RNA-Seq analysis is to detect
-differentially expressed (DE) genes under various experimental or
-environmental conditions. Count normalization are needed for adjusting
-differences in sequencing depths or library sizes (total numbers of mapped
-reads for each biological sample) due to chance variation in sample
-preparation.  In DE analysis, gene expression levels are often estimated from
-relative read frequencies. For this reason, normalization is also needed to
-account for the apparent reduction or increase in relative read frequencies of
-non-differentially expressing genes simply to accommodate the increased or
-decreased relative read frequencies of truly differentially expressing genes.
-
-\textbf{(Our goals)}
-In this paper, we discuss identifying a common set of stably expressed genes
-from multiple existing RNA-Seq data sets based on a numerical measure of
-stability.  We envision that such a common set of stably expressed genes can
-be used as a reference set or prior information for count normalization and DE
-analysis of future RNA-Seq data sets obtained from similar (??? comparable)
-experiments.  
-
-We examined RNA-Seq data on 165 biological samples from 18 different
-experiments carried out by different labs and identified genes that are stably
-expressed across biological samples, experiment conditions, and labs. 
-We fit a random-effect model to the read counts for each gene and decompose
-the total variance to into between-sample, between-treatment and between-lab
-variance components. Identifying stably expressed genes is useful for count
-normalization. The variance component analysis is a first step towards
-understanding the sources and nature of the RNA-Seq count variation.
-
-
-The exponential growth in RNA-Seq study has accumulated a large amount of
-Arabidopsis data under a variety of experimental/enviromental conditions.  The
-basic intuition and motivation are that a numerical measure/quantification of
-expression stability (typically, it measures certain aspects of RNA-Seq count
-variation) can be more reliably estimated by using more data sets.  
-{\bf the caveat}
-However,
-as pointed out by \cite{hruz2011refgenes}, universally stably expressed genes
-may not exist and that a subset of stably expressed genes from a specific
-biological context has less variability than those identified across varying
-tissues and conditions.  Many studies have shown that stably expressed genes
-are subject to change from one experiment to another, either due to varying
-experimental protocols, or due to different organs of a given species
-(\cite{reid2006optimized}, \cite{hong2010identification}).  It is not
-surprising that top 100 stably expressed genes in \cite{czechowski2005genome}
-shared only 3 genes with top 50 specifically for Arabidopsis seed identified
-by \cite{dekkers2012identification}.  In this study, we try to balance the
-generality and specificity by identify different reference gene sets for
-different tissue types of Arabidopsis.
-
-% They may or may not be most stably expressed ones for a particular
-% experiment. 
-Two subtle points we want to make: 1) using an explicit reference set improves
-interpretability of DE test results; 2) using a common reference set improve
-comparability when analyzing two or more data sets. (moot ???)
-\dots
-Another subtle point we want to make is that a reference set does not have to
-be absolutely stable to be useful as a reference set: we can slightly change
-our perspective and interpret all DE results as relative to the reference set.
-??? For example, a fold change of 2 can be interpreted as the fold change of
-this gene is 2 more than those genes in the reference set. ???  Any of the
-simple normalization methods discussed earlier (REFs) are effectively
-specifying an implicit set of genes as a referent set. Our proposal is to make
-the reference set explicit to improve interpretability of the results.
-Furthermore, using an explicit common reference set becomes more useful when
-the interest is in comparing different experiments.  For example, two fold
-change in one experiment could be different from two fold change in another if
-normalizations are done by different reference genes.  For example, when two
-RNA-Seq data sets are separately normalized with different reference sets, a
-fold change of two observed in one experiment may not be directly comparable
-to a fold change of two observed in the other.  This problem can be fixed by
-using a common set of reference genes, which helps improve comparability of
-the data sets and interpretability of DE test results. Different estimated
-normalization factors effectively specify a different reference set \ldots
-(Improve intepretability and comaprability)
-
-% Using a common reference set for count normalization can improve comparability and interpretability.  
-
-We also want to clarify the distinction between numerical stability versus
-biological stability. 
-In this paper, we identify stably expressed genes based on a numerical
-measure---the sum of three random components estimated from a GLMM.
-% Unfortunately, using data alone, 
-A profound question is whether a certain set of stably-expressed genes found
-based on a numerical measure are biologically stable in any sense.
-Numerical stability is more tractable.
-\textbf{How to find stably expressed genes}
-In pre-genomic era, the so-called "housekeeping genes" (HKGs) are
-often considered as candidates of reference genes for normalization (\cite{bustin2002quantification}, \cite{andersen2004normalization}). HKGs are
-typically constitutive genes that maintain basic cellular function, and
-therefore are expected to express at relatively constant levels in
-non-pathological situations.  However, many studies have shown that HKGs are
-not necessarily stably expressed (a review can be found in
-\cite{huggett2005real} and reference therein).  For example, in the microarray
-analysis of the model plant \textit{Arabidopsis thaliana} (Arabidopsis),
-\cite{czechowski2005genome} showed that traditional HKGs such as ACT2, TUB6,
-EF-1$\alpha$ are not stably expressed, and thus not good reference genes for
-normalization.  A similar idea is to use spike-in genes, but
-\cite{risso2014nat} showed that spike-in genes are not necessarily stably
-expressed and thus may not help normalization.  HKGs or spike-in genes thus
-cannot be taken as granted as stably expressed genes for count normalization
-purpose.
-% and careful evaluation should be performed when they are being used in
-% normalization. (??? simplify, make concise)
->>>>>>> e51536a33f2184b7d79eba0a116893d0f849abc6
 \textbf{Numerically finding stably expressed genes.}
 % Why would we bother to study them under RNA-Seq since there are related
 % works in microarray} (some sentense are needed to connect the two
@@ -355,7 +247,6 @@ Validation experiments (\cite{czechowski2005genome},
 \cite{stamova2009identification}) showed that these genes are more stably
 expressed than traditional HKGs.  
 
-<<<<<<< HEAD
 (??? to results) Different stability measures and different data sources (e.g., microarray vs
 RNA-Seq) will lead to different results. In Section (REF), we compare the
 stably expressed genes identified from different stability measures and
@@ -407,14 +298,6 @@ of stably expressed genes can be identified first.
 \newpage
 \textbf{Why is stably expressed gene important/difficult}
 (method) Count normalization would have been easy if one could identify and use as
-=======
-There are different stability measures and they will lead to different
-results \dots.
-
-\newpage
-\textbf{Why is stably expressed gene important/difficult}
-Count normalization would have been easy if one could identify and use as
->>>>>>> e51536a33f2184b7d79eba0a116893d0f849abc6
 reference a set of stably expressed genes whose expression levels are known or
 expected to not vary much under different experimental conditions.  
 Many existing normalization methods, such as the trimmed mean of M-values
@@ -430,16 +313,11 @@ affect expression levels of more than half of the genes
 normalization methods (???) may be unreliable.  
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e51536a33f2184b7d79eba0a116893d0f849abc6
 (Put in discussion) To identify a set of stably expressed genes, our method
 still need to estimate an initial set of normalization factors where we need
 to make assumptions about relative fold changes between samples. This kind of
 circular dependence seems unavoidable (REF). 
 
-<<<<<<< HEAD
 % They may or may not be most stably expressed ones for a particular
 % experiment. 
 (Discussion) Two subtle points we want to make: 1) using an explicit reference
@@ -478,8 +356,6 @@ comparability of the data sets and interpretability of DE test results.
 % Using a common reference set for count normalization can improve comparability and interpretability.  
 
 
-=======
->>>>>>> e51536a33f2184b7d79eba0a116893d0f849abc6
 % RNA-Seq is superior to microarray technology because
 % of its high-throughput, pricise measurement, as well as sensitivity for gene
 % expressed at both low and very high levels \citep{wang2009rna}. 
@@ -490,11 +366,7 @@ comparability of the data sets and interpretability of DE test results.
 % potential use. 
 
 
-<<<<<<< HEAD
 (method) We use generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} to
-=======
-We use generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} to
->>>>>>> e51536a33f2184b7d79eba0a116893d0f849abc6
 identify stably expressed genes for Arabidopsis RNA-Seq data. 
 We also applied two widely used methods "geNORM"
 \citep{vandesompele2002accurate} and  "NormFinder"
@@ -540,8 +412,6 @@ is not surprising that top 100 stably expressed genes in
 \cite{czechowski2005genome} shared only 3 genes with top 50  specifically for
 Arabidopsis seed identified by \cite{dekkers2012identification}.
 
-
-\section{Background}
 
 \section{Background}
 
