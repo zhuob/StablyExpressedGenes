@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  21 DEC 2015 00:41
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  21 DEC 2015 10:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -669,28 +669,24 @@ set to be []\OT1/cmtt/m/n/10.95 Arabidopsis_thaliana.TAIR10.22.gtf\OT1/cmr/m/n/
 l.340 ...kl}\sim N(0, \sigma_{\text{sample}}^2).\]
                                                   ] [6]
 
-LaTeX Warning: Reference `section:{section:countNormalization}' on page 7 undef
-ined on input line 386.
-
-
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `tbp') on input line 410.
 
-<Figures/cpm_seedling.png, id=275, 835.12pt x 487.8225pt>
+<Figures/cpm_seedling.png, id=277, 835.12pt x 487.8225pt>
 File: Figures/cpm_seedling.png Graphic file (type png)
 
 <use Figures/cpm_seedling.png>
 Package pdftex.def Info: Figures/cpm_seedling.png used on input line 411.
 (pdftex.def)             Requested size: 142.2616pt x 113.80461pt.
 
-<Figures/cpm_leaves.png, id=277, 835.12pt x 487.8225pt>
+<Figures/cpm_leaves.png, id=279, 835.12pt x 487.8225pt>
 File: Figures/cpm_leaves.png Graphic file (type png)
 
 <use Figures/cpm_leaves.png>
 Package pdftex.def Info: Figures/cpm_leaves.png used on input line 412.
 (pdftex.def)             Requested size: 142.2616pt x 113.80461pt.
 
-<Figures/cpm_tissue.png, id=278, 835.12pt x 487.8225pt>
+<Figures/cpm_tissue.png, id=280, 835.12pt x 487.8225pt>
 File: Figures/cpm_tissue.png Graphic file (type png)
 
 <use Figures/cpm_tissue.png>
@@ -714,19 +710,19 @@ issue.png>]
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `tbp') on input line 473.
 
-<Figures/A3.png, id=302, 949.5475pt x 383.4325pt>
+<Figures/A3.png, id=304, 949.5475pt x 383.4325pt>
 File: Figures/A3.png Graphic file (type png)
  <use Figures/A3.png>
 Package pdftex.def Info: Figures/A3.png used on input line 503.
 (pdftex.def)             Requested size: 426.78531pt x 170.7176pt.
 
-<Figures/A2.png, id=303, 949.5475pt x 383.4325pt>
+<Figures/A2.png, id=305, 949.5475pt x 383.4325pt>
 File: Figures/A2.png Graphic file (type png)
  <use Figures/A2.png>
 Package pdftex.def Info: Figures/A2.png used on input line 504.
 (pdftex.def)             Requested size: 426.78531pt x 170.7176pt.
 
-<Figures/A1.png, id=304, 949.5475pt x 383.4325pt>
+<Figures/A1.png, id=306, 949.5475pt x 383.4325pt>
 File: Figures/A1.png Graphic file (type png)
  <use Figures/A1.png>
 Package pdftex.def Info: Figures/A1.png used on input line 505.
@@ -745,11 +741,11 @@ ure.2}) has been already used, duplicate ignored
 l.524 W
        e look at the following five lists of stably expressed genes identifi...
  <./Figures/A3.png> <./Figures/A2.png> <./Figures/A1.png>]
-<Figures/rankVSrank_RNA2.png, id=329, 872.25874pt x 487.8225pt>
+<Figures/rankVSrank_RNA2.png, id=331, 872.25874pt x 487.8225pt>
 File: Figures/rankVSrank_RNA2.png Graphic file (type png)
 
 <use Figures/rankVSrank_RNA2.png>
-Package pdftex.def Info: Figures/rankVSrank_RNA2.png used on input line 577.
+Package pdftex.def Info: Figures/rankVSrank_RNA2.png used on input line 576.
 (pdftex.def)             Requested size: 436.1283pt x 243.91064pt.
 
 
@@ -894,7 +890,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 960.
 Here is how much of TeX's memory you used:
  7688 strings out of 493315
  110458 string characters out of 6137904
- 217782 words of memory out of 5000000
+ 218782 words of memory out of 5000000
  10908 multiletter control sequences out of 15000+600000
  13298 words of font info for 47 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
@@ -917,7 +913,7 @@ l/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local
 /texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/t
 exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/te
 xlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on stable.Di.pdf (18 pages, 942428 bytes).
+Output written on stable.Di.pdf (18 pages, 942556 bytes).
 PDF statistics:
  559 PDF objects out of 1000 (max. 8388607)
  484 compressed objects within 5 object streams

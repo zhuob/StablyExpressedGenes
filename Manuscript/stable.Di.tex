@@ -351,39 +351,39 @@ For each gene, we obtain the estimated variance components $\hat\sigma_{\text{sa
 We rank all the genes according to their $\hat\sigma^2$s. and consider highly ranked (top 1000) genes to be stably expressed. 
 
 \subsection{Other stability measures}\label{subsection:OtherStabilityMeasure}
-There are many other gene expression stability measures for microarray data, among which \textit{geNorm} measure \citep{vandesompele2002accurate} and \textit{NormFinder} \citep{andersen2004normalization} are popular. The geNorm algorithm works as follows: for gene $i$ in the candidate reference set that contains $m$ genes $n$ samples, an average expression stability ($V_i$) is calculated by a pairwise comparison within the reference set across all samples, 
+There are many other gene expression stability measures for microarray data, among which the $V$ value in \textit{geNorm} \citep{vandesompele2002accurate} and the $\rho$ value in \textit{NormFinder} \citep{andersen2004normalization} are popular. In geNorm, the relative variation $\text{SD}_{i, i_1}$ of genes $i$ to gene $i_1$ is calculated as the standard deviation of the log fold changes between the two genes, $\text{SD}_{i, i_1} = \text{standard deviation}(\log_2 \frac{y_{i1}}{y_{i_11}}, \ldots, \log_2 \frac{y_{im}}{y_{i_1m}})$ where $m$ is the total number of genes in the reference set; then the stability value $V_i$ for gene $i$ is the mean of pairwise variation between gene $i$ and the other $m-1$ genes, 
 \begin{equation}\label{eq:vvalue}
-V_i = \sum_{i_1 \neq i}S_{i_1, i}/m
+V_i = \sum_{i_1 \neq i}\text{SD}_{i, i_1}/m
 \end{equation}
- where $S_{i_1, i} = \text{standard deviation}(\log_2 \frac{y_{i1}}{y_{i_11}}, \ldots, \log_2 \frac{y_{im}}{y_{i_1m}})$. NormFinder method uses a linear mixed model to estimate the between-group and within-group variation from log-transformed expression values, and then combines the two variations by a Bayesian argument. For a future experiment, the stability of a given gene is defined as the its absolute value of posterior mean plus its standard prediction deviation. Alternatively, \cite{czechowski2005genome} and \cite{dekkers2012identification} use CV (standard deviation/mean) to measure expression stability, with smaller CV  corresponding to more stably expressed genes.
+Stably expressed genes are expected to have low $V$ values. NormFinder uses a linear mixed model to estimate the between-group and within-group variations from expression values of microarray data, and then combines the two variations by a Bayesian formulation. For a future experiment, the stability of a given gene is defined as the its absolute value of posterior mean plus its standard prediction deviation. Alternatively, \cite{czechowski2005genome} and \cite{dekkers2012identification} use CV (standard deviation/mean) to measure expression stability, with smaller CV  corresponding to more stably expressed genes.
 	
-Stability measures differ in summarizing variation of gene expression profiles. The total variance $\hat{\sigma}^2$ considers genes to be stably expressed when they have low $\hat{\sigma}^2$ in the estimated log relative mean
-counts; the geNorm measure $V$ identifies as stably
-expressed those genes with the most typical expression pattern; and CV measure
+Stability measures differ in summarizing variation of gene expression profiles. The total variance ${\sigma}^2$ considers genes to be stably expressed when they have low ${\sigma}^2$ in the estimated log relative mean
+counts; the $V$ value in geNorm identifies as stably
+expressed those genes that are most similar to each other; and the CV measure
 \citep{czechowski2005genome} tends to select highly expressed genes as stable
-since those genes tend to have smaller dispersion \citep{hruz2011refgenes}. Our stability measure is similar to that of NormFinder. However, NormFinder works for normally distributed expression data and requires a minimun of eight samples per treatment \citep{andersen2004normalization}, therefore it will not be discussed in this paper. %since the sample size is small (two or three samples per treatment) in a typical RNA-Seq experiment.
+since those genes tend to have smaller dispersion \citep{hruz2011refgenes}. The idea GLMM (equation \ref{eq:GLMM}) is similar to the linear mixed model in NormFinder. However, NormFinder works for normally distributed expression data and requires a minimun of eight samples per treatment \citep{andersen2004normalization}, therefore it will not be discussed in this paper. %since the sample size is small (two or three samples per treatment) in a typical RNA-Seq experiment.
 
 
 
 \section{Results} \label{section:Results}
-In section \ref{section:stablyExpressedGene}, we summarize stably expressed genes identified from three
+In Section \ref{section:stablyExpressedGene}, we summarize stably expressed genes identified from three
 different experiment groups and one emphasis is that stability is
-context dependent. In section \ref{section:CompareStablyExpressedGene}, we show that traditional housekeeping
+context dependent. In Section \ref{section:CompareStablyExpressedGene}, we show that traditional housekeeping
 genes are not necessarily stably expressed according to our numerical measure
 and microarray data and RNA-Seq data will give different sets of stably
-expressed genes.  In section \ref{section:stabilityMeasure}, we further demonstrate that when using a
+expressed genes.  In Section \ref{section:stabilityMeasure}, we further demonstrate that when using a
 numerical measure to measure gene expression stability, the outcome will
 depend on the specific numeric measure used.  These points should be
 obvious/intuitive, but they are not often emphasized in practice. 
-In section \ref{Section:varianceComp}, we discuss variance component analysis. In section
+In Section \ref{Section:varianceComp}, we discuss variance component analysis. In Section
 \ref{Section:commonReference}, we discussed how to use the identified stably expressed genes for count
 normalization.
 
 \subsection{Stably Expressed Genes}\label{section:stablyExpressedGene}
-Using the total variance, $\hat\sigma^2$, from the GLMM (see
+Using the total variance, $\sigma^2$, from the GLMM (see
 equation \ref{eq:GLMM} in Section \ref{subsection:OurMethod}) as a
 stability measure, we identified stably expressed genes in three groups of
-experiments described/summarized in Section \ref{section:{section:countNormalization}}: the group of seedling
+experiments described/summarized in Section \ref{section:countNormalization}: the group of seedling
 experiments, the group of leaf experiments, the group of experiments on
 different tissue types (see Table \ref{table:TableSet3} for a summary).  (The
 seedling group consists of 70 samples from 10 experiments on Arabidopsis
@@ -445,13 +445,13 @@ expressed according to their numerical measure. In particular, they compared
 the expression profiles of five traditional house-keeping genes (AT1G13440,
 AT3G18780, AT4G05320, AT5G12250, AT5G60390) and five genes (AT1G13320,
 AT5G59830, AT2G28390, AT4G33380 and AT4G34270) that they identified  as stably
-expressed according to a numerical measure and from a developmental series of
+expressed according to the CV measure from a developmental series of
 microarray experiments (see Figure 1 of that paper).  
 In Figure \ref{expressinlevel1}, we compare the expression profiles 
 of these 10 genes from \cite{czechowski2005genome} to the expression profiles
 of five genes (AT1G26170, AT2G23140, AT2G26000, AT2G47760, AT5G58100) that we
 randomly selected from the top 100 most stably expressed genes identified from
-the multiple-tissue group RNA-Seq data according to our stability measure.
+the multiple-tissue group RNA-Seq data according the total variance $\sigma^2$.
 For each of the 15 genes, Figure \ref{expressinlevel1} shows the expression levels measured
 in CPM over 79 samples in the eight experiments in the multi-tissue group,
 and Table \ref{table:15genes} summarizes the variance components estimated from the
@@ -460,9 +460,9 @@ GLMM in \ref{subsection:OurMethod}.
 The five house-keeping genes show large total variation with all three
 variance-components relative large as compared to the other 10 genes. This is
 consistent with Czechowski's observation that house-keeping genes are not necessarily stable
-expressed according to a numerical measure.  Three of the five
+expressed according to a numerical measure. Three of the five
 stably-expressed genes identified by Czechowski are among the top $1000$
-stably-expressed genes according to our stably measure. Czechowski et al.
+stably-expressed genes according to our stably measure --- the total variance $\sigma^2$. Czechowski et al.
 identified those five genes from microarray data and different experiments. It
 is not too surprising those genes might not be the most stable in RNA-Seq
 experiments: the two technologies differ in many aspects including coverage
@@ -519,7 +519,7 @@ measure used.  In this section, we will first compare the lists of
 stably-expressed genes identified under different scenarios where one of more
 of the above three factors differ.  We then further clarify the role of a
 specific measure by comparing our stability measure, the total variance
-$\hat\sigma^2$ from the GLMM in equation \ref{eq:GLMM} of Section \ref{subsection:OurMethod}, to geNorm $V$ value of \cite{vandesompele2002accurate}. 
+$\sigma^2$ from the GLMM in equation \ref{eq:GLMM} of Section \ref{subsection:OurMethod}, to geNorm $V$ value of \cite{vandesompele2002accurate}. 
 
 We look at the following five lists of stably expressed genes identified under
 different scenarios: 
@@ -528,27 +528,26 @@ different scenarios:
  100 top stably expressed genes from the multiple-tissue group according
  to the $V$ value in geNorm (applied to $\log(\text{count}+1)$); 
 \item[$L_2$]	
-100 top stably expressed genes from the leaf group according to our
-stability measure: the total variance $\hat\sigma^2$ from the GLMM; 
+100 top stably expressed genes from the leaf group according to the total variance $\sigma^2$ from the GLMM; 
 \item[$L_3$]
 100 top stably expressed genes from the seedling group according to
-the total variance $\hat\sigma^2$ from the GLMM;
+the total variance $\sigma^2$ from the GLMM;
 \item[$L_4$]
 100 stably expressed genes identified from a developmental series of microarray
 experiments by \cite{czechowski2005genome} using the CV measure; 
 \item[$L_5$] 50 stably expressed genes identified by \cite{dekkers2012identification} from microarray
 seed experiments using the CV measure.  
 \end{enumerate}
- Note that for geNorm,
+ Note that for $L_1$,
  instead of iteratively eliminating one gene with the largest $V$ value at a
- time, we just calculated each gene's stability value $V$ and ranked them. We will discuss the
+ time, we just calculated each gene's stability value $V$ and ranked the genes accordingly. We will discuss the
  effect of iterative elimination later in this section.  In Figure \ref{fig:rankVSrank_RNA}, %we use the so-called {\ref recall} curves.
 we examine how each of above lists overlaps with the top stably-expressed
 genes (denoted as $L_0$) identified from the multi-tissue group (see Table \ref{table:TableSet3} of Section \ref{section:DataCollection}) of RNA-Seq experiments
 according to the total variance measure $\sigma^2$.
 
 
-Each point on the curve represents the \textit{percentage of occurance} for a given list evaluated against $L_0$, 
+Each point on the curve represents the \textit{percentage of occurance} for a given list $L_i$ evaluated against $L_0$, 
 where percentage of occurance for $L_i$ is defined as 
  \[ \frac{ \#	 \{L_i\cap L_0\}}{\# \{L_i\}}\times 100\%\]
  The percentage of occurence is also known as \textit{recall} in
@@ -558,8 +557,8 @@ the $y$-axis shows the percentage of occurance for $L_i$.
 We have the following observations:
 \begin{enumerate}
     \item
-	When we apply two different stability measures, $V$-value and $\sigma^2$, to the same data set, the resulting stability rankings are
-	highly-consistent: the percentage of occurance is $35\%$ for the reference list $L_0$ of size 100 --- that is, 35 genes are overlapped between top 100 stably expressed genes in $L_0$ and top 100 stably expressed genes in $L_1$ --- and it increases to $97\%$ when the size of $L_0$ grows to 1000.
+	When we apply two different stability measures, the $V$ value and the total variance $\sigma^2$, to the same data set, the resulting stability rankings are
+	most consistent: the percentage of occurance is $35\%$ for the reference list $L_0$ of size 100 --- that is, 35 genes are overlapped between top 100 stably expressed genes in $L_0$ and top 100 stably expressed genes in $L_1$ --- and it increases to $97\%$ when the size of $L_0$ grows to 1000.
     \item For a given size of reference list $L_0$, the percentage of occurance is higher for similar tissue types than for differnet tissue types, shown in both RNA-Seq data ($L_3$ versus $L_2$) and microarray data ($L_4$ versus $L_5$). This observation is in agreement with our analysis strategy: we identify
     different sets of stably expressed genes for different tissue types.
     \item The difference in terms of  measurement technologies, biological context and numrerical stability measures. (????Is this necessary)
@@ -581,19 +580,20 @@ We have the following observations:
  \end{figure}
  
 The $V$ value in geNorm \citep{vandesompele2002accurate} and total variance $\sigma^2$ in GLMM (see equation \ref{eq:GLMM} of Section \ref{subsection:OurMethod}) are very similar in terms of ranking genes. This comes as no surprise because geNorm algorithm \citep{vandesompele2002accurate} and DESeq normalization \citep{anders2010differential}
-have the same fundemental assumption: for $V$ value measure, genes are ranked higher when they have $V$s close to zero, in other words, the log ratio of two stably expressed genes $i_1$ and $i_2$  tend to be the same across all sample combinations $j_1$ and $j_2$, \begin{equation}\label{eq:typical}
+have the same fundemental assumption: for the $V$ value, genes are ranked higher when they have $V$s close to zero, in other words, the log ratio of two stably expressed genes $i_1$ and $i_2$  tend to be the same for any two samples $j_1$ and $j_2$,
+ \begin{equation}\label{eq:typical}
     \log_2\frac{y_{i_1j_1}}{y_{i_2j_1}} = \log_2\frac{y_{i_1j_2}}{y_{i_2j_2}}
 \end{equation} 
-While for the total variance $\sigma^2$, stably expressed genes have estimated $\hat\sigma^2$ in equation \ref{eq:totalVariance}  of Section \ref{subsection:OurMethod} close to zero; and the effect of DESeq normalization is that for $i_1$ and $i_2$, the ratio of expression profiles of $j_1$ to $j_2$ is equal to the ratio of effective library sizes $S_{j_1}$ to $S_{j_2}$ defined in Section \ref{subsection:OurMethod},
+While for the total variance $\sigma^2$, stably expressed genes have estimated $\hat\sigma^2$ close to zero; and the effect of DESeq normalization is that for $i_1$ and $i_2$, the ratio of expression profiles between $j_1$ to $j_2$ is equal to the ratio of effective library sizes $S_{j_1}$ to $S_{j_2}$ defined in Section \ref{subsection:OurMethod},
 \begin{equation}\label{eq:DESeq} \frac{y_{i_1j_1}}{y_{i_1j_2}} =
     \frac{S_{j_1}}{S_{j_2}}=\frac{y_{i_2j_1}}{y_{i_2j_2}} \end{equation}
  Equations \ref{eq:typical} and \ref{eq:DESeq} are essentially equivalent. For
  this reason, an overlap of 686 genes is observed between top 1000 from the $V$ values in geNorm and top 1000 from total variance $\hat{\sigma}^2$ in GLMM, and the rank correlation between the two methods is 0.97 for all genes in multiple-tissue data. 
 
 As mentioned earlier in this section, we didn't use the iterative elimination procedure in geNorm to rank the genes. 
-We demonstrate the effect of iterative elimination by a toy example in Table \ref{table:toyexample} below, where an artificial data set is created with two samples, each containing seven genes. Columns 2 and 3 are the expression values, column 4 is the gene ranking according to geNorm $V$ value (without iterative elimination), and column 5 is the ranking by geNorm (with iterative elimination). 
+We demonstrate the effect of iterative elimination by a toy example in Table \ref{table:toyexample} below, where an artificial data set is created with two samples, each containing seven genes. Columns 2 and 3 are the expression values, column 4 is the gene ranking according to the $V$ value (geNorm without iterative elimination), and column 5 is the ranking by the geNorm (with iterative elimination). 
   
-The $V$ value and the geNorm differ in ranking Gene1 --- Gene5, where Gene4 and Gene5 are ranked first by the $V$ value and Gene1 and Gene2 are ranked first by the geNorm. For the geNorm, while Gene4 and Gene5 are ranked first in the begining, their rankings immediately drop to 4 and 5 after Gene7 is eliminated. At each iteration, the geNorm removes one gene that deviates the most from the others. When the iterations continue, the remaining genes become more similar to each other. The end result is that genes with the most typical expression pattern are ranked in the top (Gene1 --- Gene3 in this example). 	  
+The $V$ value and the geNorm differ in ranking Gene1 --- Gene5, where Gene4 and Gene5 are ranked first by the $V$ value and Gene1 and Gene2 are ranked first by the geNorm. For the geNorm, while Gene4 and Gene5 are ranked first in the begining, their rankings immediately drop to 4 and 5 after Gene7 is eliminated. At each iteration, the geNorm removes one gene that deviates the most from the others. As the iteration continues, the remaining genes become more similar to each other. The end result is that genes with the most typical expression pattern are ranked in the top (Gene1 --- Gene3 in this example). 	  
 
 
 \begin{table}[ht]
@@ -657,10 +657,10 @@ The $V$ value and the geNorm differ in ranking Gene1 --- Gene5, where Gene4 and 
 % variance components estimated, we are able to tell how much each component
 % contributes to total variation.  
 
-For each gene, the GLMM (equatino \ref{eq:GLMM}	of section \ref{subsection:OurMethod}) allows us to decompose
+For each gene, the GLMM (equation \ref{eq:GLMM}	of section \ref{subsection:OurMethod}) allows us to decompose
 total count variance into between-sample, between-treatment and
 between-experiment variance components. The estimated variance components tell us how much each component contributes
-to the total variation. Table \ref{table:percentageofvariation} summarizes the percentages of the total variation attributable to each of the three components averaged over all genes. Figure \ref{fig:densityplot} shows the histograms of the percentages. We also randomly selected 20 genes from the top 1000 stably expressed ones, and 20 from all the genes of the seedling group. Figure \ref{fig:all} shows the stacked bar plot of variance components for each of the 40 genes.
+to the total variation. Table \ref{table:percentageofvariation} summarizes the percentages of the total variation attributable to each of the three components averaged over all genes. Figure \ref{fig:densityplot} shows the histograms of the percentages. We also randomly select 20 genes from the top 1000 stably expressed ones, and 20 from all the genes of the multiple-tissue group. Figure \ref{fig:all} shows the stacked bar plot of variance components for each of the 40 genes.
 As expected, the between-experiment variance component, on average,
 explains the largest proportion of the total variation. In the group of leaf
 experiments, the between-treatment variation is markedly greater than the
