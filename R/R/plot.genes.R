@@ -19,6 +19,22 @@ library(GGally)
 
 ##### Figure in Section 4.1 --------------------------------------
 
+plot.cpm <- function(set, top=1e3, figure.num, breaks=50, textsize =rep(20, 4)){
+  
+  cpm0 <- as.vector(mean_cpm(set, top = top))
+  cpm1 = cbind.data.frame(cpm0, obs = 1:length(cpm0))
+  print(range(cpm0))
+  ggplot(data =cpm1, aes(x = cpm0)  )  + 
+    geom_histogram(binwidth=max(cpm0)/breaks, colour="black", fill="white") + 
+    theme(legend.position="top",
+          legend.text = element_text(size = textsize[1]),
+          plot.title = element_text(size = textsize[2]), 
+          axis.text=element_text(size=textsize[3]), 
+          axis.title=element_text(size=textsize[4],face="bold")) +
+    labs(x = "CPM", title = figure.num)
+}
+
+
 plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = rep(20, 4))
 {
     
@@ -53,7 +69,7 @@ plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = 
           plot.title = element_text(size = textsize[2]), 
           axis.text=element_text(size=textsize[3]), 
           axis.title=element_text(size=textsize[4],face="bold"))
-    
+   # + scale_x_continuous(breaks = seq(1, length(x), 2) )
     #+ theme(legend.position = c(2, 0.8*upper))
     #  + geom_text( aes(1, 9000, label = "A"))
     p
@@ -273,20 +289,5 @@ plot.density <- function(set, figure.num, textsize = rep(20, 4))
 
 }
 
-
-plot.cpm <- function(set, top=1e3, figure.num, breaks=50, textsize =rep(20, 4)){
-  
-  cpm0 <- as.vector(mean_cpm(set, top = top))
-  cpm1 = cbind.data.frame(cpm0, obs = 1:length(cpm0))
-  print(range(cpm0))
-  ggplot(data =cpm1, aes(x = cpm0)  )  + 
-    geom_histogram(binwidth=max(cpm0)/breaks, colour="black", fill="white") + 
-    theme(legend.position="top",
-          legend.text = element_text(size = textsize[1]),
-          plot.title = element_text(size = textsize[2]), 
-          axis.text=element_text(size=textsize[3]), 
-          axis.title=element_text(size=textsize[4],face="bold")) +
-    labs(x = "CPM", title = figure.num)
-  }
 
 

@@ -60,11 +60,14 @@ catchToList <- function(expr) {
 #' \item{Rank} the rank of sum (column 6) in ascending order 
 #' 
 
-estimate.var.component <- function(data, reference = NULL, group, trt, filter.factor=3)
+estimate.var.component <- function(dataset, reference = NULL, filter.factor=3)
 {
+     
+    data <- dataset$count
     
-    groups <- as.factor(group)
-    treat <- as.factor(trt)
+  
+    group <- as.factor(dataset$lab)
+    trt <- as.factor(dataset$trt)
     
     stable <- as.matrix(data[rowSums(data)>=filter.factor*dim(data)[2], ])
     
@@ -125,4 +128,21 @@ estimate.var.component <- function(data, reference = NULL, group, trt, filter.fa
     trt=var2, lab=var1, warnS=warn, sum=sum, Rank=rank.sum)
     
     return(list(count=stable, var.comp=var.comp, norm.factor = norm_factor, trt= trt, lab = group))
+}
+
+
+iteration.GLMM <- function(data, niter = 1, filter.factor=3, topgene = 1000){
+  
+  
+  cat("Run GLMM without reference genes...  \n" )
+  var.obj <- estimate.var.component(data, reference = NULL, filter.factor = filter.factor)
+  
+  for ( iter in niter){
+    cat("\n Begin Iteration", iter, " \n")
+    refer <- var.obj$var.comp$Gene[var.obj$var.comp$Rank <=  topgene]
+    var.obj2 <- estimate.var.component(data = var.obj, reference = refer, filter.factor = filter.factor)
+    var.obj <- var.obj2
+  }
+   return(var.obj)
+
 }

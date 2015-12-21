@@ -1,4 +1,4 @@
-library(NormqPCR)
+# library(NormqPCR)
 library(ggplot2)
 library(reshape2)
 
@@ -65,11 +65,19 @@ compare.3Set <- function(seedling, leaf, tissue, top = 1000){
             
     }
 
+######### Section 2 -------------------------------
+## rank the genes by geNorm and NormFinder
+# set is an object returned from the estimate.var.comp() function
 
-rankNorm <- function(set){
-  ######### Section 2 -------------------------------
-  ## rank the genes by geNorm and NormFinder
-  # set is an object returned from the estimate.var.comp() function
+rankVvalue <- function(set){
+  obj <- set
+  calcuV <- stabVvalue(t(obj$count + 1), log=F, na.rm= T)
+  calcuV2 <- data.frame(Vvalue = calcuV, rank = rank(calcuV))
+  
+  return(calcuV2)
+}
+
+rankNormNotUsed <- function(set){
   
     obj <- set
     new_trt <- as.factor(noquote(paste(obj$lab, obj$trt, sep="_")))
@@ -137,7 +145,7 @@ show_plot_gene <- function(figA, figB, genelist, set){
 
 
 
-stabMValue <- function (x, log = TRUE, na.rm = TRUE) {
+stabVvalue <- function (x, log = TRUE, na.rm = TRUE) {
 ####### calculate the V-values of the gene, algorithm of geNorm 
 ## input:
 #       x: the expression data, with column being genes and rows being samples
