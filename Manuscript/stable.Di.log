@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  20 DEC 2015 22:23
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  21 DEC 2015 00:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -676,25 +676,25 @@ ined on input line 386.
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `tbp') on input line 410.
 
-<../Figures/cpm_seedling.png, id=275, 835.12pt x 487.8225pt>
-File: ../Figures/cpm_seedling.png Graphic file (type png)
+<Figures/cpm_seedling.png, id=275, 835.12pt x 487.8225pt>
+File: Figures/cpm_seedling.png Graphic file (type png)
 
-<use ../Figures/cpm_seedling.png>
-Package pdftex.def Info: ../Figures/cpm_seedling.png used on input line 411.
+<use Figures/cpm_seedling.png>
+Package pdftex.def Info: Figures/cpm_seedling.png used on input line 411.
 (pdftex.def)             Requested size: 142.2616pt x 113.80461pt.
 
-<../Figures/cpm_leaves.png, id=277, 835.12pt x 487.8225pt>
-File: ../Figures/cpm_leaves.png Graphic file (type png)
+<Figures/cpm_leaves.png, id=277, 835.12pt x 487.8225pt>
+File: Figures/cpm_leaves.png Graphic file (type png)
 
-<use ../Figures/cpm_leaves.png>
-Package pdftex.def Info: ../Figures/cpm_leaves.png used on input line 412.
+<use Figures/cpm_leaves.png>
+Package pdftex.def Info: Figures/cpm_leaves.png used on input line 412.
 (pdftex.def)             Requested size: 142.2616pt x 113.80461pt.
 
-<../Figures/cpm_tissue.png, id=278, 835.12pt x 487.8225pt>
-File: ../Figures/cpm_tissue.png Graphic file (type png)
+<Figures/cpm_tissue.png, id=278, 835.12pt x 487.8225pt>
+File: Figures/cpm_tissue.png Graphic file (type png)
 
-<use ../Figures/cpm_tissue.png>
-Package pdftex.def Info: ../Figures/cpm_tissue.png used on input line 413.
+<use Figures/cpm_tissue.png>
+Package pdftex.def Info: Figures/cpm_tissue.png used on input line 413.
 (pdftex.def)             Requested size: 142.2616pt x 113.80461pt.
 
 Overfull \hbox (19.38007pt too wide) in paragraph at lines 442--459
@@ -708,32 +708,31 @@ has been already used, duplicate ignored
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.459 
-       <../Figures/cpm_seedling.png> <../Figures/cpm_leaves.png> <../Figures/cp
-m_tissue.png>]
+       <./Figures/cpm_seedling.png> <./Figures/cpm_leaves.png> <./Figures/cpm_t
+issue.png>]
 
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `tbp') on input line 473.
 
-<../Figures/A3.png, id=302, 949.5475pt x 383.4325pt>
-File: ../Figures/A3.png Graphic file (type png)
- <use ../Figures/A3.png>
-Package pdftex.def Info: ../Figures/A3.png used on input line 503.
+<Figures/A3.png, id=302, 949.5475pt x 383.4325pt>
+File: Figures/A3.png Graphic file (type png)
+ <use Figures/A3.png>
+Package pdftex.def Info: Figures/A3.png used on input line 503.
 (pdftex.def)             Requested size: 426.78531pt x 170.7176pt.
 
-<../Figures/A2.png, id=303, 949.5475pt x 383.4325pt>
-File: ../Figures/A2.png Graphic file (type png)
- <use ../Figures/A2.png>
-Package pdftex.def Info: ../Figures/A2.png used on input line 504.
+<Figures/A2.png, id=303, 949.5475pt x 383.4325pt>
+File: Figures/A2.png Graphic file (type png)
+ <use Figures/A2.png>
+Package pdftex.def Info: Figures/A2.png used on input line 504.
 (pdftex.def)             Requested size: 426.78531pt x 170.7176pt.
 
-<../Figures/A1.png, id=304, 949.5475pt x 383.4325pt>
-File: ../Figures/A1.png Graphic file (type png)
- <use ../Figures/A1.png>
-Package pdftex.def Info: ../Figures/A1.png used on input line 505.
+<Figures/A1.png, id=304, 949.5475pt x 383.4325pt>
+File: Figures/A1.png Graphic file (type png)
+ <use Figures/A1.png>
+Package pdftex.def Info: Figures/A1.png used on input line 505.
 (pdftex.def)             Requested size: 426.78531pt x 170.7176pt.
-
-[8pdfTeX warning (ext4): destination with the same identifier (name{table.2}) h
-as been already used, duplicate ignored
+ [8pdfTeX warning (ext4): destination with the same identifier (name{table.2}) 
+has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
@@ -745,13 +744,12 @@ ure.2}) has been already used, duplicate ignored
                                                   \fi \fi 
 l.524 W
        e look at the following five lists of stably expressed genes identifi...
- <../Figures/A3.png> <../Figures/A2.png> <../Figures/A1.png>]
-<../Figures/rankVSrank_RNA2.png, id=329, 872.25874pt x 487.8225pt>
-File: ../Figures/rankVSrank_RNA2.png Graphic file (type png)
+ <./Figures/A3.png> <./Figures/A2.png> <./Figures/A1.png>]
+<Figures/rankVSrank_RNA2.png, id=329, 872.25874pt x 487.8225pt>
+File: Figures/rankVSrank_RNA2.png Graphic file (type png)
 
-<use ../Figures/rankVSrank_RNA2.png>
-Package pdftex.def Info: ../Figures/rankVSrank_RNA2.png used on input line 577.
-
+<use Figures/rankVSrank_RNA2.png>
+Package pdftex.def Info: Figures/rankVSrank_RNA2.png used on input line 577.
 (pdftex.def)             Requested size: 436.1283pt x 243.91064pt.
 
 
@@ -769,39 +767,39 @@ l.673
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.673 
-       <../Figures/rankVSrank_RNA2.png>]
-<../Figures/var_dens1.png, id=365, 835.12pt x 487.8225pt>
-File: ../Figures/var_dens1.png Graphic file (type png)
+       <./Figures/rankVSrank_RNA2.png>]
+<Figures/var_dens1.png, id=365, 835.12pt x 487.8225pt>
+File: Figures/var_dens1.png Graphic file (type png)
 
-<use ../Figures/var_dens1.png>
-Package pdftex.def Info: ../Figures/var_dens1.png used on input line 690.
+<use Figures/var_dens1.png>
+Package pdftex.def Info: Figures/var_dens1.png used on input line 690.
 (pdftex.def)             Requested size: 142.2616pt x 113.80461pt.
 
-<../Figures/var_dens2.png, id=366, 835.12pt x 487.8225pt>
-File: ../Figures/var_dens2.png Graphic file (type png)
+<Figures/var_dens2.png, id=366, 835.12pt x 487.8225pt>
+File: Figures/var_dens2.png Graphic file (type png)
 
-<use ../Figures/var_dens2.png>
-Package pdftex.def Info: ../Figures/var_dens2.png used on input line 691.
+<use Figures/var_dens2.png>
+Package pdftex.def Info: Figures/var_dens2.png used on input line 691.
 (pdftex.def)             Requested size: 142.2616pt x 113.80461pt.
 
-<../Figures/var_dens3.png, id=367, 835.12pt x 487.8225pt>
-File: ../Figures/var_dens3.png Graphic file (type png)
+<Figures/var_dens3.png, id=367, 835.12pt x 487.8225pt>
+File: Figures/var_dens3.png Graphic file (type png)
 
-<use ../Figures/var_dens3.png>
-Package pdftex.def Info: ../Figures/var_dens3.png used on input line 692.
+<use Figures/var_dens3.png>
+Package pdftex.def Info: Figures/var_dens3.png used on input line 692.
 (pdftex.def)             Requested size: 142.2616pt x 113.80461pt.
 
-<../Figures/top1000.png, id=368, 889.3225pt x 383.4325pt>
-File: ../Figures/top1000.png Graphic file (type png)
+<Figures/top1000.png, id=368, 889.3225pt x 383.4325pt>
+File: Figures/top1000.png Graphic file (type png)
 
-<use ../Figures/top1000.png>
-Package pdftex.def Info: ../Figures/top1000.png used on input line 701.
+<use Figures/top1000.png>
+Package pdftex.def Info: Figures/top1000.png used on input line 701.
 (pdftex.def)             Requested size: 386.95897pt x 166.8386pt.
+ <Figures/all.png, id=369, 889.3225pt x 383.4325pt>
+File: Figures/all.png Graphic file (type png)
 
-<../Figures/all.png, id=369, 889.3225pt x 383.4325pt>
-File: ../Figures/all.png Graphic file (type png)
- <use ../Figures/all.png>
-Package pdftex.def Info: ../Figures/all.png used on input line 702.
+<use Figures/all.png>
+Package pdftex.def Info: Figures/all.png used on input line 702.
 (pdftex.def)             Requested size: 386.95897pt x 166.8386pt.
 
 
@@ -825,33 +823,30 @@ l.712
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.712 
-       <../Figures/var_dens1.png> <../Figures/var_dens2.png> <../Figures/var_de
-ns3.png>] <../Figures/norm1.png, id=382, 835.12pt x 487.8225pt>
-File: ../Figures/norm1.png Graphic file (type png)
+       <./Figures/var_dens1.png> <./Figures/var_dens2.png> <./Figures/var_dens3
+.png>] <Figures/norm1.png, id=382, 835.12pt x 487.8225pt>
+File: Figures/norm1.png Graphic file (type png)
 
-<use ../Figures/norm1.png>
-Package pdftex.def Info: ../Figures/norm1.png used on input line 717.
+<use Figures/norm1.png>
+Package pdftex.def Info: Figures/norm1.png used on input line 717.
 (pdftex.def)             Requested size: 167.02103pt x 97.56276pt.
+ <Figures/norm2.png, id=383, 835.12pt x 487.8225pt>
+File: Figures/norm2.png Graphic file (type png)
 
-<../Figures/norm2.png, id=383, 835.12pt x 487.8225pt>
-File: ../Figures/norm2.png Graphic file (type png)
-
-<use ../Figures/norm2.png>
-Package pdftex.def Info: ../Figures/norm2.png used on input line 718.
+<use Figures/norm2.png>
+Package pdftex.def Info: Figures/norm2.png used on input line 718.
 (pdftex.def)             Requested size: 167.02103pt x 97.56276pt.
+ <Figures/norm3.png, id=384, 835.12pt x 487.8225pt>
+File: Figures/norm3.png Graphic file (type png)
 
-<../Figures/norm3.png, id=384, 835.12pt x 487.8225pt>
-File: ../Figures/norm3.png Graphic file (type png)
-
-<use ../Figures/norm3.png>
-Package pdftex.def Info: ../Figures/norm3.png used on input line 719.
+<use Figures/norm3.png>
+Package pdftex.def Info: Figures/norm3.png used on input line 719.
 (pdftex.def)             Requested size: 167.02103pt x 97.56276pt.
+ <Figures/norm4.png, id=385, 835.12pt x 487.8225pt>
+File: Figures/norm4.png Graphic file (type png)
 
-<../Figures/norm4.png, id=385, 835.12pt x 487.8225pt>
-File: ../Figures/norm4.png Graphic file (type png)
-
-<use ../Figures/norm4.png>
-Package pdftex.def Info: ../Figures/norm4.png used on input line 720.
+<use Figures/norm4.png>
+Package pdftex.def Info: Figures/norm4.png used on input line 720.
 (pdftex.def)             Requested size: 167.02103pt x 97.56276pt.
 
 
@@ -863,15 +858,15 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.750 
-       <../Figures/top1000.png> <../Figures/all.png>] [14pdfTeX warning (ext4):
- destination with the same identifier (name{figure.6}) has been already used, d
-uplicate ignored
+       <./Figures/top1000.png> <./Figures/all.png>] [14pdfTeX warning (ext4): d
+estination with the same identifier (name{figure.6}) has been already used, dup
+licate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.781 
-       <../Figures/norm1.png> <../Figures/norm2.png> <../Figures/norm3.png> <..
-/Figures/norm4.png>]
+       <./Figures/norm1.png> <./Figures/norm2.png> <./Figures/norm3.png> <./Fig
+ures/norm4.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 819--830
 
  []
@@ -898,7 +893,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 960.
  ) 
 Here is how much of TeX's memory you used:
  7688 strings out of 493315
- 110653 string characters out of 6137904
+ 110458 string characters out of 6137904
  217782 words of memory out of 5000000
  10908 multiletter control sequences out of 15000+600000
  13298 words of font info for 47 fonts, out of 8000000 for 9000
