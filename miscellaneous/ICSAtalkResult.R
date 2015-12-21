@@ -122,7 +122,9 @@ for ( i in 1: length(rank.seq))
   
   }
 
+################################################################################################
 ## the overlap between geNorm and our method, top 1000 genes
+##  Find out the genes that behave differently based on two rankings
 nrank <- 1000
 gene.geNORM <- rownames(Mvalue[which(Mvalue$rank <= nrank),])
 gene.s <- var.s$Gene[var.s$Rank <= nrank]
@@ -241,11 +243,11 @@ mdata <- mdata[id, ]
 
 
 library(scales)
-# ggplot(mdata,aes(x = Gene, y = value,fill = variable)) + 
-#   geom_bar(position = "fill",stat = "identity") + 
-#   theme(axis.text.x = element_text(size=10,angle = 90, hjust = 1)) +
-#   labs( y="percentage of total variance") +
-#    scale_y_continuous(labels = percent_format())
+ggplot(mdata,aes(x = Gene, y = value,fill = variable)) + 
+  geom_bar(position = "fill",stat = "identity") + 
+  theme(axis.text.x = element_text(size=10,angle = 90, hjust = 1)) +
+  labs( y="percentage of total variance") +
+   scale_y_continuous(labels = percent_format())
 
 
 
