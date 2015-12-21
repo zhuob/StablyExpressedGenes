@@ -94,8 +94,8 @@ estimate.var.component <- function(data, reference = NULL, group, trt, filter.fa
     warn <- rep(0, dim(stable)[1])
     var1 <- var2 <- var3 <- c()
     
-    print(nrow(stable))
-    
+    cat(paste("total number of genes to be evaluated: ", nrow(stable)))
+    cat("\n runing the GLMM for genes...  \n")
     for ( i in 1:dim(stable)[1]){
         
         cat('\r', i)  # show how many iterations have been executed
