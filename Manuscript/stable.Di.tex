@@ -519,49 +519,61 @@ measure used.  In this section, we will first compare the lists of
 stably-expressed genes identified under different scenarios where one of more
 of the above three factors differ.  We then further clarify the role of a
 specific measure by comparing our stability measure, the total variance
-$\sigma^2$ from the GLMM in equation \ref{eq:GLMM} of Section \ref{subsection:OurMethod}, to geNorm $V$ value of \cite{vandesompele2002accurate}. 
+$\sigma^2$ from the GLMM in equation \ref{eq:GLMM} of Section
+\ref{subsection:OurMethod}, to geNorm $V$ value of
+\cite{vandesompele2002accurate}. 
 
-We look at the following five lists of stably expressed genes identified under
-different scenarios: 
+We look at an additional five lists of stably expressed genes identified under
+different scenarios and examine how each of these five lists overlaps with the
+the top stably-expressed genes identified from the multi-tissue group  of
+RNA-Seq experiments  according to the total variance measure $\hat\sigma^2$
+(see subsection 3.1 ??? \ref{section:DataCollection}). 
+The five lists are: 
 \begin{enumerate}
-    \item[$L_1$]
+    \item[$L_1$:]
  100 top stably expressed genes from the multiple-tissue group according
  to the $V$ value in geNorm (applied to $\log(\text{count}+1)$); 
-\item[$L_2$]	
+\item[$L_2$:]	
+100 top stably expressed genes from the seedling group according to the total variance $\sigma^2$ from the GLMM;
+\item[$L_3$:]
 100 top stably expressed genes from the leaf group according to the total variance $\sigma^2$ from the GLMM; 
-\item[$L_3$]
-100 top stably expressed genes from the seedling group according to
-the total variance $\sigma^2$ from the GLMM;
-\item[$L_4$]
+\item[$L_4$:]
 100 stably expressed genes identified from a developmental series of microarray
 experiments by \cite{czechowski2005genome} using the CV measure; 
-\item[$L_5$] 50 stably expressed genes identified by \cite{dekkers2012identification} from microarray
+\item[$L_5$:] 50 stably expressed genes identified by \cite{dekkers2012identification} from microarray
 seed experiments using the CV measure.  
 \end{enumerate}
- Note that for $L_1$,
- instead of iteratively eliminating one gene with the largest $V$ value at a
- time, we just calculated each gene's stability value $V$ and ranked the genes accordingly. We will discuss the
- effect of iterative elimination later in this section.  In Figure \ref{fig:rankVSrank_RNA}, %we use the so-called {\ref recall} curves.
-we examine how each of above lists overlaps with the top stably-expressed
-genes (denoted as $L_0$) identified from the multi-tissue group (see Table \ref{table:TableSet3} of Section \ref{section:DataCollection}) of RNA-Seq experiments
-according to the total variance measure $\sigma^2$.
-
-
-Each point on the curve represents the \textit{percentage of occurance} for a given list $L_i$ evaluated against $L_0$, 
-where percentage of occurance for $L_i$ is defined as 
- \[ \frac{ \#	 \{L_i\cap L_0\}}{\# \{L_i\}}\times 100\%\]
- The percentage of occurence is also known as \textit{recall} in
-information retrieval.  Along the $x$-axis is the size of $L_0$, and along
-the $y$-axis shows the percentage of occurance for $L_i$.  
-% These points should be intuitive and obvious, but it seems that they---especially points 1) and 3)---are not emphasized often enough in practical DE analysis.
+In Figure \ref{fig:rankVSrank_RNA}, the plot the {\em recall} percentage for
+each list above against the number of top stably-expressed genes we selected
+as reference from the multi-tissue-type group. 
+The recall percentage for $L_i$ is defined as 
+\[ \frac{ \#	 \{L_i \cap \text{reference set} \}}{\# \{L_i\}}\times 100, \]
+where $\#\{ \}$ denotes the number of elements in the list.
 We have the following observations:
 \begin{enumerate}
     \item
-	When we apply two different stability measures, the $V$ value and the total variance $\sigma^2$, to the same data set, the resulting stability rankings are
-	most consistent: the percentage of occurance is $35\%$ for the reference list $L_0$ of size 100 --- that is, 35 genes are overlapped between top 100 stably expressed genes in $L_0$ and top 100 stably expressed genes in $L_1$ --- and it increases to $97\%$ when the size of $L_0$ grows to 1000.
-    \item For a given size of reference list $L_0$, the percentage of occurance is higher for similar tissue types than for differnet tissue types, shown in both RNA-Seq data ($L_3$ versus $L_2$) and microarray data ($L_4$ versus $L_5$). This observation is in agreement with our analysis strategy: we identify
-    different sets of stably expressed genes for different tissue types.
-    \item The difference in terms of  measurement technologies, biological context and numrerical stability measures. (????Is this necessary)
+	The list $L_1$ is identified from the same set of RNA-Seq experiments as the
+	reference sets, but using a different stability measure ($V$ value in
+	geNorm). This list has significant overlap with the top
+	stably-expressed genes identified using the total variance measure:
+	$35$ and $97$ out of the $100$ genes from the list $L_1$ are among the
+	top $100$ and $1000$, respectively, most stably-expressed genes from the
+	multiple-tissue group identified using the total variance measure. 
+    \item
+	The lists $L_2$ and $L_3$ are identified from different sets of
+	RNA-Seq experiments (leaf and seedling experiments) using the same
+	stability measure as used for the reference sets. The lists $L_4$ and $L_5$ are
+	identified from microarray experiments (a developmental series and a
+	seed group) and using the CV measure. The overlapping (recall)
+	percentages are still statistically significant, but much less than in
+	the case of $L_1$.  This shows that differences in tissue type and in
+	measuring technology both influence the expression stability rankings,
+	and to comparable degrees. The lists $L_3$ and $L_5$ have the least
+	overlapping percentages with the reference sets. Theses lists are
+	identified from a leaf group and a seed group respectively.
+	Our understanding is that the leaf group and the seed group are more
+	biologically homogeneous than the multi-tissue group and thus provide
+	very different biological contexts for evaluating expression stability.
 \end{enumerate}
 
 %(\textbf{use stably expressed genes from RNA-Seq study when studying RNA-Seqdata!, even if not the same tissue type}) Next, we compared the consistencybetween stably expressed genes identified from seedling, leaf and multiple-tissue in this study. Figure \ref{fig:rankVSrank_RNA} shows that stably expressed genes from RNA-Seq study are slightly more consistent than when comparing those from RNA-Seq data with those from microarray data, but less consistent than stably expressed genes identified from the same data with different stability measures.
@@ -578,23 +590,69 @@ We have the following observations:
 	 	\label{fig:rankVSrank_RNA}
 	 	\end{center}
  \end{figure}
- 
-The $V$ value in geNorm \citep{vandesompele2002accurate} and total variance $\sigma^2$ in GLMM (see equation \ref{eq:GLMM} of Section \ref{subsection:OurMethod}) are very similar in terms of ranking genes. This comes as no surprise because geNorm algorithm \citep{vandesompele2002accurate} and DESeq normalization \citep{anders2010differential}
-have the same fundemental assumption: for the $V$ value, genes are ranked higher when they have $V$s close to zero, in other words, the log ratio of two stably expressed genes $i_1$ and $i_2$  tend to be the same for any two samples $j_1$ and $j_2$,
- \begin{equation}\label{eq:typical}
-    \log_2\frac{y_{i_1j_1}}{y_{i_2j_1}} = \log_2\frac{y_{i_1j_2}}{y_{i_2j_2}}
+When applied to the same set of experiments, the $M$ value and total variance
+measure $\hat\sigma^2$ give similar expression stability rankings. 
+This comes as no surprise because M-value and
+normalization step needed for computing our total variance measure have the
+same fundamental assumption. The basic principle
+behind the $M$-value is that the expression ratio of two stably-expressed
+genes should be identical in all samples. In formula, it means that the
+expression values of two genes $i_1$, $_2$ in any two samples $j_1$, $j_2$
+should satisfy
+\begin{equation}\label{eq:typical}
+   \dfrac{y_{i_1, j_1}}{y_{i_2, j_1}} = \dfrac{y_{i_1, j_2}}{y_{i_2, j_2}}.
 \end{equation} 
-While for the total variance $\sigma^2$, stably expressed genes have estimated $\hat\sigma^2$ close to zero; and the effect of DESeq normalization is that for $i_1$ and $i_2$, the ratio of expression profiles between $j_1$ to $j_2$ is equal to the ratio of effective library sizes $S_{j_1}$ to $S_{j_2}$ defined in Section \ref{subsection:OurMethod},
-\begin{equation}\label{eq:DESeq} \frac{y_{i_1j_1}}{y_{i_1j_2}} =
-    \frac{S_{j_1}}{S_{j_2}}=\frac{y_{i_2j_1}}{y_{i_2j_2}} \end{equation}
- Equations \ref{eq:typical} and \ref{eq:DESeq} are essentially equivalent. For
- this reason, an overlap of 686 genes is observed between top 1000 from the $V$ values in geNorm and top 1000 from total variance $\hat{\sigma}^2$ in GLMM, and the rank correlation between the two methods is 0.97 for all genes in multiple-tissue data. 
+(In practice, genes  with the more ``typical'' expression profiles are
+considered as more stable.)
+Our total variance measure $\hat\sigma^2$ is estimated from normalized data.
+The basic assumption in the normalization method is that majority of genes are
+not DE. In formula, it means for any stably-expressed gene $i_1$, its expression
+level as measured by the relative frequency should be stable across all
+samples,
+\begin{equation}\label{eq:DESeq} 
+    \frac{y_{i_1j_1}}{S_{j_1}}= \dfrac{y_{i_1j_2}}{S_{j_2}},
+\end{equation}
+where $S_{j_1}$ to $S_{j_2}$ are the normalized library sizes (i.e., $R_j N_j$ in equation).
+This implies for any two stably-expressed genes $i_1$ and $i_2$
+\begin{equation}\label{eq:DESeq2} 
+    \frac{y_{i_1j_1}}{y_{i_1j_2}} = \frac{y_{i_2j_1}}{y_{i_2j_2}} =
+    \frac{S_{j_1}}{S_{j_2}}.
+\end{equation}
+This first equation in \ref{eq:DESeq} is equivalent to equation
+\ref{eq:typical}.
 
-As mentioned earlier in this section, we didn't use the iterative elimination procedure in geNorm to rank the genes. 
-We demonstrate the effect of iterative elimination by a toy example in Table \ref{table:toyexample} below, where an artificial data set is created with two samples, each containing seven genes. Columns 2 and 3 are the expression values, column 4 is the gene ranking according to the $V$ value (geNorm without iterative elimination), and column 5 is the ranking by the geNorm (with iterative elimination). 
+[The iterative elimination procedure]
+Note that in the geNorm program by \ref{ }, an iterative elimination procedure
+is applied to a given reference set to determine final ranks of the expression
+stability. We did not use such an iterative procedure in the comparisons
+above.  
+
+This iterative procedure creates an extra layer of complexity.  We note that
+the iterative elimination procedure can give surprising results and the
+adaption of it in practice should not be automatic.  We demonstrate the
+effect/behavior of iterative elimination procedure by a toy example in Table
+\ref{table:toyexample} below, where an artificial data set is created with two
+samples, each containing seven genes. Columns 2 and 3 are the expression
+values, column 4 is the gene ranking according to the $V$ value (geNorm
+without iterative elimination), and column 5 is the ranking by the geNorm
+(with iterative elimination). In this example, the initial rankings according
+to the $M$-value is very difficult from the final rankings after the iterative
+elimination. Once a less stable gene is eliminated, the rankings of the rest
+genes can change dramatically. This behavior makes it difficult to predict the
+final rankings. \dots
+
   
-The $V$ value and the geNorm differ in ranking Gene1 --- Gene5, where Gene4 and Gene5 are ranked first by the $V$ value and Gene1 and Gene2 are ranked first by the geNorm. For the geNorm, while Gene4 and Gene5 are ranked first in the begining, their rankings immediately drop to 4 and 5 after Gene7 is eliminated. At each iteration, the geNorm removes one gene that deviates the most from the others. As the iteration continues, the remaining genes become more similar to each other. The end result is that genes with the most typical expression pattern are ranked in the top (Gene1 --- Gene3 in this example). 	  
+The $V$ value and the geNorm differ in ranking Gene1 --- Gene5, where Gene4
+and Gene5 are ranked first by the $V$ value and Gene1 and Gene2 are ranked
+first by the geNorm. For the geNorm, while Gene4 and Gene5 are ranked first in
+the begining, their rankings immediately drop to 4 and 5 after Gene7 is
+eliminated. At each iteration, the geNorm removes one gene that deviates the
+most from the others. As the iteration continues, the remaining genes become
+more similar to each other. The end result is that genes with the most typical
+expression pattern are ranked in the top (Gene1 --- Gene3 in this example). 	  
 
+Effectively, the iterative procedure is using a different reference set (with
+decreasing size) in each iteration.
 
 \begin{table}[ht]
 	\centering
@@ -616,7 +674,6 @@ The $V$ value and the geNorm differ in ranking Gene1 --- Gene5, where Gene4 and 
 		\caption{Toy Example} 
 		\label{table:toyexample}
 		\end{table}
-
 
 \begin{table}[ht]
 	\centering
