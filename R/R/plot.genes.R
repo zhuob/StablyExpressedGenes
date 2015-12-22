@@ -14,6 +14,7 @@
 
 library(ggplot2)
 library(reshape2)
+library(scales)
 library(NBPSeq)
 library(GGally)
 
@@ -35,8 +36,7 @@ plot.cpm <- function(set, top=1e3, figure.num, breaks=50, textsize =rep(20, 4)){
 }
 
 
-plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = rep(20, 4))
-{
+plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = rep(20, 4)){
     
     lab <- set$lab
     count <- set$count
@@ -68,8 +68,8 @@ plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = 
           legend.text = element_text(size = textsize[1]),
           plot.title = element_text(size = textsize[2]), 
           axis.text=element_text(size=textsize[3]), 
-          axis.title=element_text(size=textsize[4],face="bold"))
-   # + scale_x_continuous(breaks = seq(1, length(x), 2) )
+          axis.title=element_text(size=textsize[4],face="bold")) +
+     scale_x_discrete(breaks = seq(1, length(x), 2) )
     #+ theme(legend.position = c(2, 0.8*upper))
     #  + geom_text( aes(1, 9000, label = "A"))
     p
@@ -80,7 +80,7 @@ plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = 
 
 ##### Figure in Section 4.2 --------------------------------------
 
-TopGene <- function(set1, set2, set3, cze, dek, geNormNormFinder, xtext, textsize = rep(20, 4)){
+TopGene <- function(set1, set2, set3, cze, dek, geNorm, xtext, textsize = rep(20, 4)){
   
   
   var_set1 <-set1$var.comp
@@ -92,7 +92,7 @@ TopGene <- function(set1, set2, set3, cze, dek, geNormNormFinder, xtext, textsiz
   gene.dek <- dek[, 1]
   
   #gene.geNORM <- geNorm_NormFinder_CV$Gene[geNorm_NormFinder_CV$rank <=100]
-  gene.geNORM <- geNormNormFinder$Gene[geNormNormFinder$Rank_M <= 100]
+  gene.geNORM <- geNorm$Gene[geNorm$Rank_M <= 100]
   #gene.NormFinder <- geNormNormFinder$Gene[geNormNormFinder$Rank_rho <= 100]
   
   gene.set2 <- var_set2$Gene[var_set2$Rank <= 100]  ##  
@@ -118,20 +118,25 @@ TopGene <- function(set1, set2, set3, cze, dek, geNormNormFinder, xtext, textsiz
   
   
   pct.data <- data.frame(rank=rank.seq, genorm, set2.num, set3.num, cze.num, dek.num )#, Normfinder)
-  colnames(pct.data) <- c("Rank",xtext[5], xtext[2], xtext[3],
-                          "Microarray(Czechowski,2005):CV: \n Developmental Series", "Microarray:CV:\nSeed(Dekkers 2012)")#, "NormFinder")
-  pct.data <- melt(pct.data, id="Rank", variable.name = "Source",  value.name = "Percentage")
+  colnames(pct.data) <- c("Rank",xtext[5], xtext[2], xtext[3],xtext[6], xtext[7])#, "NormFinder")
+  pct.data <- melt(pct.data, id="Rank", variable.name = "List",  value.name = "Percentage")
   
   
-  ggplot(pct.data,  aes(x= Rank, y = Percentage, color = Source,  linetype = Source)) + 
+  ggplot(pct.data,  aes(x= Rank, y = Percentage, color = List,  linetype = List)) + 
     geom_line(size = 1.5) +
     labs(x=xtext[1], y=xtext[4]) +
-    theme(legend.position=c(0.8, 0.2), 
+    theme(legend.position="top", 
           legend.text = element_text(size = textsize[1]),
           plot.title = element_text(size = textsize[2]), 
           axis.text=element_text(size=textsize[3]), 
-          axis.title=element_text(size=textsize[4],face="bold"))
-
+          axis.title=element_text(size=textsize[4],face="bold")) +
+       scale_y_continuous(labels = percent)  +
+    guides(fill = guide_legend(keywidth = 1, keyheight = 1),
+             linetype=guide_legend(keywidth = 3, keyheight = 1),
+             colour=guide_legend(keywidth = 3, keyheight = 1))
+    
+    #  scale_fill_continuous(guide = "legend") + 
+  #   guides(fill = guide_legend(keywidth = 10, keyheight = 1))
   }
 
 
@@ -220,19 +225,22 @@ plot.stackedBar <- function(gene_ids, set, percent =F, figure.num, textsize = re
     if (percent == F)
     {
         colnames(target_var)[2:4] <- c("sample", "treatment", "experiment")
-        mdata <- melt(target_var[target_var$Gene %in% gene_ids, c(1:4)], id=c("Gene"))
+        mdata <- melt(target_var[target_var$Gene %in% gene_ids, c(1:4)], id=c("Gene"), 
+                      variable.name = "Source",  value.name = "value")
         id <- which(mdata$value > 1e-6)
         mdata <- mdata[id, ]
       
-    ggplot(mdata,aes(x = Gene, y = value,fill = variable)) +
+    ggplot(mdata,aes(x = Gene, y = value,fill = Source)) +
         geom_bar(stat = "identity") +
         theme( legend.text = element_text(size = textsize[1]),
+               legend.position="top",
                plot.title = element_text(size = textsize[2]), 
                axis.text.x = element_text(size=textsize[3],angle = 90, hjust = 1),
                axis.text.y = element_text(size = textsize[3]),
                axis.title=element_text(size=textsize[4],face="bold")) +
         labs( y="variance", title=figure.num) +
-        scale_y_continuous()
+        scale_y_continuous() +
+      scale_fill_brewer()
     }
     
     else
@@ -244,19 +252,22 @@ plot.stackedBar <- function(gene_ids, set, percent =F, figure.num, textsize = re
         target_var.percent$experiment <- target_var$lab/target_var$sum
         colnames(target_var.percent)[2:4] <- c("sample", "treatment", "experiment")
 
-        mdata <- melt(target_var.percent[target_var$Gene %in% gene_ids, c(1:4)], id=c("Gene"))
+        mdata <- melt(target_var.percent[target_var$Gene %in% gene_ids, c(1:4)], id=c("Gene"), 
+                      variable.name = "Source",  value.name = "value")
 
         
-        ggplot(mdata,aes(x = Gene, y = value,fill = variable)) +
+        ggplot(mdata,aes(x = Gene, y = value,fill = Source)) +
             geom_bar(position = "fill",stat = "identity") +
             theme( legend.text = element_text(size = textsize[1]),
+                   legend.position="top",
                    plot.title = element_text(size = textsize[2]), 
                    axis.text.x = element_text(size=textsize[3],angle = 90, hjust = 1),
                    axis.text.y = element_text(size = textsize[3]),
                    axis.title=element_text(size=textsize[4],face="bold") ) +
             labs( y="percentage of total variance", title=figure.num) +
-            scale_y_continuous(labels = percent_format())
-
+            scale_y_continuous(labels = percent_format())+
+          scale_fill_brewer()
+        
     }
 
 
