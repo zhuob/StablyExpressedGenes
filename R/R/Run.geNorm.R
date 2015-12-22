@@ -6,6 +6,7 @@
 CodeNeeded <- paste(CodePath, "Compare.gene.R", sep="")
 source(CodeNeeded)
 
+
 data <- paste(ResultPath, "tissue.columbia.use.reference.iter.1.rds", sep ="")
 obj <- readRDS(data)
 geNorm <- rankVvalue(obj)
