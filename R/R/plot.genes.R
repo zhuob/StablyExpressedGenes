@@ -60,7 +60,7 @@ plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = 
     
     p <- ggplot(data.plot) +
     geom_line(aes(x=Sample,y=CPM,group=Gene, color=Gene, linetype= Gene), size=1)+
-    facet_grid(.~lab,scales="free") +
+    facet_grid(.~lab,scales="free", space = "free") +
     theme(axis.text.x = element_text(size=15,angle = 90, hjust = 1)) +
     labs(title=figure.num) +
     scale_y_log10(limits=c(lower, upper)) +
@@ -92,7 +92,8 @@ TopGene <- function(set1, set2, set3, cze, dek, geNorm, xtext, textsize = rep(20
   gene.dek <- dek[, 1]
   
   #gene.geNORM <- geNorm_NormFinder_CV$Gene[geNorm_NormFinder_CV$rank <=100]
-  gene.geNORM <- geNorm$Gene[geNorm$Rank_M <= 100]
+  
+  gene.geNORM <- geNorm$Gene[geNorm$Rank <= 100]
   #gene.NormFinder <- geNormNormFinder$Gene[geNormNormFinder$Rank_rho <= 100]
   
   gene.set2 <- var_set2$Gene[var_set2$Rank <= 100]  ##  

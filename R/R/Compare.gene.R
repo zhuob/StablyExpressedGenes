@@ -65,34 +65,6 @@ compare.3Set <- function(seedling, leaf, tissue, top = 1000){
             
     }
 
-######### Section 2 -------------------------------
-## rank the genes by geNorm and NormFinder
-# set is an object returned from the estimate.var.comp() function
-
-rankVvalue <- function(set){
-  obj <- set
-  calcuV <- stabVvalue(t(obj$count + 1), log=F, na.rm= T)
-  calcuV2 <- data.frame(Vvalue = calcuV, rank = rank(calcuV))
-  
-  return(calcuV2)
-}
-
-rankNormNotUsed <- function(set){
-  
-    obj <- set
-    new_trt <- as.factor(noquote(paste(obj$lab, obj$trt, sep="_")))
-    calcuRho <- stabMeasureRho(x = t(obj$count +1),log=F, group = new_trt)
-    calcuRho2 <- data.frame( Rho = calcuRho, rank = rank(calcuRho))
-   
-    calcuM <- stabMeasureM(t(obj$count + 1), log=F, na.rm= T)
-    calcuM2 <- data.frame(Mvalue = calcuM, rank = rank(calcuM))
-    
-    geNorm_NormFinder <- merge(calcuM2, calcuRho2, by = "row.names")
-    colnames(geNorm_NormFinder)[c(1, 3, 5)] <- c("Gene", "Rank_M","Rank_rho")
-    
-    return(geNorm_NormFinder)
-
-    }
 
 
 
@@ -145,7 +117,7 @@ show_plot_gene <- function(figA, figB, genelist, set){
 
 
 
-stabVvalue <- function (x, log = TRUE, na.rm = TRUE) {
+stabMvalue <- function (x, log = TRUE, na.rm = TRUE) {
 ####### calculate the V-values of the gene, algorithm of geNorm 
 ## input:
 #       x: the expression data, with column being genes and rows being samples
@@ -162,7 +134,7 @@ stabVvalue <- function (x, log = TRUE, na.rm = TRUE) {
   n <- ncol(x)
   if (n == 1) 
     stop("you need at least two variables (i.e., columns) for this computation")
-  V <- numeric(n)
+  M <- numeric(n)
   for (j in 1:n) {
     if (log == T) 
       A <- x[, j] - x[, -j]
@@ -171,16 +143,45 @@ stabVvalue <- function (x, log = TRUE, na.rm = TRUE) {
       N <- colSums(!is.na(A))
       N[N < 1] <- NA
       Mean <- colMeans(A, na.rm = na.rm)
-      V[j] <- mean(sqrt(rowSums((t(A) - Mean)^2, na.rm = na.rm)/(N - 1)))
+      M[j] <- mean(sqrt(rowSums((t(A) - Mean)^2, na.rm = na.rm)/(N - 1)))
     }
-    else V[j] <- sd(A, na.rm = na.rm)
+    else M[j] <- sd(A, na.rm = na.rm)
   }
-  names(V) <- colnames(x)
-  V
+  names(M) <- colnames(x)
+  M
   
 }
 
 
+######### Section 2 -------------------------------
+## rank the genes by geNorm and NormFinder
+# set is an object returned from the estimate.var.comp() function
+
+rankMvalue <- function(set){
+  obj <- set
+  calcuM <- stabMvalue(t(obj$count + 1), log=F, na.rm= T)
+  calcuM2 <- data.frame(Gene = names(calcuM), Mvalue = calcuM, Rank = rank(calcuM))
+  rownames(calcuM2) <- NULL
+  return(calcuM2)
+}
+
+
+rankNormNotUsed <- function(set){
+  
+  obj <- set
+  new_trt <- as.factor(noquote(paste(obj$lab, obj$trt, sep="_")))
+  calcuRho <- stabMeasureRho(x = t(obj$count +1),log=F, group = new_trt)
+  calcuRho2 <- data.frame( Rho = calcuRho, rank = rank(calcuRho))
+  
+  calcuM <- stabMeasureM(t(obj$count + 1), log=F, na.rm= T)
+  calcuM2 <- data.frame(Mvalue = calcuM, rank = rank(calcuM))
+  
+  geNorm_NormFinder <- merge(calcuM2, calcuRho2, by = "row.names")
+  colnames(geNorm_NormFinder)[c(1, 3, 5)] <- c("Gene", "Rank_M","Rank_rho")
+  
+  return(geNorm_NormFinder)
+  
+}
 
 
 rankReferenceSet <- function(exprData, log = F, print.level = 0){
@@ -200,7 +201,7 @@ rankReferenceSet <- function(exprData, log = F, print.level = 0){
   count <- 0
   
   while ( nrow(stepwiseData) > 2) {
-    sortMvalue <- sort(stabMValue(t(stepwiseData), log=log))
+    sortMvalue <- sort(stabMvalue(t(stepwiseData), log=log))
     if (print.level == 1){
       print( noquote( paste("step ", count + 1, ":", sep = "")))
       print(sortMvalue)}  

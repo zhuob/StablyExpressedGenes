@@ -9,8 +9,7 @@ source(CodeNeeded)
 
 data <- paste(ResultPath, "tissue.columbia.use.reference.iter.1.rds", sep ="")
 obj <- readRDS(data)
-geNorm <- rankVvalue(obj)
+geNorm <- rankMvalue(obj)
 save.path <- paste(ResultPath, "geNorm_rank_tissue.rds", sep="")
-saveRDS(geNorm, save.path)
-
+saveRDS(geNorm2, save.path)
 

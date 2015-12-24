@@ -6,6 +6,8 @@
 #  TablePath: where should the table be stored
 # FigurePath: where should the figures be stored
 
+## textsize: 4 elements, for legend, plot.title, axis, and axis title respectively.
+
 
 CodeNeeded1 <- paste(CodePath, "Compare.gene.R", sep = "")
 CodeNeeded2 <- paste(CodePath, "plot.genes.R", sep="")
@@ -38,15 +40,18 @@ cat("producing results in section 1...\n")
 
 setEPS()
 postscript(paste(FigurePath, "cpm_seedling.eps", sep=""))
-plot.cpm(var_seedling,  1e3, "seedling", textsize =c(10, 30, 20, 20))
+A1 <- plot.cpm(var_seedling,  1e3, "seedling", textsize =c(10, 30, 20, 20))
+print(A1)
 dev.off()
 setEPS()
 postscript(paste(FigurePath, "cpm_leaves.eps", sep=""))
-plot.cpm(var_leaf,  1e3, "leaves", textsize =c(10, 30, 20, 20))
+A2 <- plot.cpm(var_leaf,  1e3, "leaves", textsize =c(10, 30, 20, 20))
+print(A2)
 dev.off()
 setEPS()
 postscript(paste(FigurePath, "cpm_tissue.eps", sep=""))
-plot.cpm(var_tissue,  1e3, "multiple tissues", textsize =c(10, 30, 20, 20))
+A3 <- plot.cpm(var_tissue,  1e3, "multiple tissues", textsize =c(10, 30, 20, 20))
+print(A3)
 dev.off()
 
 ## produce 1000 stably-expressed genes for the three groups
@@ -78,12 +83,14 @@ textsize <- c(15, 1, 12, 15)  # legened, title, axis, axis.title
 
 setEPS() 
 postscript(paste(FigurePath, "A1.eps", sep=""), width = 13, height = 5)
-plot.gene(figA, var_tissue, 1, 1e4,figure.num = NULL,textsize = textsize)
+A4 <- plot.gene(figA, var_tissue, 1, 1e4,figure.num = NULL,textsize = textsize)
+print(A4)
 dev.off()
 
 setEPS() 
 postscript(paste(FigurePath, "A2.eps", sep=""), width = 13, height = 5)
-plot.gene(figB, var_tissue, 1, 1e4, figure.num = NULL, textsize)
+A5 <- plot.gene(figB, var_tissue, 1, 1e4, figure.num = NULL, textsize)
+print(A5)
 dev.off()
 
 
@@ -92,7 +99,8 @@ postscript(paste(FigurePath, "A3.eps", sep=""), width = 13, height = 5)
 set.seed(102)  ## 102 or 107
 random.gene <- sample(1:100, 5)
 genelist <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% random.gene]
-plot.gene(genelist,var_tissue, 1, 1e4, figure.num = NULL, textsize)
+A6 <- plot.gene(genelist,var_tissue, 1, 1e4, figure.num = NULL, textsize)
+print(A6)
 dev.off()
 
 ## table of variance components for the 15 genes
@@ -110,7 +118,8 @@ cat("producing results in section 3...\n")
 setEPS() 
 postscript(paste(FigurePath, "rankVSrank_RNA2.eps", sep=""), width = 10, height = 5)
 xtext <- c( "number of most stably expressed Genes (Multi-tissue)", "L3", "L2", "recall percentage", "L1", "L4", "L5")
-TopGene(var_tissue, var_leaf, var_seedling, cze_100, dek_50, geNorm, xtext)
+A7 <- TopGene(var_tissue, var_leaf, var_seedling, cze_100, dek_50, geNorm, xtext)
+print(A7)
 dev.off()
 
 ## overlap number
@@ -134,28 +143,33 @@ gene_ids2 <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% sample(1:200
 
 setEPS() 
 postscript(paste(FigurePath, "top1000.eps", sep=""), width = 10, height = 5)
-plot.stackedBar(gene_ids1, var_tissue, percent=F, figure.num = NULL, textsize=c(20, 20, 15, 20))
+A8 <- plot.stackedBar(gene_ids1, var_tissue, percent=F, figure.num = NULL, textsize=c(20, 20, 15, 20))
+print(A8)
 dev.off()
 
 setEPS() 
 postscript(paste(FigurePath, "all.eps", sep=""), width = 10, height = 5)
-plot.stackedBar(gene_ids2, var_tissue, percent=F, figure.num = NULL, textsize=c(20, 20, 15, 20))
+A9 <- plot.stackedBar(gene_ids2, var_tissue, percent=F, figure.num = NULL, textsize=c(20, 20, 15, 20))
+print(A9)
 dev.off()
 
  ############# density plot
 setEPS() 
 postscript(paste(FigurePath, "var_dens1.eps", sep=""), width = 8, height = 5)
-plot.density(var_seedling, "Seedling")
+A10 <- plot.density(var_seedling, "Seedling")
+print(A10)
 dev.off()
 
 setEPS() 
 postscript(paste(FigurePath, "var_dens2.eps", sep=""), width = 8, height = 5)
-plot.density(var_leaf, "Leaf")
+A11 <- plot.density(var_leaf, "Leaf")
+print(A11)
 dev.off()
 
 setEPS() 
 postscript(paste(FigurePath, "var_dens3.eps", sep=""), width = 8, height = 5)
-plot.density(var_tissue, "Tissue")
+A12 <- plot.density(var_tissue, "Tissue")
+print(A12)
 dev.off()
 
 ############# variance percentage
@@ -178,29 +192,32 @@ text.size <- c(20, 20, 10, 20)
 
 setEPS() 
 postscript(paste(FigurePath, "norm1.eps", sep=""), width = 8, height = 8)
-plot.pair.normfactor(var_seedling, textsize = text.size)
+A13 <- plot.pair.normfactor(var_seedling, textsize = text.size)
+print(A13)
 dev.off()
 
 setEPS() 
 postscript(paste(FigurePath, "norm2.eps", sep=""), width = 8, height = 8)
-plot.pair.normfactor(var_leaf, textsize = text.size)
+A14 <- plot.pair.normfactor(var_leaf, textsize = text.size)
+print(A14)
 dev.off()
 
 setEPS() 
 postscript(paste(FigurePath, "norm3.eps", sep=""), width = 8, height = 8)
-plot.pair.normfactor(var_tissue, textsize = text.size)
-
+A15 <- plot.pair.normfactor(var_tissue, textsize = text.size)
+print(A15)
 dev.off()
-## plot norm.factors of a new data set GSE66666
 
+## plot norm.factors of a new data set GSE66666
 GSE66666 <- read.table(paste(DataPath, "GSE66666.Rsubread.txt", sep=""))
 var_new <- var_seedling
 var_new$count <- GSE66666
 
 setEPS() 
 postscript(paste(FigurePath, "norm4.eps", sep=""), width = 8, height = 8)
-plot.pair.normfactor(var_new, text.size)
- dev.off()
+A16 <- plot.pair.normfactor(var_new, text.size)
+print(A16) 
+dev.off()
 
 
 

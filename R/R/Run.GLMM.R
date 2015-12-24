@@ -19,7 +19,7 @@ niter = niters,                                   # number of iteration for DESe
 filter.factor= 3,                                 # average row means below which the genes are removed, default is 3.
 topgene = 1000                                    # number of top stably expressed genes to be used for normalization, default is 1000
 )
-save.target <- paste(ResultPath, data[i], ".columbia.use.reference.iter.", niters, ".rds", sep="")
+save.target <- paste(ResultPath, dataname[i], ".columbia.use.reference.iter.", niters, ".rds", sep="")
 saveRDS(var.obj, save.target)
 }
 
