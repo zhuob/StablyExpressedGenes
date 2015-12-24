@@ -351,14 +351,14 @@ For each gene, we obtain the estimated variance components $\hat\sigma_{\text{sa
 We rank all the genes according to their $\hat\sigma^2$s. and consider highly ranked (top 1000) genes to be stably expressed. 
 
 \subsection{Other stability measures}\label{subsection:OtherStabilityMeasure}
-There are many other gene expression stability measures for microarray data, among which the $V$ value in \textit{geNorm} \citep{vandesompele2002accurate} and the $\rho$ value in \textit{NormFinder} \citep{andersen2004normalization} are popular. In geNorm, the relative variation $\text{SD}_{i, i_1}$ of genes $i$ to gene $i_1$ is calculated as the standard deviation of the log fold changes between the two genes, $\text{SD}_{i, i_1} = \text{standard deviation}(\log_2 \frac{y_{i1}}{y_{i_11}}, \ldots, \log_2 \frac{y_{im}}{y_{i_1m}})$ where $m$ is the total number of genes in the reference set; then the stability value $V_i$ for gene $i$ is the mean of pairwise variation between gene $i$ and the other $m-1$ genes, 
+There are many other gene expression stability measures for microarray data, among which the $M$ value in \textit{geNorm} \citep{vandesompele2002accurate} and the $\rho$ value in \textit{NormFinder} \citep{andersen2004normalization} are popular. In geNorm, the relative variation $\text{SD}_{i, i_1}$ of genes $i$ to gene $i_1$ is calculated as the standard deviation of the log fold changes between the two genes, $\text{SD}_{i, i_1} = \text{standard deviation}(\log_2 \frac{y_{i1}}{y_{i_11}}, \ldots, \log_2 \frac{y_{im}}{y_{i_1m}})$ where $m$ is the total number of genes in the reference set; then the stability value $V_i$ for gene $i$ is the mean of pairwise variation between gene $i$ and the other $m-1$ genes, 
 \begin{equation}\label{eq:vvalue}
 V_i = \sum_{i_1 \neq i}\text{SD}_{i, i_1}/m
 \end{equation}
-Stably expressed genes are expected to have low $V$ values. NormFinder uses a linear mixed model to estimate the between-group and within-group variations from expression values of microarray data, and then combines the two variations by a Bayesian formulation. For a future experiment, the stability of a given gene is defined as the its absolute value of posterior mean plus its standard prediction deviation. Alternatively, \cite{czechowski2005genome} and \cite{dekkers2012identification} use CV (standard deviation/mean) to measure expression stability, with smaller CV  corresponding to more stably expressed genes.
+Stably expressed genes are expected to have low $M$ values. NormFinder uses a linear mixed model to estimate the between-group and within-group variations from expression values of microarray data, and then combines the two variations by a Bayesian formulation. For a future experiment, the stability of a given gene is defined as the its absolute value of posterior mean plus its standard prediction deviation. Alternatively, \cite{czechowski2005genome} and \cite{dekkers2012identification} use CV (standard deviation/mean) to measure expression stability, with smaller CV  corresponding to more stably expressed genes.
 	
 Stability measures differ in summarizing variation of gene expression profiles. The total variance ${\sigma}^2$ considers genes to be stably expressed when they have low ${\sigma}^2$ in the estimated log relative mean
-counts; the $V$ value in geNorm identifies as stably
+counts; the $M$ value in geNorm identifies as stably
 expressed those genes that are most similar to each other; and the CV measure
 \citep{czechowski2005genome} tends to select highly expressed genes as stable
 since those genes tend to have smaller dispersion \citep{hruz2011refgenes}. The idea GLMM (equation \ref{eq:GLMM}) is similar to the linear mixed model in NormFinder. However, NormFinder works for normally distributed expression data and requires a minimun of eight samples per treatment \citep{andersen2004normalization}, therefore it will not be discussed in this paper. %since the sample size is small (two or three samples per treatment) in a typical RNA-Seq experiment.
@@ -408,9 +408,9 @@ is computed as \[ \dfrac{ \text{count} \times 10^6 }{ \text{normalized library
 size}} \] in each sample and the mean is computed over all samples.
  
 \begin{figure}[] \begin{center}
-    \includegraphics[width=5cm,height=4cm]{Figures/cpm_seedling.png}
-    \includegraphics[width=5cm,height=4cm]{Figures/cpm_leaves.png}
-    \includegraphics[width=5cm,height=4cm]{Figures/cpm_tissue.png}
+    \includegraphics[width=5cm,height=4cm]{Figures/cpm_seedling.eps}
+    \includegraphics[width=5cm,height=4cm]{Figures/cpm_leaves.eps}
+    \includegraphics[width=5cm,height=4cm]{Figures/cpm_tissue.eps}
     \caption{{\small{\label{cpm} mean CPM for the top 1000 most stably
     expressed genes, seedling (left), leaf (middle) and multiple tissue
     (right) }}} \end{center} 
@@ -500,9 +500,9 @@ and sensitivity.
 
  \begin{figure}[H]
 \begin{center}
-	\includegraphics[width=15cm,height=6cm]{Figures/A3.png}
-	\includegraphics[width=15cm,height=6cm]{Figures/A2.png}
-	\includegraphics[width=15cm,height=6cm]{Figures/A1.png}
+	\includegraphics[width=15cm,height=6cm]{Figures/A3.eps}
+	\includegraphics[width=15cm,height=6cm]{Figures/A2.eps}
+	\includegraphics[width=15cm,height=6cm]{Figures/A1.eps}
 	\caption{{\small{\label{expressinlevel1} Expression levels CPM of genes across RNA-Seq samples using multiple-tissue data: 5 stably expressed genes identified by our method(top)}; 5 stably expressed genes from developmental series by Czechowski et. al. (middle); 5 traditional reference genes (bottom).}}
 \end{center}
 \end{figure} 
@@ -520,7 +520,7 @@ stably-expressed genes identified under different scenarios where one of more
 of the above three factors differ.  We then further clarify the role of a
 specific measure by comparing our stability measure, the total variance
 $\sigma^2$ from the GLMM in equation \ref{eq:GLMM} of Section
-\ref{subsection:OurMethod}, to geNorm $V$ value of
+\ref{subsection:OurMethod}, to geNorm $M$ value of
 \cite{vandesompele2002accurate}. 
 
 We look at an additional five lists of stably expressed genes identified under
@@ -532,7 +532,7 @@ The five lists are:
 \begin{enumerate}
     \item[$L_1$:]
  100 top stably expressed genes from the multiple-tissue group according
- to the $V$ value in geNorm (applied to $\log(\text{count}+1)$); 
+ to the $M$ value in geNorm (applied to $\log(\text{count}+1)$); 
 \item[$L_2$:]	
 100 top stably expressed genes from the seedling group according to the total variance $\sigma^2$ from the GLMM;
 \item[$L_3$:]
@@ -553,7 +553,7 @@ We have the following observations:
 \begin{enumerate}
     \item
 	The list $L_1$ is identified from the same set of RNA-Seq experiments as the
-	reference sets, but using a different stability measure ($V$ value in
+	reference sets, but using a different stability measure ($M$ value in
 	geNorm). This list has significant overlap with the top
 	stably-expressed genes identified using the total variance measure:
 	$35$ and $97$ out of the $100$ genes from the list $L_1$ are among the
@@ -585,7 +585,7 @@ We have the following observations:
 
  \begin{figure}[h!]
  	\begin{center}
- 		\includegraphics[scale=0.5]{Figures/rankVSrank_RNA2.png}
+ 		\includegraphics[scale=0.5]{Figures/rankVSrank_RNA2.eps}
  		\caption{percentage of occurance. For each of case C1)--C5), we choose top 100 stably expresed genes, except Dekkers(2012) where only a list of 50 genes is available. $x$-axis is the number of most stably expressed genes and $y$-axis shows the percentage of occurance.}
 	 	\label{fig:rankVSrank_RNA}
 	 	\end{center}
@@ -633,7 +633,7 @@ adaption of it in practice should not be automatic.  We demonstrate the
 effect/behavior of iterative elimination procedure by a toy example in Table
 \ref{table:toyexample} below, where an artificial data set is created with two
 samples, each containing seven genes. Columns 2 and 3 are the expression
-values, column 4 is the gene ranking according to the $V$ value (geNorm
+values, column 4 is the gene ranking according to the $M$ value (geNorm
 without iterative elimination), and column 5 is the ranking by the geNorm
 (with iterative elimination). In this example, the initial rankings according
 to the $M$-value is very difficult from the final rankings after the iterative
@@ -642,8 +642,8 @@ genes can change dramatically. This behavior makes it difficult to predict the
 final rankings. \dots
 
   
-The $V$ value and the geNorm differ in ranking Gene1 --- Gene5, where Gene4
-and Gene5 are ranked first by the $V$ value and Gene1 and Gene2 are ranked
+The $M$ value and the geNorm differ in ranking Gene1 --- Gene5, where Gene4
+and Gene5 are ranked first by the $M$ value and Gene1 and Gene2 are ranked
 first by the geNorm. For the geNorm, while Gene4 and Gene5 are ranked first in
 the begining, their rankings immediately drop to 4 and 5 after Gene7 is
 eliminated. At each iteration, the geNorm removes one gene that deviates the
@@ -659,7 +659,7 @@ decreasing size) in each iteration.
 	\begin{tabular}{rrrrr}
 		\hline
 		 & \multicolumn{2}{c}{Raw Counts} & \multicolumn{2}{c}{Rank}\\
-	Gene	& sample 1 & sample 2 & $V$ value & geNorm \\ 
+	Gene	& sample 1 & sample 2 & $M$ value & geNorm \\ 
 		\hline
 		Gene1 & 1 & 1 & 3 & 1 \\ 
 		Gene2 & 1 & 1 & 3 & 1 \\ 
@@ -702,7 +702,7 @@ decreasing size) in each iteration.
 
 %\begin{figure}
 %\centering
-%\includegraphics[width=0.7\linewidth]{Figures/wenn.png}
+%\includegraphics[width=0.7\linewidth]{Figures/wenn.eps}
 %\caption{Overlap diagram: each circle represents top 1000 stably expressed genes from geNorm, NormFinder and our method}
 %\label{fig:wenn}
 %\end{figure}
@@ -744,9 +744,9 @@ DE genes.)
 
  \begin{figure}[h]
 \begin{center}
-\includegraphics[width=5cm,height=4cm]{Figures/var_dens1.png}
-\includegraphics[width=5cm,height=4cm]{Figures/var_dens2.png}
-\includegraphics[width=5cm,height=4cm]{Figures/var_dens3.png}
+\includegraphics[width=5cm,height=4cm]{FiguresTest/var_dens1.eps}
+\includegraphics[width=5cm,height=4cm]{Figures/var_dens2.eps}
+\includegraphics[width=5cm,height=4cm]{Figures/var_dens3.eps}
 \caption{ Density plot of variance component: Seedling data, Leaf data, Tissue data (left to right).}
 \label{fig:densityplot}
 \end{center}
@@ -755,8 +755,8 @@ DE genes.)
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=0.8\linewidth]{Figures/top1000}
-	\includegraphics[width=0.8\linewidth]{Figures/all}
+	\includegraphics[width=0.8\linewidth]{Figures/top1000.eps}
+	\includegraphics[width=0.8\linewidth]{Figures/all.eps}
 	\caption{stacked bar plot of variance components. Left: 20 stably expressed genes randomly selected from top 1000; right: 20 genes randomly selected from all the genes.}
 	\label{fig:all}
 \end{figure}
@@ -771,10 +771,10 @@ One goal of identifying stably expressed genes is to use them as reference genes
 
  \begin{figure}[h!]
 \begin{center}
-\includegraphics[scale=0.2]{Figures/norm1.png}
-\includegraphics[scale=0.2]{Figures/norm2.png}
-\includegraphics[scale=0.2]{Figures/norm3.png}
-\includegraphics[scale=0.2]{Figures/norm4.png}
+\includegraphics[scale=0.2]{Figures/norm1.eps}
+\includegraphics[scale=0.2]{Figures/norm2.eps}
+\includegraphics[scale=0.2]{Figures/norm3.eps}
+\includegraphics[scale=0.2]{Figures/norm4.eps}
 \caption{\label{fig:normfactor} matrix plot of normalization factors by choosing top 10--10000 stably expressed genes for seedling group (top left), leaf group (top right), multiple-tissue (bottom left) group. The bottom right plot shows the normalization factors of a new seedling experiment GSE66666 (sample size is 6) when using top 10--10000 stably expressed genes from seedling group.}
 \end{center}
 \end{figure}
@@ -983,9 +983,9 @@ The details of experimental data is summarized as below
 %
 % \begin{figure}[H]
 %\begin{center}
-%\includegraphics[scale=0.4]{Figures/C1.png}
-%\includegraphics[scale=0.4]{Figures/C2.png}
-%\includegraphics[scale=0.4]{Figures/C3.png}
+%\includegraphics[scale=0.4]{Figures/C1.eps}
+%\includegraphics[scale=0.4]{Figures/C2.eps}
+%\includegraphics[scale=0.4]{Figures/C3.eps}
 %\caption{{\small{\label{sup:expressinlevel} expression levels of Arabidopsis RNA-Seq leaf data: traditional reference genes in set 3 (top)};  5 stably expressed genes by  Czechowski et. al. (middle); 5 stably expressed genes identified by total variance (bottom)}}
 %\end{center}
 %\end{figure} 
@@ -1001,8 +1001,8 @@ The details of experimental data is summarized as below
 %
 % \begin{figure}[h!]
 %\begin{center}
-%\includegraphics[scale=0.3]{Figures/mvalue2.png}
-%\includegraphics[scale=0.3]{Figures/mvalue3.png}
+%\includegraphics[scale=0.3]{Figures/mvalue2.eps}
+%\includegraphics[scale=0.3]{Figures/mvalue3.eps}
 %\caption{\label{sup:mvalue} geNORM ranking of reference genes: 5 traditional HKGs, 5 reference genes identified by Czechowski et. al. and 8 stably expressed genes based on seedling RNA-Seq data.  The spearman correlations of $M$ values and total variance  are 0.989 and 0.977, respectively. }
 %\end{center}
 %\end{figure}
@@ -1031,10 +1031,10 @@ we randomly choose five genes from top 100 stably expressed genes identified fro
 
  \begin{figure}[H]
  \begin{center}
-	%\includegraphics[scale=0.5]{Figures/B1.png}
+	%\includegraphics[scale=0.5]{Figures/B1.eps}
 	
-	\includegraphics[scale=0.4][Figures/tissue_leaf.png}
-	\includegraphics[scale=0.4]{Figures/leaf_leaf.png}
+	\includegraphics[scale=0.4][Figures/tissue_leaf.eps}
+	\includegraphics[scale=0.4]{Figures/leaf_leaf.eps}
 	\caption{{\small{\label{expressinlevel2} Expression levels CPM plotted using leaves data: 5 stably expressed genes randomly selected from top 100 of leaves group (top) ; 5 stably expressed genes randomly selected from top 100 of multiple-tissue group }}}
 \end{center}
 \end{figure} 
