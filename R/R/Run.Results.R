@@ -66,6 +66,11 @@ for ( i in 1:length(VarCompData)){
 }
 paste(TablePath, VarCompData[i])
 
+## how does stably expressed genes across different tissue types
+cat("Overlapped genes among the multi-tissue, leaf and seedling data")
+overlap_gene <- compare.3Set(var_seedling, var_leaf, var_tissue, top =1000)
+print( length(overlap_gene) )# 106
+
 
 
 #########  SECTION 2 ---------------------------------------
