@@ -70,7 +70,7 @@ paste(TablePath, VarCompData[i])
 cat("Overlapped genes among the multi-tissue, leaf and seedling data")
 overlap_gene <- compare.3Set(var_seedling, var_leaf, var_tissue, top =1000)
 print( length(overlap_gene) )# 106
-
+write.csv(overlap_gene, paste(TablePath, "OverlappedGeneFromThreeSetsTop1000.csv", sep=""),row.names = F)
 
 
 #########  SECTION 2 ---------------------------------------
@@ -214,7 +214,7 @@ print(A15)
 dev.off()
 
 ## plot norm.factors of a new data set GSE66666
-GSE66666 <- read.table(paste(DataPath, "GSE66666.Rsubread.txt", sep=""))
+GSE66666 <- readRDS(paste(DataPath, "GSE66666.rds", sep=""))
 var_new <- var_seedling
 var_new$count <- GSE66666
 
