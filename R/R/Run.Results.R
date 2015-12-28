@@ -122,8 +122,8 @@ cat("producing results in section 3...\n")
 # PLOT The figure
 setEPS() 
 postscript(paste(FigurePath, "rankVSrank_RNA2.eps", sep=""), width = 10, height = 5)
-xtext <- c( "number of most stably expressed Genes (Multi-tissue)", "L3", "L2", "recall percentage", "L1", "L4", "L5")
-A7 <- TopGene(var_tissue, var_leaf, var_seedling, cze_100, dek_50, geNorm, xtext)
+xtext <- c( "number of most stably expressed Genes (Multi-tissue)", "L2", "L3", "recall percentage", "L1", "L4", "L5")
+A7 <- TopGene(var_tissue, var_seedling, var_leaf, cze_100, dek_50, geNorm, xtext)
 print(A7)
 dev.off()
 
