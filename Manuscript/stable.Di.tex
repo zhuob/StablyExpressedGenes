@@ -173,10 +173,9 @@ than those identified across varying tissues and conditions.  Many studies
 have shown that stably expressed genes are subject to change from one
 experiment to another, either due to varying experimental protocols, or due to
 different organs of a given species (\cite{reid2006optimized},
-\cite{hong2010identification}).  The top 100 stably expressed genes in developmental series of 
-\cite{czechowski2005genome} shared only 3 genes with top 50 stably expressed
+\cite{hong2010identification}).  The top 100 stably expressed genes in  Arabidopsis developmental series of \cite{czechowski2005genome} shared only 3 genes with top 50 stably expressed
 genes identified from Arabidopsis seed samples by \cite{dekkers2012identification}.  In this
-study, we try to balance the generality and specificity by identify different
+study, we try to balance the generality and specificity by identifying different
 reference gene sets for different tissue types of Arabidopsis. 
 
 We can also think that when a normalization method is applied to a single data
@@ -193,15 +192,15 @@ these points in the Discussion section (REF).
 
 
 In this paper, we identify stably expressed genes from RNA-Seq data sets based
-on a numerical measure---the sum of three random components estimated from a
+on a numerical measure---the sum of three variance components estimated from a
 mixed-effect model.  We want to clarify that there is a distinction between
 numerical stability and biological stability---often times, we may not
 understand the biological functions of genes with numerically stable
 expression measures.  From an operational point of view, however, numerical
-stability is more tractable.  In pre-genomic era, the so-called "house-keeping
+stability is more tractable. In pre-genomic era, the so-called "house-keeping
 genes" are often considered as candidates of reference genes for
 normalization (\cite{bustin2002quantification},
-\cite{andersen2004normalization}). house-keeping
+\cite{andersen2004normalization}). House-keeping
 genes are typically constitutive genes that
 maintain basic cellular function, and therefore are expected to express at
 relatively constant levels in non-pathological situations.  However, many
@@ -251,7 +250,7 @@ expressed than traditional house-keeping genes.
 
 
 
-The rest of the paper organized as follows: in \ref{section:{section:countNormalization}}, we describe the data collection and processing steps. In \ref{section:countNormalization}, we give a brief review normalization methods, which is needed for fitting a generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} in our method presented in Section \ref{subsection:OurMethod}. We compare the stably expressed genes with previous studies in \ref{section:stablyExpressedGene} and \ref{section:CompareStablyExpressedGene}, and discuss expression stability in terms of different stability measures and of different data sources in section \ref{section:stabilityMeasure}. We present variance components in \ref{Section:varianceComp} and recommend stably expressed genes for normalization in \ref{Section:commonReference}.
+The rest of the paper organized as follows: in \ref{section:DataCollection}, we describe the data collection and processing steps. In \ref{section:countNormalization}, we give a brief review normalization methods, which is needed for fitting a generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} in our method presented in Section \ref{subsection:OurMethod}. We compare the stably expressed genes with previous studies in \ref{section:stablyExpressedGene} and \ref{section:CompareStablyExpressedGene}, and discuss expression stability in terms of different stability measures and of different data sources in section \ref{section:stabilityMeasure}. We present variance components in \ref{Section:varianceComp} and recommend stably expressed genes for normalization in \ref{Section:commonReference}.
 
 \section{Methods} \label{section:Methods}
 (Overview) In this section, we discussed our method of identifying stably expressed genes. In 1, we described how the Arabidopsis RNA-Seq data sets are collected and cleaned. In 2, we briefly discussed count normalization method, which is needed for fitting our GLMM model. Our main method is presented in 3, where we fit a GLMM to each gene and estimate three variance components: the \textit{between-sample}, \textit{between-treatment} and \textit{between-experiment} variances.
@@ -305,7 +304,7 @@ Many existing normalization methods, such as the trimmed mean of M-values normal
  The \textit{normalization factor} for sample $j$ is then calculated as the median of the fold-changes between sample $j$ and pseudo-reference sample over all genes
   \[R_j = \text{median}(y_{1j}/z_1, \ldots, y_{nj}/z_n)\]
 
-In this paper, we use an iterative procedure to estimate the normalization factors: initially, we use all the genes to calculate the normalization factors, which is part of the offset term in the GLMM, and rank all the genes by total variance (see Section \ref{subsection:OurMethod}); next, at each iteration, we select the top 1000 genes ---  ranking based on previous iteration --- as reference to update the normalization factors. In practice, $95\%$ of top 1000 genes after one iteration are overlapped with the top 1000 of the initial ranking. We therefore recommend one iteration to be sufficient.  
+In this paper, we use an iterative procedure to estimate the normalization factors: initially, we use all the genes to calculate the normalization factors, which is part of the offset term in the GLMM, and rank all the genes by our stability measure (see Section \ref{subsection:OurMethod}); next, at each iteration, we select the top 1000 genes ---  ranking based on previous iteration --- as reference to update the normalization factors. In practice, $95\%$ of top 1000 genes after one iteration are overlapped with the top 1000 of the initial ranking according to our stability measure. We therefore recommend one iteration to be sufficient.  
 
 \subsection{Poisson log-linear mixed-effects regression model}\label{subsection:OurMethod} 
 % (Each individual count is model as a Poisson distribution. The count mean is
@@ -333,14 +332,14 @@ We assume that $\alpha$s, $\beta$s and $\epsilon$s are mutually independent, and
   \[\alpha_l\sim N(0, \sigma^2_{\text{experiment}}),~~
   \beta_{k(l)}\sim N(0, \sigma^2_{\text{treatment}}),~~
   \epsilon_{jkl}\sim N(0, \sigma_{\text{sample}}^2).\]
-where $\sigma_{\text{sample}}^2$, $\sigma_{\text{treatment}}^2$, $\sigma_{\text{experiment}}^2$ are called \textit{variance-components}. They capture the
-\textit{between-sample}, \textit{between-treatment} and \textit{between-experiment} variation
+where $\sigma_{\text{experiment}}^2$, $\sigma_{\text{treatment}}^2$ and $\sigma_{\text{sample}}^2$  are called \textit{variance-components}. They capture the
+\textit{between-experiment}, \textit{between-treatment} and \textit{between-sample} variation
 correspondingly. The between-sample variance plays a similar role as the over-dispersion, which represents extra-Poisson variation in read counts under a negative binomial model (\cite{anders2010differential}, \cite{di2011nbp}).  The between-treatment term accounts for variations in treatment condition (e.g., genotype, growth medium). 
 The between-experiment variation includes all other possible variations that are difficult to be separated statistically, for example, lab personnel and conditions, day light hours, age of the plants, temperature, sequencing platform, etc.
 
 The stability measure of a gene is defined by the total variance
  \begin{equation}\label{eq:totalVariance}
- \sigma^2 =\sigma_{\text{sample}}^2+ \sigma_{\text{treatment}}^2+ \sigma_{\text{experiment}}^2
+ \hat \sigma^2 =\hat\sigma_{\text{sample}}^2+ \hat\sigma_{\text{treatment}}^2+ \hat\sigma_{\text{experiment}}^2
  \end{equation}
 %For each gene, we estimate variance components $\hat\sigma_{\text{sample}}^2,  \hat\sigma_{\text{treatment}}^2,  \hat\sigma_{\text{experiment}}^2$  from (\ref{eq:GLMM}) and calculate the total variance $\hat\sigma^2$.
 We rank all the genes according to their $\hat\sigma^2$s. and consider highly ranked (top 1000) genes to be stably expressed. 
@@ -364,7 +363,7 @@ Similar to GLMM for RNA-Seq data, the NormFinder uses a linear mixed model to ca
 \section{Results} \label{section:Results}
 In Section \ref{section:stablyExpressedGene}, we summarize stably expressed genes identified from three
 different experiment groups and one emphasis is that stability is
-context dependent. In Section \ref{section:CompareStablyExpressedGene}, we show that traditional housekeeping
+context dependent. In Section \ref{section:CompareStablyExpressedGene}, we show that traditional house-keeping
 genes are not necessarily stably expressed according to our numerical measure, 
 and that microarray data and RNA-Seq data will give different sets of stably
 expressed genes.  In Section \ref{section:stabilityMeasure}, we further demonstrate that when using a

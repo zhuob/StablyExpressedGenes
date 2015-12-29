@@ -69,7 +69,10 @@ plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = 
           plot.title = element_text(size = textsize[2]), 
           axis.text=element_text(size=textsize[3]), 
           axis.title=element_text(size=textsize[4],face="bold")) +
-     scale_x_discrete(breaks = seq(1, length(x), 2) )
+     scale_x_discrete(breaks = seq(1, length(x), 2) ) +
+      guides(fill = guide_legend(keywidth = 1, keyheight = 1),
+             linetype=guide_legend(keywidth = 3, keyheight = 1),
+             colour=guide_legend(keywidth = 3, keyheight = 1))
     #+ theme(legend.position = c(2, 0.8*upper))
     #  + geom_text( aes(1, 9000, label = "A"))
     p
