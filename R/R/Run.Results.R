@@ -136,6 +136,16 @@ print(match.gene(geNorm$Gene[geNorm$Rank  <= 100], var_tissue, top = 1000)$s)
 geNorm_GLMM <- merge(geNorm, var_tissue$var.comp, by="Gene")
 print(cor(geNorm_GLMM$Rank.x, geNorm_GLMM$Rank.y, method="spearman"))
 
+
+#### toy exmaple
+sample1 <- rep(1, 7)
+sample2 <- c(1, 1, 1, 2, 2, 3, 4)
+
+toy <- data.frame(sample1, sample2)
+rownames(toy) <- paste("Gene", 1:7, sep="")
+rank(stabMvalue(t(toy)), ties.method = "min")
+rankReferenceSet(toy, print.level = 1)
+
 #########  SECTION 4 ---------------------------------------
 
 cat("producing results in section 4...\n")
@@ -193,7 +203,8 @@ cat("producing results in section 5...\n")
 #######  Scatter plot for normalization factors 
 # legened, title, axis, axis.title
 
-text.size <- c(20, 20, 10, 20)
+text.size <- c(20, 20, 15, 20)
+
 
 setEPS() 
 postscript(paste(FigurePath, "norm1.eps", sep=""), width = 8, height = 8)

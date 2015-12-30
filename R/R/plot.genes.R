@@ -1,6 +1,5 @@
 #'   Plot the Counts Per Million (CPM) of a given gene list from RNA-Seq data
 #'
-#'
 #' @title Plot CPM of a gene list
 #'
 #' @param genelist a list of gene IDs
@@ -150,9 +149,6 @@ TopGene <- function(set1, set2, set3, cze, dek, geNorm, xtext, textsize = rep(20
 
 
 
-
-
-
 #'  estimate norm factors by most stably expressed genes
 #' 
 #' @title Estimate norm. factor
@@ -195,21 +191,18 @@ plot.pair.normfactor <- function(set, textsize = rep(20,4)){
   
   x <- data.frame(top10=as.numeric(norm.10), top1e2 = as.numeric(norm.1e2),
                   top1e3=as.numeric(norm.1e3), top1e4 = as.numeric(norm.1e4),
-                  all= norm.all)
-
-  ggpairs(x) +
+                  all= as.numeric(norm.all))
+  
+  x <- round(x, 2)
+  ggpairs(x, upper = list(params = c(size = 10))) +
     theme(legend.position=c(0.9, 0.2), 
           legend.text = element_text(size = textsize[1]),
           plot.title = element_text(size = textsize[2]), 
           axis.text=element_text(size=textsize[3]), 
-          axis.title=element_text(size=textsize[4],face="bold"))
+          axis.title=element_text(size=textsize[4],face="bold")) 
   
 
 }
-
-
-
-
 
 
 
@@ -244,7 +237,7 @@ plot.stackedBar <- function(gene_ids, set, percent =F, figure.num, textsize = re
                axis.title=element_text(size=textsize[4],face="bold")) +
         labs( y="variance", title=figure.num) +
         scale_y_continuous() +
-      scale_fill_brewer()
+      scale_fill_grey()
     }
     
     else
@@ -270,7 +263,7 @@ plot.stackedBar <- function(gene_ids, set, percent =F, figure.num, textsize = re
                    axis.title=element_text(size=textsize[4],face="bold") ) +
             labs( y="percentage of total variance", title=figure.num) +
             scale_y_continuous(labels = percent_format())+
-          scale_fill_brewer()
+          scale_fill_grey()
         
     }
 
