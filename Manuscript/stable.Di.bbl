@@ -19,6 +19,13 @@ Andersen, C.~L., Jensen, J.~L., and {\O}rntoft, T.~F. (2004).
   normalization, applied to bladder and colon cancer data sets.
 \newblock {\em Cancer research}, 64(15):5245--5250.
 
+\bibitem[Baron et~al., 2012]{baron2012transcriptional}
+Baron, K.~N., Schroeder, D.~F., and Stasolla, C. (2012).
+\newblock Transcriptional response of abscisic acid (aba) metabolism and
+  transport to cold and heat stress applied at the reproductive stage of
+  development in arabidopsis thaliana.
+\newblock {\em Plant science}, 188:48--59.
+
 \bibitem[Bates et~al., 2012]{bates2012lme4}
 Bates, D., Maechler, M., and Bolker, B. (2012).
 \newblock lme4: Linear mixed-effects models using s4 classes.
@@ -34,6 +41,14 @@ Bolker, B.~M., Brooks, M.~E., Clark, C.~J., Geange, S.~W., Poulsen, J.~R.,
 \newblock Generalized linear mixed models: a practical guide for ecology and
   evolution.
 \newblock {\em Trends in ecology \& evolution}, 24(3):127--135.
+
+\bibitem[Bournier et~al., 2013]{bournier2013arabidopsis}
+Bournier, M., Tissot, N., Mari, S., Boucherez, J., Lacombe, E., Briat, J.-F.,
+  and Gaymard, F. (2013).
+\newblock Arabidopsis ferritin 1 (atfer1) gene regulation by the phosphate
+  starvation response 1 (atphr1) transcription factor reveals a direct
+  molecular link between iron and phosphate homeostasis.
+\newblock {\em Journal of Biological Chemistry}, 288(31):22670--22680.
 
 \bibitem[Bullard et~al., 2010]{bullard2010evaluation}
 Bullard, J.~H., Purdom, E., Hansen, K.~D., and Dudoit, S. (2010).
