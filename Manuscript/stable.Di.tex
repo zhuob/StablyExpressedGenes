@@ -292,6 +292,9 @@ Step 3, read counts are summarized at the gene level using annotation \verb"Arab
    \end{table}
    
 
+%\textbf{Moved from introduction part, or better to put it in discussion part?}
+%\cite{czechowski2005genome} and \cite{dekkers2012identification} adopted similar approach for statistical analysis for identifying stably expressed genes, and both used Arabidopsis microarray data. Briefly, for each gene the mean expression and the standard deviation (SD) over all biological samples are calculated, and the coefficients of variation (CV), which is the ratio of SD to mean expression, are obtained. Genes with lower CVs are expected to be more stably expressed. This simple approach, however, does not provide us any information about possible sources, except the amounts,  of variation.  \textbf{}\\ 
+
 \subsection{Count normalization}\label{section:countNormalization}
 
 Many existing normalization methods, such as the trimmed mean of M-values normalization method (TMM) \citep{robinson2010scaling} and DESeq normalization \citep{anders2010differential}, assume that the majority of the genes are not DE within an experiment. Effectively, these methods use genes with relatively small observed fold changes under a single experiment as a reference gene set in normalization. We choose DESeq \citep{anders2010differential} as our normalization method in this paper. Briefly, let $y_{ij}$ denote the read count for $i$th gene and $j$th sample, then a pseudo-reference sample is created, with gene $i$th expression value defined as the geometric mean of the same gene over all real samples, 
@@ -302,6 +305,9 @@ Many existing normalization methods, such as the trimmed mean of M-values normal
 In this paper, we use an iterative procedure to estimate the normalization factors: initially, we use all the genes to calculate the normalization factors, which is part of the offset term in the GLMM, and rank all the genes by our stability measure (see Section \ref{subsection:OurMethod}); next, at each iteration, we select the top 1000 genes ---  ranking based on previous iteration --- as reference to update the normalization factors. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and that from the second iteration according to our stability measure. We therefore recommend one iteration to be sufficient.  
 
 \subsection{Poisson log-linear mixed-effects regression model}\label{subsection:OurMethod} 
+% (Each individual count is model as a Poisson distribution. The count mean is
+% modeled through a log-linear mixed-effects regression model.)
+
 
 Let $Y_{ijkl}$ denote the read count for $i$th gene
 in $j$th observational unit of $k$th treatment group in $l$th experiment
