@@ -11,7 +11,6 @@
 #' \item{error} error message. If none, "NO" is returned.
 #'
 
-
 ## this function is used to save warnings and errors as output
 # http://stackoverflow.com/questions/4948361/how-do-i-save-warnings-and-errors-as-output-from-a-function
 
