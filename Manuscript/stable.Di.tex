@@ -118,7 +118,7 @@ understanding the sources and nature of the RNA-Seq count variation.
 \textbf{(overview)}
 RNA sequencing (RNA-Seq) has become the technology of choice for transcriptome
 profiling over the last few years. The exponential growth in RNA-Seq study has
-accumulated a large amount of Arabidopsis data under a variety of
+accumulated a large amount of \textit{Arabidopsis thaliana} (Arabidopsis) data under a variety of
 experimental/enviromental conditions.  It is only natural to begin exploring
 how the large amount of existing data sets can help the analysis of future
 data.  In this paper, we discuss identifying stably expressed genes from
@@ -173,14 +173,16 @@ than those identified across varying tissues and conditions.  Many studies
 have shown that stably expressed genes are subject to change from one
 experiment to another, either due to varying experimental protocols, or due to
 different organs of a given species (\cite{reid2006optimized},
-\cite{hong2010identification}).  The top 100 stably expressed genes in  Arabidopsis developmental series of \cite{czechowski2005genome} shared only 3 genes with top 50 stably expressed
-genes identified from Arabidopsis seed samples by \cite{dekkers2012identification}.  In this
-study, we try to balance the generality and specificity by identifying different
-reference gene sets for different tissue types of Arabidopsis. 
+\cite{hong2010identification}).  The top 100 stably expressed genes in
+Arabidopsis developmental series of \cite{czechowski2005genome} shared only 3
+genes with top 50 stably expressed genes identified from Arabidopsis seed
+samples by \cite{dekkers2012identification}.  In this study, we try to balance
+the generality and specificity by identifying different reference gene sets
+for different tissue types of Arabidopsis. 
 
 We can also think that when a normalization method is applied to a single data
 set, it effectively specifies an implicit reference set of stably expressed
-genes (those genes that has least variation after normalization). We can think
+genes (those genes that have the least variation after normalization). We can think
 this as using an internal reference set. In contrast, what we are proposing is
 that one can also identify an external reference set by looking at past data
 sets. The internal and external reference sets will provide different contexts
@@ -188,7 +190,7 @@ for the DE analysis: in other words, one can choose to answer different
 scientific questions by using different reference sets. In any case, we
 advocate  making the reference set explicit during a DE analysis and using a
 common reference set when analyzing multiple datasets. We will further discuss
-these points in the Discussion section (REF).
+these points in the discussion Section \ref{section:discussion}.
 
 
 In this paper, we identify stably expressed genes from RNA-Seq data sets based
@@ -207,8 +209,7 @@ relatively constant levels in non-pathological situations.  However, many
 studies have shown that house-keeping
 genes are not necessarily stably expressed according to
 numerical measures (a review can be found in \cite{huggett2005real} and
-reference therein).  For example, in the microarray analysis of the model
-plant \textit{Arabidopsis thaliana} (Arabidopsis), \cite{czechowski2005genome}
+reference therein).  For example, in the microarray analysis of Arabidopsis, \cite{czechowski2005genome}
 showed that traditional house-keeping
 genes such as ACT2, TUB6, EF-1$\alpha$ are not stably
 expressed, and thus not good reference genes for normalization.  Spike-in
@@ -250,19 +251,22 @@ expressed than traditional house-keeping genes.
 
 
 
-The rest of the paper organized as follows: in \ref{section:DataCollection}, we describe the data collection and processing steps. In \ref{section:countNormalization}, we give a brief review normalization methods, which is needed for fitting a generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} in our method presented in Section \ref{subsection:OurMethod}. We compare the stably expressed genes with previous studies in \ref{section:stablyExpressedGene} and \ref{section:CompareStablyExpressedGene}, and discuss expression stability in terms of different stability measures and of different data sources in section \ref{section:stabilityMeasure}. We present variance components in \ref{Section:varianceComp} and recommend stably expressed genes for normalization in \ref{Section:commonReference}.
+The rest of the paper is organized as follows: in Section \ref{section:Methods}, we describe the data preparation steps and our method of identifying stably expressed genes; in Section \ref{section:Results}, we discuss the stably expressed genes and factors that might affact stability rankings; we also discuss results from variance component analysis and how to use the identified stably expressed genes for count normalization. (AND DISCUSSION...)
+
 
 \section{Methods} \label{section:Methods}
-(Overview) In this section, we discussed our method of identifying stably expressed genes. In 1, we described how the Arabidopsis RNA-Seq data sets are collected and cleaned. In 2, we briefly discussed count normalization method, which is needed for fitting our GLMM model. Our main method is presented in 3, where we fit a GLMM to each gene and estimate three variance components: the \textit{between-sample}, \textit{between-treatment} and \textit{between-experiment} variances.
+(Overview) In this section, we discuss the data preparation and our method of identifying stably expressed genes. In \ref{section:DataCollection}, we describe the steps for collecting and processing data. In \ref{section:countNormalization}, we introduce the DESeq normalization that will be included in our model. In Section \ref{subsection:OurMethod}  we fit a generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} and estimate three variance components from each gene: the \textit{between-sample}, \textit{between-treatment} and \textit{between-experiment} variances.
  The \textit{total variance} is defined to be the expression stability measure associated with that gene. Genes with smaller total variance are considered to be more stably expressed. 
 
 
 
 \subsection{Data collection}\label{section:DataCollection}
 The \textit{Gene Expression Omnibus} (GEO) repository at \textit{National Center for Biotechnology Information} (NCBI, \url{http://www.ncbi.nlm.nih.gov/}) contains a large number of RNA-Seq experiments. However, the RNA-Seq read counts are either processed by different aligners or not directly available at NCBI. For this reason, we arrange a pipeline based on the NCBI \textit{Sequence Read Archive} (SRA) Toolkit (version 2.3.5-2) and the Subread aligner (version 1.16.2 in R software, \cite{liao2013subread}) to process raw FASTQ data into read counts. The pipeline, implemented using R software, is summarized as follows: Step 1,  SRA format files of Arabidopsis samples are retrieved from GEO repository, and then converted to FASTQ files using SRA Toolkit;  %\url{http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?cmd=show&f=software&m=software&s=software},
-Step 2, short reads in FASTQ files are aligned to the Arabidopsis reference genome, which is downloaded from the\textit{ Ensembl plants FTP server} (\url{http://plants.ensembl.org/info/data/ftp/index. html});
+Step 2, short reads in FASTQ files are aligned to the Arabidopsis reference genome downloaded from the\textit{ Ensembl plants FTP server} (\url{http://plants.ensembl.org/info/data/ftp/index. html});
  %As suggested by\cite{anders2013count}, "FASTA(DNA)" link was chosen because samples were aligned to the genome. .  
-Step 3, read counts are summarized at the gene level using annotation \verb"Arabidopsis_thaliana.TAIR10.22.gtf" and stored as data matrix. % Default options for all functions were used except that the annotation file is set to be \verb"Arabidopsis_thaliana.TAIR10.22.gtf" in \verb|featureCounts()|, which is desired for matching the short reads to Arabidopsis genes. % The multi-mapping or multi-overlapping reads were not counted (included in the default option).
+Step 3, read counts are summarized at the gene level
+% using annotation \verb"Arabidopsis_thaliana.TAIR10.22.gtf" 
+ and stored as data matrix. % Default options for all functions were used except that the annotation file is set to be \verb"Arabidopsis_thaliana.TAIR10.22.gtf" in \verb|featureCounts()|, which is desired for matching the short reads to Arabidopsis genes. % The multi-mapping or multi-overlapping reads were not counted (included in the default option).
 
 
   (\textbf{Selecting experiments}) For this study, our attention is restricted to experiments satisfying all the following conditions:  1. Ecotype = "Columbia" ( as a result, we might only choose the Columbia samples when the experiment is done to compare Columbia with other ecotypes.); 2. Library strategy= "RNA-Seq"; 3. Library Source = "transcriptomic"; 4. Library selection= "cDNA"; 5. Library layout = "Single End"; 6. there are at least 2 biological replicates for each treatment. We screened all the Arabidopsis experiments available at NCBI up to May 31, 2015, and processed a total of 49 data sets. Each data set is named by its accession number. 
@@ -300,9 +304,11 @@ Step 3, read counts are summarized at the gene level using annotation \verb"Arab
 Many existing normalization methods, such as the trimmed mean of M-values normalization method (TMM) \citep{robinson2010scaling} and DESeq normalization \citep{anders2010differential}, assume that the majority of the genes are not DE within an experiment. Effectively, these methods use genes with relatively small observed fold changes under a single experiment as a reference gene set in normalization. We choose DESeq \citep{anders2010differential} as our normalization method in this paper. Briefly, let $y_{ij}$ denote the read count for $i$th gene and $j$th sample, then a pseudo-reference sample is created, with gene $i$th expression value defined as the geometric mean of the same gene over all real samples, 
 \[ z_i = (\prod_{j=1}^ny_{ij})^{1/n},  i=1, \ldots, m \]
  The \textit{normalization factor} for sample $j$ is then calculated as the median of the fold-changes between sample $j$ and pseudo-reference sample over all genes
-  \[R_j = \text{median}(y_{1j}/z_1, \ldots, y_{nj}/z_n)\]
+  \begin{equation}\label{eq:normfactors} 
+ R_j = \text{median}(y_{1j}/z_1, \ldots, y_{nj}/z_n)
+  \end{equation}
 
-In this paper, we use an iterative procedure to estimate the normalization factors: initially, we use all the genes to calculate the normalization factors, which is part of the offset term in the GLMM, and rank all the genes by our stability measure (see Section \ref{subsection:OurMethod}); next, at each iteration, we select the top 1000 genes ---  ranking based on previous iteration --- as reference to update the normalization factors. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and that from the second iteration according to our stability measure. We therefore recommend one iteration to be sufficient.  
+In this paper, we use an iterative procedure to estimate the normalization factors: initially, we use all the genes to calculate the normalization factors, which is part of the offset term in the GLMM, and rank all the genes by our stability measure (see Section \ref{subsection:OurMethod}); next, at each iteration, we select the top 1000 genes ---  ranking based on previous iteration --- as reference to update the normalization factors. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and those from the second iteration according to our stability measure. We therefore recommend one iteration to be sufficient.  
 
 \subsection{Poisson log-linear mixed-effects regression model}\label{subsection:OurMethod} 
 % (Each individual count is model as a Poisson distribution. The count mean is
@@ -310,16 +316,16 @@ In this paper, we use an iterative procedure to estimate the normalization facto
 
 
 Let $Y_{ijkl}$ denote the read count for $i$th gene
-in $j$th observational unit of $k$th treatment group in $l$th experiment
-and index $i$ is suppressed herein since only one gene is evaluated at a time
+in $j$th observational unit of $k$th treatment group in $l$th experiment.
+The index $i$ is suppressed herein since only one gene is evaluated at a time
 by GLMM. We assume that each read count $Y_{jkl}$ follows a Poisson
-distribution $\text{Poisson}(\mu_{jkl})$ with mean
+distribution with mean $\mu_{jkl}$ modeled as
 \begin{equation}\label{eq:GLMM}
     \log( \mu_{jkl}) = \xi + \log(R_{jkl}N_{jkl})+ \alpha_l + \beta_{k(l)} + \epsilon_{jkl},
 \end{equation}
 where $\alpha$s are experiment effects,  $\beta$s are treatment effects
 nested in experiments, and $\epsilon$s are the effects for biological samples. 
-$N_{jkl}$ is the library size (column sum), and the $R_{jkl}$ is the normalization factors discussed in Section (\ref{section:countNormalization}). The product term $R_{jkl}N_{jkl}$ is called \textit{normalized library size} in DE analysis. 
+$N_{jkl}$ is the library size (column sum), and $R_{jkl}$ is the normalization factor discussed in Section (\ref{section:countNormalization}). The product term $R_{jkl}N_{jkl}$ is called \textit{normalized library size} in DE analysis. 
 
 The between-experiment effect $\alpha$ in equation (\ref{eq:GLMM}) is treated as random for two considerations. First, we view the collected data sets as a random sample from the pool of all Arabidopsis RNA-Seq experiments. Second, we expect the results from this study to be generalizable to future experiments when it comes to stably expressed genes and variance component analysis.
 We also consider the treatment effects $\beta$ as random 
@@ -332,7 +338,7 @@ We assume that $\alpha$s, $\beta$s and $\epsilon$s are mutually independent, and
   \epsilon_{jkl}\sim N(0, \sigma_{\text{sample}}^2).\]
 where $\sigma_{\text{experiment}}^2$, $\sigma_{\text{treatment}}^2$ and $\sigma_{\text{sample}}^2$  are called \textit{variance-components}. They capture the
 \textit{between-experiment}, \textit{between-treatment} and \textit{between-sample} variation
-correspondingly. The between-sample variance plays a similar role as the over-dispersion, which represents extra-Poisson variation in read counts under a negative binomial model (\cite{anders2010differential}, \cite{di2011nbp}).  The between-treatment term accounts for variations in treatment condition (e.g., genotype, growth medium). 
+correspondingly. The between-sample variance plays a similar role as the over-dispersion, which represents extra-Poisson variation in read counts under a negative binomial model (\cite{anders2010differential}, \cite{di2011nbp}).  The between-treatment term accounts for variation in treatment condition (e.g., genotype, growth medium). 
 The between-experiment variation includes all other possible variations that are difficult to be separated statistically, for example, lab personnel and conditions, day light hours, age of the plants, temperature, sequencing platform, etc.
 
 The stability measure of a gene is defined by the total variance
@@ -340,16 +346,16 @@ The stability measure of a gene is defined by the total variance
  \hat \sigma^2 =\hat\sigma_{\text{sample}}^2+ \hat\sigma_{\text{treatment}}^2+ \hat\sigma_{\text{experiment}}^2
  \end{equation}
 %For each gene, we estimate variance components $\hat\sigma_{\text{sample}}^2,  \hat\sigma_{\text{treatment}}^2,  \hat\sigma_{\text{experiment}}^2$  from (\ref{eq:GLMM}) and calculate the total variance $\hat\sigma^2$.
-We rank all the genes according to their $\hat\sigma^2$s. and consider highly ranked (top 1000) genes to be stably expressed. 
+We rank all the genes according to their $\hat\sigma^2$s, and consider highly ranked (top 1000) genes to be stably expressed. 
 
 \subsection{Other stability measures}\label{subsection:OtherStabilityMeasure}
-There are many other gene expression stability measures for microarray data, among which the $M$-value in \textit{geNorm} \citep{vandesompele2002accurate} and the $\rho$ value in \textit{NormFinder} \citep{andersen2004normalization} are popular. In geNorm, the relative variation of genes $i$ to gene $i_1$ is calculated as the standard deviation of the log fold changes between the two genes, $\text{SD}_{i, i_1} = \text{standard deviation}(\log_2 \frac{y_{i,1}}{y_{i_1,1}}, \ldots, \log_2 \frac{y_{i,m_0}}{y_{i_1,m_0}})$ where $m_0$ is the total number of genes in the reference set; then the stability value $M_i$ for gene $i$ is the mean of pairwise variation between gene $i$ and the other $m-1$ genes, 
+There are many other gene expression stability measures for microarray data, among which the $M$-value in \textit{geNorm} \citep{vandesompele2002accurate} and the $\rho$ value in \textit{NormFinder} \citep{andersen2004normalization} are popular. In geNorm, the relative variation of genes $i$ to gene $i_1$ is calculated as the standard deviation of the log fold changes between the two genes, $\text{SD}_{i, i_1} = \text{standard deviation}(\log_2 \frac{y_{i,1}}{y_{i_1,1}}, \ldots, \log_2 \frac{y_{i,m_0}}{y_{i_1,m_0}})$ where $m_0$ is the total number of genes in the reference set; then the stability value $M_i$ for gene $i$ is the mean of pairwise variation between gene $i$ and the other $m_0-1$ genes, 
 \begin{equation}\label{eq:vvalue}
 M_i = \sum_{i_1 \neq i}\text{SD}_{i, i_1}/m_0
 \end{equation}
 Stably expressed genes are expected to have low $M$-values. NormFinder uses a linear mixed model to estimate the between-group and within-group variations from expression values of microarray data, and then combines the two variations by a Bayesian formulation. For a future experiment, the stability of a given gene is defined as the its absolute value of posterior mean plus its standard prediction deviation. Alternatively, \cite{czechowski2005genome} and \cite{dekkers2012identification} use CV (standard deviation/mean) to measure expression stability, with smaller CV  corresponding to more stably expressed genes.
 	
-Stability measures differ in summarizing variation of gene expression profiles. The total variance ${\sigma}^2$ considers genes to be stably expressed when they have low ${\sigma}^2$ in the estimated log relative mean
+Stability measures differ in summarizing variation of gene expression profiles. The total variance $\hat{\sigma}^2$ considers genes to be stably expressed when they have low $\hat{\sigma}^2$ in the estimated log relative mean
 counts; the $M$-value in geNorm identifies as stably
 expressed those genes that are most similar to each other; and the CV measure
 \citep{czechowski2005genome} tends to select highly expressed genes as stable
@@ -415,31 +421,34 @@ size}} \] in each sample and the mean is computed over all samples.
 
 It shows from comparison of the lists of top 1000 genes in the three groups that
 they share 106 genes in common (see supplement material for detail).  These
-genes are stably expressed under a wide range of experimental conditions
-and in different tissue types, and thus may be worth further study.  
-This list of $106$ genes has significant overlap with the top $100$ stably
-expressed genes identified by \cite{} out of $14000$ genes he examined:
-$10$ out of these $106$ genes (see Table \ref ) appeared in the list of top $100$ stably
-expressed genes identified by \cite{} out of $14000$ genes he examined (the
-probability is $3.68\times10^{-10}$ for a list of $106$ genes random selected
-from a set of $14000$ genes to have a overlap of size $10$ or more with a
-pre-selected list of $100$ genes). In particular, one gene, AT1G13320, was
-identified by \cite{hong2010identification} as a stably expressed gene under
-all six but one experimental conditions he examined, and it is in all ten but
-one list of top 500 stably expressed genes identified by
-\cite{czechowski2005genome} for different experimental and experimental
-conditions (the one exception being the set of diurnal series, ??? Jeff).
-This gene is ranked 446 (top 1.8\%), 112 (top 0.5\%), 687 (top 2.9\%)
-according to our stably measure in the three groups we examined.  (??? Is
-there anything special about this gene? Jeff) This gene is a subunite of
-protein phosphatase type 2A complex and involves in regulation of
-phosphorylation and regulation of protein phosphatase type 2A activity. It has
-been used as a reference gene for normalization in many papers
-(e.g., \cite{bournier2013arabidopsis}, \cite{baron2012transcriptional}; these
-two papers cited \cite{czechowski2005genome} as reference). (Similar genes are AT1G10430,
-AT3G01150, [AT5G46630, encoded proteins involved in adaptor complex subunits
-of claturin which mainly involved the protein transport and cell division
-process]
+genes are stably expressed under a wide range of experimental conditions and
+in different tissue types, and thus may be worth further study.  This list of
+$106$ genes has significant overlap with the top $100$ stably expressed genes
+identified by \cite{czechowski2005genome} from a developmental series of
+microarray samples: $10$ out of these $106$ genes (see Table REF in the
+supplement material for details),
+\begin{quote}
+    gene1, gene2
+\end{quote}
+appeared in the list of top $100$ stably expressed genes
+out of $14000$ genes he examined (the probability is $3.68\times10^{-10}$ for
+a list of $106$ genes random selected from a set of $14000$ genes to have an
+overlap of size $10$ or more with a pre-selected list of $100$ genes). In
+particular, one gene, AT1G13320, is in all ten but one list of top 500 stably
+expressed genes identified by \cite{czechowski2005genome} for different
+experimental and experimental conditions (the only exception is the set of
+diurnal series, ??? Jeff), and is also identified by
+\cite{hong2010identification} as a stably expressed gene under all six but one
+experimental conditions he examined.  This gene is ranked 446 (top 1.8\%), 112
+(top 0.5\%), 687 (top 2.9\%) according to our stably measure in the three
+groups we examined.  (??? Is there anything special about this gene? Jeff)
+This gene is a subunite of protein phosphatase type 2A complex and involves in
+regulation of phosphorylation and regulation of protein phosphatase type 2A
+activity. It has been used as a reference gene for normalization in many
+papers (e.g., \cite{bournier2013arabidopsis}, \cite{baron2012transcriptional};
+these two papers cited \cite{czechowski2005genome} as reference). 
+
+% (Similar genes are AT1G10430, AT3G01150, [AT5G46630, encoded proteins involved in adaptor complex subunits of claturin which mainly involved the protein transport and cell division process]
 
 \subsection{Comparison to house-keeping genes and stably expressed genes
 identified from microarray data}\label{section:CompareStablyExpressedGene}
@@ -478,7 +487,7 @@ and sensitivity.
 	\centering
 	\caption{My caption}
 	\label{table:15genes}
-	\begin{tabular}{llrrrr}
+	\begin{tabular}{llrrrr}\\ \hline
 		type                        & Gene      & betweeen-sample & between-treatment & between-experiment & Rank  \\  \hline
 		\multirow{5}{*}{RNA-Seq}    & AT5G58100 & 0.0018          & 0.0008            & 0.0042             & 9     \\
 		& AT2G23140 & 0.0049          & 0.0058            & 0.0000             & 49    \\
@@ -515,19 +524,18 @@ and sensitivity.
 \subsection{Factors affecting stability ranking}\label{section:stabilityMeasure}
 The previous two subsections demonstrate that when using a numerical measure
 to quantify gene expression stability, the outcome is dependent on 1) the
-biological context reflected in the reference data sets used and 2) the
+biological context reflected in the reference sample set used and 2) the
 technology used for measuring gene expression. It should also be intuitive,
 and we will further clarify in the second half of this subsection, that 3) the
 stability ranking is also dependent on the specific numerical measure used.
 In this section, we will first compare the lists of stably-expressed genes
 identified under different scenarios where one or more of the above three
-factors differ.  
-We then further discuss the subtle roles played by the specific stability
-measure and the reference gene set by comparing
-the total variance $\hat\sigma^2$ measure from the GLMM (see equation
-(\ref{eq:GLMM})) to the $M$-value measure used in geNorm
-\citep{vandesompele2002accurate}, and discussing the effect of an iterative
-elimination procedure used by geNorm.
+factors differ.  We then further discuss the subtle roles played by the
+specific stability measure and the reference gene set by comparing the total
+variance $\hat\sigma^2$ measure from the GLMM (see equation (\ref{eq:GLMM}))
+to the $M$-value measure used in geNorm \citep{vandesompele2002accurate}.
+Last, we discuss the effect of an iterative elimination procedure used by
+geNorm.
 
 We look at an additional five lists of stably expressed genes identified under
 different scenarios and examine how each of these five lists overlaps with the
@@ -563,7 +571,7 @@ We have the following observations:
 	geNorm). This list has significant overlap with the top
 	stably-expressed genes identified using the total variance measure:
 	$35$ and $99$ out of the $100$ genes from the list $L_1$ are among the
-	top $100$ and $1000$, respectively, most stably-expressed genes from the
+	top $100$ and $1000$ most stably-expressed genes, respectively, from the
 	multi-tissue group identified using the total variance measure. 
     \item
 	The lists $L_2$ and $L_3$ are identified from different sets of
@@ -638,7 +646,7 @@ reference genes. See the Method section for more details.)
 In practice, the geNorm program \citep{vandesompele2002accurate} is usually
 used to rank a set of reference genes identified from other methods.  An
 iterative elimination procedure is used along with the $M$-value to determine
-final ranks of the expression stability:  after each iteration, the gene
+the final ranks of the expression stability:  after each iteration, the gene
 receiving the largest $M$-value will be removed and a new set of $M$-values
 will be computed for the remaining genes, and the iteration will go on until
 there are only two genes left.  We did not use such an iterative procedure in
@@ -653,7 +661,7 @@ consider the expression values of 7 genes in two samples shown in Table
 initial ranking of expression stability is given in column 4 of the Table:
 gene $7$ is the least stable one and genes $4$ and $5$ are considered the most
 stable ones.  Once genes 6 and 7 are eliminated, however, the recalculated
-$M$-values will rank genes $1$, $2$ and $3$ as more stable than genes $4$ and
+$M$-values will rank genes 1--3 as more stable than genes $4$ and
 $5$ (see column 5 of Table \ref{table:toyexample}). The root cause of this
 reversal of rankings is that when an iterative elimination procedure is used,
 effectively, the reference gene set is changing after each iteration: in the
@@ -713,19 +721,23 @@ between-sample, between-treatment and between-experiment variance components.
 The estimated variance components tell us how much each component contributes
 to the overall count variation. Table \ref{table:percentageofvariation}
 summarizes the percentages---averaged over all genes---of the total variation
-attributable to each of the three components.  Figure \ref{fig:densityplot}
-shows the histograms of the percentages. We also randomly select 20 genes from
-the top 1000 stably expressed ones, and 20 from all the genes of the
-multi-tissue group. Figure \ref{fig:all} shows the stacked bar plot of
-variance components for each of the 40 genes.  As expected, the
-between-experiment variance component, on average, explains the largest
-proportion of the total variation.  In the group of leaf experiments, the
-between-treatment variation is markedly greater than the between-sample
-variation: one implication is that DE is easier to detect in this group of
-experiments.  [Ask Jeff] Our intuition is that leaf samples tend to be more
-homogeneous and thus the treatment effect is easier to detect between leaf
-samples. (The larger component of between-treatment variation suggests the
-existence of a higher proportion of DE genes.) 
+attributable to each of the three components for three groups of RNA-Seq
+samples (seedling, leaf and multi-tissue groups).  Figure \ref{fig:densityplot}
+shows the histograms of the percentages. 
+Figure \ref{fig:all} shows the stacked bar plot of variance components 
+estimated for the multi-tissue group for 20
+genes randomly selected from the top 1000 stably expressed genes 
+and 20 genes randomly selected from all the genes. 
+As expected, the between-experiment variance component, on average, explains
+the largest proportion of the total variation. In the group of leaf
+experiments, the between-treatment variation is markedly greater than the
+between-sample variation:
+the larger component of between-treatment variation suggests the existence of a higher proportion of DE genes.
+([Ask Jeff], one implication is that DE is easier to detect in
+this group of experiments.  
+ Our intuition is that leaf samples tend
+to be more homogeneous and thus the treatment effect is easier to detect
+between leaf samples. ) 
  
  \begin{center} \begin{table}[h!] \centering \caption{proportion of estimated
      variance components} \label{table:percentageofvariation}
@@ -757,8 +769,9 @@ existence of a higher proportion of DE genes.)
 
 
 
-\subsection{A common reference set of genes for normalization}\label{Section:commonReference}
-One goal of identifying stably expressed genes is to use them as reference genes for normalization. We used stably expressed genes to see how normalization factors vary by choosing different sizes of reference set.   As an illustration, we chose top 10, 100, 1000, 10000 stably expressed genes as reference, and then calculated normalization factors by DESeq method for each sample in seedling, leaf and multi-tissue group, respectively. Figure \ref{fig:normfactor} shows paired scatter plot of normalization factors, in which high consistency is reached when top 100 or 1000 stably expressed gene are selected. We thus recommend using top 1000 stably expressed genes as reference to compute normalization factors. %A common reference set of stably expressed genes will help improve comparability of the data sets and interpretability of DE test leaf.
+\subsection{Choosing reference set for normalization}\label{Section:commonReference}
+The choice of stably expressed genes has an impact on estimating normalization factors, and further on detecting DE genes in gene expression analysis. 
+One goal of identifying stably expressed genes is to use them as reference genes for normalization. As an illustration, we choose top 10, 100, 1000, 10000 stably expressed genes identified by GLMM as reference set, and calculate normalization factors by DESeq method (see equation (\ref{eq:normfactors}) ) for each sample in the seedling, the leaf and the multi-tissue groups. Figure \ref{fig:normfactor} shows paired scatter plot of normalization factors for the three groups and an additional seedling experiment. In all of the three groups, the Pearson correlation is the largest ($0.987$, $0.988$, and $0.996$ for the seedling, the leaf and the multi-tissue groups, respectively) between normalization factors using top 100 and those using top 1000 stably expressed genes identified from the corresponding groups. For the additional seedling experiment, the largest Pearson correlation $0.995$ comes from between the normalization factors using top $1000$ and those using top $10000$, stably expressed genes identified from the seedling group. We thus recommend using top 1000 stably expressed genes as reference to compute normalization factors. %A common reference set of stably expressed genes will help improve comparability of the data sets and interpretability of DE test leaf.
 
 
 
@@ -772,7 +785,7 @@ One goal of identifying stably expressed genes is to use them as reference genes
 \end{center}
 \end{figure}
 
-  \section{Discussion}
+  \section{Discussion}\label{section:discussion}
 In this paper, we advocate quantifying gene expression stability by applying a
 numerical stability measure to a large number of existing data sets.  This
 strategy has also been used by many for finding stably expressed genes using
