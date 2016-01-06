@@ -421,6 +421,7 @@ size}} \] in each sample and the mean is computed over all samples.
 
 It shows from comparison of the lists of top 1000 genes in the three groups that
 they share 106 genes in common (see supplement material for detail).  These
+<<<<<<< HEAD
 genes are stably expressed under a wide range of experimental conditions and
 in different tissue types, and thus may be worth further study.  This list of
 $106$ genes has significant overlap with the top $100$ stably expressed genes
@@ -449,6 +450,30 @@ papers (e.g., \cite{bournier2013arabidopsis}, \cite{baron2012transcriptional};
 these two papers cited \cite{czechowski2005genome} as reference). 
 
 % (Similar genes are AT1G10430, AT3G01150, [AT5G46630, encoded proteins involved in adaptor complex subunits of claturin which mainly involved the protein transport and cell division process]
+=======
+genes are stably expressed under a wide range of experimental conditions
+and in different tissue types, and thus may be worth further study.  
+This list of $106$ genes has significant overlap with the top $100$ stably
+expressed genes of developmental series identified by \cite{czechowski2005genome}:
+$10$ out of these $106$ genes (see Table REF in the supplement material ) appeared in the list of top $100$ stably expressed genes out of $14000$ genes he examined (the
+probability is $3.68\times10^{-10}$ for a list of $106$ genes random selected
+from a set of $14000$ genes to have an overlap of size $10$ or more with a
+pre-selected list of $100$ genes). In particular, one gene, AT1G13320, is in all ten but one list of top 500 stably expressed genes identified by
+\cite{czechowski2005genome} for different experimental and experimental
+conditions (the only exception is the set of diurnal series, ??? Jeff),
+and is also identified by \cite{hong2010identification} as a stably expressed gene under all six but one experimental conditions he examined.
+This gene is ranked 446 (top 1.8\%), 112 (top 0.5\%), 687 (top 2.9\%)
+according to our stably measure in the three groups we examined.  (??? Is
+there anything special about this gene? Jeff) This gene is a subunite of
+protein phosphatase type 2A complex and involves in regulation of
+phosphorylation and regulation of protein phosphatase type 2A activity. It has
+been used as a reference gene for normalization in many papers
+(e.g., \cite{bournier2013arabidopsis}, \cite{baron2012transcriptional}; these
+two papers cited \cite{czechowski2005genome} as reference). (Similar genes are AT1G10430,
+AT3G01150, [AT5G46630, encoded proteins involved in adaptor complex subunits
+of claturin which mainly involved the protein transport and cell division
+process]
+>>>>>>> 45edb5f72d51064712781a0714305a6773dad12d
 
 \subsection{Comparison to house-keeping genes and stably expressed genes
 identified from microarray data}\label{section:CompareStablyExpressedGene}
@@ -721,6 +746,7 @@ between-sample, between-treatment and between-experiment variance components.
 The estimated variance components tell us how much each component contributes
 to the overall count variation. Table \ref{table:percentageofvariation}
 summarizes the percentages---averaged over all genes---of the total variation
+<<<<<<< HEAD
 attributable to each of the three components for three groups of RNA-Seq
 samples (seedling, leaf and multi-tissue groups).  Figure \ref{fig:densityplot}
 shows the histograms of the percentages. 
@@ -738,6 +764,21 @@ this group of experiments.
  Our intuition is that leaf samples tend
 to be more homogeneous and thus the treatment effect is easier to detect
 between leaf samples. ) 
+=======
+attributable to each of the three components.  Figure \ref{fig:densityplot}
+shows the histograms of the percentages. We also randomly select 20 from
+the top 1000 stably expressed genes, and 20 from all the genes, of the
+multi-tissue group. Figure \ref{fig:all} shows the stacked bar plot of
+variance components for each of the 40 genes.  As expected, the
+between-experiment variance component, on average, explains the largest
+proportion of the total variation. In the group of leaf experiments, the
+between-treatment variation is markedly greater than the between-sample
+variation: one implication is that DE is easier to detect in this group of
+experiments.  [Ask Jeff] Our intuition is that leaf samples tend to be more
+homogeneous and thus the treatment effect is easier to detect between leaf
+samples. (The larger component of between-treatment variation suggests the
+existence of a higher proportion of DE genes.) 
+>>>>>>> 45edb5f72d51064712781a0714305a6773dad12d
  
  \begin{center} \begin{table}[h!] \centering \caption{proportion of estimated
      variance components} \label{table:percentageofvariation}
