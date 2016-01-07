@@ -251,7 +251,7 @@ expressed than traditional house-keeping genes.
 
 
 
-The rest of the paper is organized as follows: in Section \ref{section:Methods}, we describe the data preparation steps and our method of identifying stably expressed genes; in Section \ref{section:Results}, we discuss the stably expressed genes and factors that might affact stability rankings; we also discuss results from variance component analysis and how to use the identified stably expressed genes for count normalization. (AND DISCUSSION...)
+The rest of the paper is organized as follows: in Section \ref{section:Methods}, we describe the data preparation steps and our method of identifying stably expressed genes; in Section \ref{section:Results}, we discuss the stably expressed genes and factors that might affact stability ranking; we also discuss results from variance component analysis and how to use the identified stably expressed genes for count normalization. (AND DISCUSSION...)
 
 
 \section{Methods} \label{section:Methods}
@@ -269,19 +269,19 @@ Step 3, read counts are summarized at the gene level
  and stored as data matrix. % Default options for all functions were used except that the annotation file is set to be \verb"Arabidopsis_thaliana.TAIR10.22.gtf" in \verb|featureCounts()|, which is desired for matching the short reads to Arabidopsis genes. % The multi-mapping or multi-overlapping reads were not counted (included in the default option).
 
 
-  (\textbf{Selecting experiments}) For this study, our attention is restricted to experiments satisfying all the following conditions:  1. Ecotype = "Columbia" ( as a result, we might only choose the Columbia samples when the experiment is done to compare Columbia with other ecotypes.); 2. Library strategy= "RNA-Seq"; 3. Library Source = "transcriptomic"; 4. Library selection= "cDNA"; 5. Library layout = "Single End"; 6. there are at least 2 biological replicates for each treatment. We screened all the Arabidopsis experiments available at NCBI up to May 31, 2015, and processed a total of 49 data sets. Each data set is named by its accession number. 
+  (\textbf{Selecting experiments}) For this study, our attention is restricted to experiments satisfying all the following conditions:  1. Ecotype = "Columbia" ( as a result, we might only choose the Columbia samples when the experiment is done to compare Columbia with other ecotypes.); 2. Library strategy= "RNA-Seq"; 3. Library Source = "transcriptomic"; 4. Library selection= "cDNA"; 5. Library layout = "Single End"; 6. there are at least 2 biological replicates for each treatment. We screened all the Arabidopsis experiments available at NCBI up to May 31, 2015, and processed a total of 49 data sets. Each data set is named by its unique accession number. 
     
 
   
    
    
   (\textbf{Three groups of experiments}) \cite{czechowski2005genome}, \cite{hruz2011refgenes}, and
-   \cite{dekkers2012identification} show that transcriptomes vary across different tissue types and development stages. For this reason, we separated the data sets into three groups: the seedling group where only Arabidopsis seedling are included, the leaf group where only Arabidopsis leaves are included, and the multi-tissue group where different tissue types are included. Within each group, we pre-screened experiments by treatment structures and data quality: 1. If there are repeated measurements over time, we chose only one time period (this includes GSE39463 and GSE43865); 2. We chose experiments with \textit{initial DESeq normalization factors} (discussed in Section \ref{section:countNormalization}) ranging from 0.70 to 1.30: that is, the experiment is retained only when minimun of normalization factors is greater than 0.7 and maximun of normlization factors is less than 1.3. 
+   \cite{dekkers2012identification} show that transcriptomes vary across different tissue types and development stages. For this reason, we separated the data sets into three groups: the \textit{seedling group} where only Arabidopsis seedling are included, the \textit{leaf group} where only Arabidopsis leaves are included, and the \textit{multi-tissue group} where different tissue types are included. Within each group, we pre-screened experiments by treatment structures and data quality: 1. If there are repeated measurements over time, we chose only one time period (this includes GSE39463 and GSE43865); 2. We chose experiments with initial DESeq normalization factors (discussed in Section \ref{section:countNormalization}) ranging from 0.70 to 1.30: that is, the experiment is retained only when the minimun of normalization factors is greater than 0.70 and the maximun of normlization factors is less than 1.30. 
    
-    Eventually, we obtained 23 data sets (with 209 biological samples): 10 experiments (70 samples) for seedling group, 5 experiments (60 samples) for leaf group and 8 experiments (79 samples) for multi-tissue (shoot apical,  root tip, primary root, inflorescences and siliques, hypocotyl, flower, carpels, aerial tissue) group. Samples from different experiments were merged by their unique gene IDs, and then stored as read count matrices. A brief description of the data sets can be found in Table (REF) supplementary material. More details for each experiment are also accessible at NCBI via the unique accession number provided in Table (REF).
+    Eventually, we obtained 23 data sets (with 209 biological samples): 10 experiments (70 samples) for the seedling group, 5 experiments (60 samples) for the leaf group and 8 experiments (79 samples) for the multi-tissue group (that is: shoot apical,  root tip, primary root, inflorescences and siliques, hypocotyl, flower, carpels, aerial tissue). Samples from different experiments were merged by their unique gene IDs, and then stored as read count matrices. A brief description of the data sets can be found in Table (REF) supplementary material. More details for each experiment are also accessible at NCBI via the unique accession number provided in Table (REF).
    
    
-	 (Selecting genes) Prior to analysis, we removed genes with low overall counts as suggested by \cite{anders2013count}. Filtering lowly-expressed genes is helpful not only because such genes provide little information about expression level,  but also because they will cause convergence failure to our model. In practice, convergence issue can be avoided by removing genes with overall mean count less than 3. Table \ref{table:TableSet3} summarizes the three groups after  lowly-expressed genes are removed.
+	 (Selecting genes) Prior to analysis, we removed genes with low overall counts as suggested by \cite{anders2013count}. Filtering lowly-expressed genes is helpful not only because such genes provide little information about expression level,  but also because they will cause convergence failure to our model. In practice, convergence issue can be avoided by removing genes with overall mean count less than 3. Table \ref{table:TableSet3} summarizes the three groups after lowly-expressed genes are removed.
    
    \begin{table}[h]
    	\centering
@@ -305,10 +305,10 @@ Many existing normalization methods, such as the trimmed mean of M-values normal
 \[ z_i = (\prod_{j=1}^ny_{ij})^{1/n},  i=1, \ldots, m \]
  The \textit{normalization factor} for sample $j$ is then calculated as the median of the fold-changes between sample $j$ and pseudo-reference sample over all genes
   \begin{equation}\label{eq:normfactors} 
- R_j = \text{median}(y_{1j}/z_1, \ldots, y_{nj}/z_n)
+ R_j = \text{median}(\dfrac{y_{1j}}{z_1}, \ldots, \dfrac{y_{nj}}{z_n})
   \end{equation}
 
-In this paper, we use an iterative procedure to estimate the normalization factors: initially, we use all the genes to calculate the normalization factors, which is part of the offset term in the GLMM, and rank all the genes by our stability measure (see Section \ref{subsection:OurMethod}); next, at each iteration, we select the top 1000 genes ---  ranking based on previous iteration --- as reference to update the normalization factors. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and those from the second iteration according to our stability measure. We therefore recommend one iteration to be sufficient.  
+In this paper, we use an iterative procedure to estimate the normalization factors: initially, we use all the genes to calculate the normalization factors, which serve as a part of the offset term in the GLMM, and rank all the genes by our stability measure (see Section \ref{subsection:OurMethod}); next, at each iteration, we select the top 1000 genes ---  ranking based on previous iteration --- as reference to update the normalization factors. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and those from the second iteration according to our stability measure. We therefore recommend one iteration to be sufficient.  
 
 \subsection{Poisson log-linear mixed-effects regression model}\label{subsection:OurMethod} 
 % (Each individual count is model as a Poisson distribution. The count mean is
@@ -585,7 +585,7 @@ We have the following observations:
 	seed group) and using the CV measure. The overlapping (recall)
 	percentages are still statistically significant, but much less than in
 	the case of $L_1$.  This shows that differences in tissue type and in
-	measuring technology both influence the expression stability rankings,
+	measuring technology both influence the expression stability ranking,
 	and to comparable degrees. The lists $L_3$ and $L_5$ have the least
 	overlapping percentages with the reference sets. These lists are
 	identified from a leaf group and a seed group respectively.
@@ -610,7 +610,7 @@ We have the following observations:
 \end{figure}
 
 When applied to the same set of samples, the $M$-value and total variance
-measure $\hat\sigma^2$ give similar expression stability rankings: the rank
+measure $\hat\sigma^2$ give similar expression stability ranking: the rank
 correlation is $0.97$ (see also, observation 1 above).
 % there is significant overlap between the sets of most stably-expressed genes identified
 % according to the $M$-value measure and according to the total variance
@@ -667,7 +667,7 @@ gene $7$ is the least stable one and genes $4$ and $5$ are considered the most
 stable ones.  Once genes 6 and 7 are eliminated, however, the recalculated
 $M$-values will rank genes 1--3 as more stable than genes $4$ and
 $5$ (see column 5 of Table \ref{table:toyexample}). The root cause of this
-reversal of rankings is that when an iterative elimination procedure is used,
+reversal of ranking is that when an iterative elimination procedure is used,
 effectively, the reference gene set is changing after each iteration: in the
 initial ranking, the expression patterns genes 4 and 5 are close to the
 ``middle of the pack'' and thus considered as the most stable, and the
@@ -697,7 +697,7 @@ adaption of it in practice should not be automatic.
     Gene7 & 1 & 4 & 7 &  \\ \hline 
     Library Size & 7 & 14 & & 	\\ \hline 
     Note: &\multicolumn{4}{l}{ rank1 = initial ranking by $M$-value, } \\
-    & \multicolumn{4}{l}{ rank2= rankings after Gene 6 and 7 removed.}
+    & \multicolumn{4}{l}{ rank2= ranking after Gene 6 and 7 removed.}
 \end{tabular} \label{table:toyexample} \end{table}
 
 
@@ -768,15 +768,54 @@ between leaf samples. )
 \end{figure}
 
 
+\subsection{Reference gene set for normalization}
+\label{Section:commonReference}
+
+Once we have ranked the genes according to our numerical stability measure
+(i.e, the total variation measure, $\hat\sigma^2$), one application is to use
+an explicit set of most stably expressed genes as reference genes for count
+normalization. The key difference of this approach from existing normalization
+approach that uses only the one data set under study is that this new approach
+allows investigators to prescribe a specific biological context for evaluating
+gene stability by choosing the most relevant reference samples and experiments
+when computing the stability measure. For example, the most stably expressed
+genes identified from the multi-tissue group and those identified from the
+seedling group will provide different biological contexts.
+
+In the Introduction, we also argued that using an explicit set of genes as
+reference for normalization can improve interpretability of DE results,
+especially when one wants to compare results from two or more experiments, in
+the sense that DE can always be interpreted as relative to the explicit
+reference gene set used. We use a toy example illustrate this point: ??? (Two
+experiments, 2 columns (two experiment means), 5 genes).
+
+In practice, we recommend using the top 1000 most stably genes for estimating
+normalization factors. The key is to avoid using too few (e.g., less than 10)
+or too many (e.g., using all genes): intuitively, using too few, the estimates will be
+variable; using too many, the results will be influenced by less stably
+expressed genes.  Our simple simulations suggest that using between 100 to
+10000 genes seems to give stable results.  In this first set of three
+examples, we use Anders and Huber's method (see equation
+(\ref{eq:normfactors})) to estimate normalization factors for samples in each
+of the seedling, leaf and multi-tissue groups of experiments (see REF).  We
+use the top 10, 100, 1000, and 10000 stably expressed genes identified earlier
+(see 3.1 for details) as reference gene set. Figure \ref{fig:normfactor} shows
+the pairwise scatter plots and correlation coefficient between the
+normalization factors when different numbers of top stable genes are used as
+reference. The plots and correlation coefficients suggest using between 100
+and 1000 genes tend to give similar normalization factor estimates. We also
+used the top 10, 100, 1000, and 10000 stably expressed genes identified from
+the seedling group as reference set for estimating normalization factors for a
+set of six seedling samples from a different experiment. The largest Pearson
+correlation $0.995$ is between the normalization factors estimated using the
+top $1000$ and top $10000$ stably expressed genes as reference.
+
+%A common reference set of stably expressed genes will help improve
+%comparability of the data sets and interpretability of DE test leaf.
 
 
-\subsection{Choosing reference set for normalization}\label{Section:commonReference}
-The choice of stably expressed genes has an impact on estimating normalization factors, and further on detecting DE genes in gene expression analysis. 
-One goal of identifying stably expressed genes is to use them as reference genes for normalization. To determine an appropriate size for reference set, we choose top 10, 100, 1000, 10000 stably expressed genes identified by GLMM as reference set, and calculate normalization factors by DESeq method (see equation (\ref{eq:normfactors}) ) for each sample in the seedling, the leaf and the multi-tissue groups. Figure \ref{fig:normfactor} shows paired scatter plot of normalization factors for the three groups and an additional seedling experiment. In all of the three groups, the Pearson correlation is the largest ($0.987$, $0.988$, and $0.996$ for the seedling, the leaf and the multi-tissue groups, respectively) between normalization factors using top 100 and those using top 1000 stably expressed genes identified from the corresponding groups. For the additional seedling experiment, the largest Pearson correlation $0.995$ comes from between the normalization factors using top $1000$ and those using top $10000$, stably expressed genes identified from the seedling group. We thus recommend using top 1000 stably expressed genes as reference to compute normalization factors. %A common reference set of stably expressed genes will help improve comparability of the data sets and interpretability of DE test leaf.
 
-
-
- \begin{figure}[h!]
+\begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.4]{Figures/norm1.eps}
 \includegraphics[scale=0.4]{Figures/norm2.eps}
