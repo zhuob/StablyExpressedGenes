@@ -40,17 +40,17 @@ cat("producing results in section 1...\n")
 
 setEPS()
 postscript(paste(FigurePath, "cpm_seedling.eps", sep=""))
-A1 <- plot.cpm(var_seedling,  1e3, "seedling", textsize =c(10, 30, 20, 20))
+A1 <- plot.cpm(var_seedling,  1e3, "Seedling", textsize =c(10, 30, 20, 20))
 print(A1)
 dev.off()
 setEPS()
 postscript(paste(FigurePath, "cpm_leaves.eps", sep=""))
-A2 <- plot.cpm(var_leaf,  1e3, "leaves", textsize =c(10, 30, 20, 20))
+A2 <- plot.cpm(var_leaf,  1e3, "Leaf", textsize =c(10, 30, 20, 20))
 print(A2)
 dev.off()
 setEPS()
 postscript(paste(FigurePath, "cpm_tissue.eps", sep=""))
-A3 <- plot.cpm(var_tissue,  1e3, "multiple tissues", textsize =c(10, 30, 20, 20))
+A3 <- plot.cpm(var_tissue,  1e3, "Multi-tissues", textsize =c(10, 30, 20, 20))
 print(A3)
 dev.off()
 
@@ -183,7 +183,7 @@ dev.off()
 
 setEPS() 
 postscript(paste(FigurePath, "var_dens3.eps", sep=""), width = 8, height = 5)
-A12 <- plot.density(var_tissue, "Tissue")
+A12 <- plot.density(var_tissue, "Multi-tissue")
 print(A12)
 dev.off()
 
@@ -203,7 +203,7 @@ cat("producing results in section 5...\n")
 #######  Scatter plot for normalization factors 
 # legened, title, axis, axis.title
 
-text.size <- c(20, 20, 15, 20)
+text.size <- c(20, 20, 40, 20)
 
 
 setEPS() 

@@ -194,14 +194,27 @@ plot.pair.normfactor <- function(set, textsize = rep(20,4)){
                   all= as.numeric(norm.all))
   
   x <- round(x, 2)
-  ggpairs(x, upper = list(params = c(size = 10))) +
-    theme(legend.position=c(0.9, 0.2), 
-          legend.text = element_text(size = textsize[1]),
+  
+  abcd <- ggpairs(x, upper = "blank", axisLabels = "none") +
+    theme(legend.text = element_text(size = textsize[1]),
+          panel.grid.major = element_blank(), 
+          axis.ticks=element_blank(), 
+          panel.border = element_rect(linetype = "dashed", colour = "blue", fill = NA), 
           plot.title = element_text(size = textsize[2]), 
           axis.text=element_text(size=textsize[3]), 
           axis.title=element_text(size=textsize[4],face="bold")) 
   
-
+  ## fill the uppper part manually
+  for ( i in 1:(ncol(x)-1)){
+    for ( j in (i + 1) :ncol(x) ){
+      x1 <- x[, i]
+      x2 <- x[, j]
+      r <- round(cor(x1, x2), 3)
+      add_plot <- ggally_text(r, size = 10)
+      abcd[i, j] <- add_plot
+    }
+  }
+  abcd 
 }
 
 

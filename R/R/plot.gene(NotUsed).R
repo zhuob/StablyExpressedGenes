@@ -43,3 +43,43 @@ plot.gene <- function(genelist, count, lower=1, upper=1e4, figure.num)
   #  + geom_text( aes(1, 9000, label = "A"))
   
 }
+
+
+
+
+plot.pair.normfactor <- function(set, color="red") {
+  
+  target_var <- set$var.comp
+  target_count <- set$count
+  
+  norm.10 <- norm.factor(target_var, target_count, 10)
+  norm.1e2 <- norm.factor(target_var, target_count, 1e2)
+  norm.1e3 <- norm.factor(target_var, target_count, 1e3)
+  norm.1e4 <- norm.factor(target_var, target_count, 1e4)
+  
+  
+  norm.all <- norm.factor(target_var, target_count, dim(target_var)[1])
+  
+  norm.factor1 <- estimate.norm.factors(target_count, lib.sizes=colSums(target_count))
+  
+  x <- data.frame(top10=as.numeric(norm.10), top1e2 = as.numeric(norm.1e2),
+                  top1e3=as.numeric(norm.1e3), top1e4 = as.numeric(norm.1e4),
+                  all= norm.all)
+  
+  
+  panel.cor <- function(x, y, digits = 3, prefix = "", cex.cor, ...)
+  {
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- abs(cor(x, y))
+    txt <- format(c(r, 0.123456789), digits = digits)[1]
+    txt <- paste0(prefix, txt)
+    if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+    text(0.6, 0.5, txt, cex = cex.cor * r)
+  }
+  pairs(x, pch=15, col=color, lower.panel = panel.smooth, upper.panel = panel.cor)
+}
+
+
+plot.pair.normfactor(set )
+
