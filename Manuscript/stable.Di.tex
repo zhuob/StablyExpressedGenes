@@ -255,13 +255,13 @@ The rest of the paper is organized as follows: in Section \ref{section:Methods},
 
 
 \section{Methods} \label{section:Methods}
-(Overview) In this section, we discuss the data preparation and our method of identifying stably expressed genes. In \ref{section:DataCollection}, we describe the steps for collecting and processing data. In \ref{section:countNormalization}, we introduce the DESeq normalization that will be included in our model. In Section \ref{subsection:OurMethod}  we fit a generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} and estimate three variance components from each gene: the \textit{between-sample}, \textit{between-treatment} and \textit{between-experiment} variances.
+(Overview) In this section, we discuss the data preparation and our method of identifying stably expressed genes. In Section \ref{section:DataCollection}, we describe the steps for collecting and processing data. In Section \ref{section:countNormalization}, we introduce the DESeq normalization that will be included in our model. In Section Section \ref{subsection:OurMethod}  we fit a generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} and estimate three variance components from each gene: the \textit{between-sample}, \textit{between-treatment} and \textit{between-experiment} variances.
  The \textit{total variance} is defined to be the expression stability measure associated with that gene. Genes with smaller total variance are considered to be more stably expressed. 
 
 
 
 \subsection{Data collection}\label{section:DataCollection}
-The \textit{Gene Expression Omnibus} (GEO) repository at \textit{National Center for Biotechnology Information} (NCBI, \url{http://www.ncbi.nlm.nih.gov/}) contains a large number of RNA-Seq experiments. However, the RNA-Seq read counts are either processed by different aligners or not directly available at NCBI. For this reason, we arrange a pipeline based on the NCBI \textit{Sequence Read Archive} (SRA) Toolkit (version 2.3.5-2) and the Subread aligner (version 1.16.2 in R software, \cite{liao2013subread}) to process raw FASTQ data into read counts. The pipeline, implemented using R software, is summarized as follows: Step 1,  SRA format files of Arabidopsis samples are retrieved from GEO repository, and then converted to FASTQ files using SRA Toolkit;  %\url{http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?cmd=show&f=software&m=software&s=software},
+The \textit{Gene Expression Omnibus} (GEO) repository at \textit{National Center for Biotechnology Information} (NCBI, \url{http://www.ncbi.nlm.nih.gov/}) contains a large number of RNA-Seq experiments. However, the RNA-Seq read counts are either processed by different aligners or not directly available at NCBI. For this reason, we arrange a pipeline based on the NCBI \textit{Sequence Read Archive} (SRA) Toolkit (version 2.3.5-2) and the Subread aligner (version 1.16.2, implemented in R software, \cite{liao2013subread}) to process raw FASTQ data into read counts. The pipeline, implemented using R software, is summarized as follows: Step 1,  SRA format files of Arabidopsis samples are retrieved from GEO repository, and then converted to FASTQ files using SRA Toolkit;  %\url{http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?cmd=show&f=software&m=software&s=software},
 Step 2, short reads in FASTQ files are aligned to the Arabidopsis reference genome downloaded from the\textit{ Ensembl plants FTP server} (\url{http://plants.ensembl.org/info/data/ftp/index. html});
  %As suggested by\cite{anders2013count}, "FASTA(DNA)" link was chosen because samples were aligned to the genome. .  
 Step 3, read counts are summarized at the gene level
@@ -269,7 +269,7 @@ Step 3, read counts are summarized at the gene level
  and stored as data matrix. % Default options for all functions were used except that the annotation file is set to be \verb"Arabidopsis_thaliana.TAIR10.22.gtf" in \verb|featureCounts()|, which is desired for matching the short reads to Arabidopsis genes. % The multi-mapping or multi-overlapping reads were not counted (included in the default option).
 
 
-  (\textbf{Selecting experiments}) For this study, our attention is restricted to experiments satisfying all the following conditions:  1. Ecotype = "Columbia" ( as a result, we might only choose the Columbia samples when the experiment is done to compare Columbia with other ecotypes.); 2. Library strategy= "RNA-Seq"; 3. Library Source = "transcriptomic"; 4. Library selection= "cDNA"; 5. Library layout = "Single End"; 6. there are at least 2 biological replicates for each treatment. We screened all the Arabidopsis experiments available at NCBI up to May 31, 2015, and processed a total of 49 data sets. Each data set is named by its unique accession number. 
+  (\textbf{Selecting experiments}) For this study, we restrict our attention to experiments satisfying all the following conditions:  1. Ecotype = "Columbia" (as a result, we might only choose the Columbia samples when the experiment is done to compare Columbia with other ecotypes.); 2. Library strategy= "RNA-Seq"; 3. Library source = "transcriptomic"; 4. Library selection= "cDNA"; 5. Library layout = "Single End"; 6. there are at least 2 biological replicates for each treatment. We screened all the Arabidopsis experiments available at NCBI up to May 31, 2015, and processed a total of 49 data sets. Each data set is named by its unique accession number. 
     
 
   
@@ -278,7 +278,7 @@ Step 3, read counts are summarized at the gene level
   (\textbf{Three groups of experiments}) \cite{czechowski2005genome}, \cite{hruz2011refgenes}, and
    \cite{dekkers2012identification} show that transcriptomes vary across different tissue types and development stages. For this reason, we separated the data sets into three groups: the \textit{seedling group} where only Arabidopsis seedling are included, the \textit{leaf group} where only Arabidopsis leaves are included, and the \textit{multi-tissue group} where different tissue types are included. Within each group, we pre-screened experiments by treatment structures and data quality: 1. If there are repeated measurements over time, we chose only one time period (this includes GSE39463 and GSE43865); 2. We chose experiments with initial DESeq normalization factors (discussed in Section \ref{section:countNormalization}) ranging from 0.70 to 1.30: that is, the experiment is retained only when the minimun of normalization factors is greater than 0.70 and the maximun of normlization factors is less than 1.30. 
    
-    Eventually, we obtained 23 data sets (with 209 biological samples): 10 experiments (70 samples) for the seedling group, 5 experiments (60 samples) for the leaf group and 8 experiments (79 samples) for the multi-tissue group (that is: shoot apical,  root tip, primary root, inflorescences and siliques, hypocotyl, flower, carpels, aerial tissue). Samples from different experiments were merged by their unique gene IDs, and then stored as read count matrices. A brief description of the data sets can be found in Table (REF) supplementary material. More details for each experiment are also accessible at NCBI via the unique accession number provided in Table (REF).
+    Eventually, we obtained 23 data sets (with 209 biological samples): 10 experiments (70 samples) for the seedling group, 5 experiments (60 samples) for the leaf group and 8 experiments (79 samples) for the multi-tissue group (that is: shoot apical,  root tip, primary root, inflorescences and siliques, hypocotyl, flower, carpels, aerial tissue). Samples from different experiments were merged by their unique gene IDs, and then stored as read count matrices. A brief description of the data sets can be found in Table (REF) of the online supplementary material. More details for each experiment are also accessible at NCBI via the unique accession number provided in Table (REF).
    
    
 	 (Selecting genes) Prior to analysis, we removed genes with low overall counts as suggested by \cite{anders2013count}. Filtering lowly-expressed genes is helpful not only because such genes provide little information about expression level,  but also because they will cause convergence failure to our model. In practice, convergence issue can be avoided by removing genes with overall mean count less than 3. Table \ref{table:TableSet3} summarizes the three groups after lowly-expressed genes are removed.
@@ -301,14 +301,15 @@ Step 3, read counts are summarized at the gene level
 
 \subsection{Count normalization}\label{section:countNormalization}
 
-Many existing normalization methods, such as the trimmed mean of M-values normalization method (TMM) \citep{robinson2010scaling} and DESeq normalization \citep{anders2010differential}, assume that the majority of the genes are not DE within an experiment. Effectively, these methods use genes with relatively small observed fold changes under a single experiment as a reference gene set in normalization. We choose DESeq \citep{anders2010differential} as our normalization method in this paper. Briefly, let $y_{ij}$ denote the read count for $i$th gene and $j$th sample, then a pseudo-reference sample is created, with gene $i$th expression value defined as the geometric mean of the same gene over all real samples, 
+Many existing normalization methods, such as the trimmed mean of M-values normalization method (TMM) \citep{robinson2010scaling} and Anders and Huber's normalization \citep{anders2010differential}, assume that the majority of the genes are not DE within an experiment. Effectively, these methods use genes with relatively small observed fold changes under a single experiment as a reference gene set in normalization. In this paper, we choose Anders and Huber's method \citep{anders2010differential} to estimate normalization factors.  Briefly, let $y_{ij}$ denote the read count for $i$th gene of $j$th sample, then a pseudo-reference sample is created, with gene $i$th expression value defined as the geometric mean of the same gene over all real samples, 
 \[ z_i = (\prod_{j=1}^ny_{ij})^{1/n},  i=1, \ldots, m \]
  The \textit{normalization factor} for sample $j$ is then calculated as the median of the fold-changes between sample $j$ and pseudo-reference sample over all genes
   \begin{equation}\label{eq:normfactors} 
  R_j = \text{median}(\dfrac{y_{1j}}{z_1}, \ldots, \dfrac{y_{nj}}{z_n})
   \end{equation}
+This method is implemeted in NBPSeq package \citep{di2014package}. 
 
-In this paper, we use an iterative procedure to estimate the normalization factors: initially, we use all the genes to calculate the normalization factors, which serve as a part of the offset term in the GLMM, and rank all the genes by our stability measure (see Section \ref{subsection:OurMethod}); next, at each iteration, we select the top 1000 genes ---  ranking based on previous iteration --- as reference to update the normalization factors. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and those from the second iteration according to our stability measure. We therefore recommend one iteration to be sufficient.  
+In this paper, we use an iterative procedure to estimate the normalization factors: initially, we use all the genes to calculate the normalization factors, which serve as a part of the offset term in the GLMM, and rank all the genes by our stability measure (see Section \ref{subsection:OurMethod}); next, at each iteration, we select the top 1000 genes ---  ranking based on previous iteration --- as reference genes to recalculate the normalization factors. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and those from the second iteration according to our stability measure. We therefore recommend one iteration to be sufficient.  
 
 \subsection{Poisson log-linear mixed-effects regression model}\label{subsection:OurMethod} 
 % (Each individual count is model as a Poisson distribution. The count mean is
@@ -786,8 +787,22 @@ In the Introduction, we also argued that using an explicit set of genes as
 reference for normalization can improve interpretability of DE results,
 especially when one wants to compare results from two or more experiments, in
 the sense that DE can always be interpreted as relative to the explicit
-reference gene set used. We use a toy example illustrate this point: ??? (Two
-experiments, 2 columns (two experiment means), 5 genes).
+reference gene set used. We use a toy example to illustrate this point in Table \ref{table:reference}, in which we consider two experiemnts, each comparing two treatments for a total number of 5 genes. Columns 2--5 are the mean expression levels for each treatment. When comparing the two experiments, we will consider genes 1--3 and 5 to be DE if we use gene 4 as reference gene; however, we will consider genes 4 and 5 as DE if we use gene 1--3 as reference genes: the resulting DE genes are dependent on the reference gene set.
+	\begin{center}
+	\begin{table}\centering
+		\caption{My caption}\label{table:reference}
+		\begin{tabular}{ccccc} \\ \hline
+			&  \multicolumn{2}{c}{Exp. 1} & \multicolumn{2}{c}{Exp. 2} \\
+			Gene  & $T_{1, 1}$ & $T_{1, 2}$  & $T_{2, 1}$  &$T_{2, 2}$ \\ \hline
+			1     & 10       & 10       & 20    &20   \\
+			2     & 10       & 10       & 20    &20   \\
+			3     & 10       & 10       & 20    &20   \\
+			4     & 20       & 20       & 20    &20   \\
+			5     & 30       & 30       & 20    &20   \\  \hline
+			total & 80       & 80      & 100   &100   \\ \hline
+		\end{tabular}
+	\end{table}
+	\end{center}
 
 In practice, we recommend using the top 1000 most stably genes for estimating
 normalization factors. The key is to avoid using too few (e.g., less than 10)
@@ -797,7 +812,7 @@ expressed genes.  Our simple simulations suggest that using between 100 to
 10000 genes seems to give stable results.  In this first set of three
 examples, we use Anders and Huber's method (see equation
 (\ref{eq:normfactors})) to estimate normalization factors for samples in each
-of the seedling, leaf and multi-tissue groups of experiments (see REF).  We
+of the seedling, leaf and multi-tissue groups of experiments (see Section \ref{section:DataCollection}).  We
 use the top 10, 100, 1000, and 10000 stably expressed genes identified earlier
 (see 3.1 for details) as reference gene set. Figure \ref{fig:normfactor} shows
 the pairwise scatter plots and correlation coefficient between the
@@ -817,10 +832,10 @@ top $1000$ and top $10000$ stably expressed genes as reference.
 
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[scale=0.4]{Figures/norm1.eps}
-\includegraphics[scale=0.4]{Figures/norm2.eps}
-\includegraphics[scale=0.4]{Figures/norm3.eps}
-\includegraphics[scale=0.4]{Figures/norm4.eps}
+\includegraphics[scale=0.38]{Figures/norm1.eps}
+\includegraphics[scale=0.38]{Figures/norm2.eps}
+\includegraphics[scale=0.38]{Figures/norm3.eps}
+\includegraphics[scale=0.38]{Figures/norm4.eps}
 \caption{\label{fig:normfactor} matrix plot of normalization factors by choosing top 10--10000 stably expressed genes for seedling group (top left), leaf group (top right), multi-tissue (bottom left) group. The bottom right plot shows the normalization factors of a new seedling experiment GSE66666 (sample size is 6) when using top 10--10000 stably expressed genes from seedling group.}
 \end{center}
 \end{figure}
