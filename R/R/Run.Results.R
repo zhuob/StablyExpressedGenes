@@ -50,7 +50,7 @@ print(A2)
 dev.off()
 setEPS()
 postscript(paste(FigurePath, "cpm_tissue.eps", sep=""))
-A3 <- plot.cpm(var_tissue,  1e3, "Multi-tissues", textsize =c(10, 30, 20, 20))
+A3 <- plot.cpm(var_tissue,  1e3, "Multi-tissue", textsize =c(10, 30, 20, 20))
 print(A3)
 dev.off()
 

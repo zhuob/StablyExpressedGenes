@@ -31,7 +31,7 @@ plot.cpm <- function(set, top=1e3, figure.num, breaks=50, textsize =rep(20, 4)){
           plot.title = element_text(size = textsize[2]), 
           axis.text=element_text(size=textsize[3]), 
           axis.title=element_text(size=textsize[4],face="bold")) +
-    labs(x = "CPM", title = figure.num)
+    labs(x = "CPM", y = "Frequency", title = figure.num)
 }
 
 
