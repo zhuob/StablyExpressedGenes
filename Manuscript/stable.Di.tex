@@ -788,27 +788,72 @@ when computing the stability measure. For example, the most stably expressed
 genes identified from the multi-tissue group and those identified from the
 seedling group will provide different biological contexts.
 
+%	\begin{center}
+%	\begin{table}\centering
+%		\caption{My caption}\label{table:reference}
+%		\begin{tabular}{ccccc} \\ \hline
+%			&  \multicolumn{2}{c}{Exp. 1} & \multicolumn{2}{c}{Exp. 2} \\
+%			Gene  & $T_{1, 1}$ & $T_{1, 2}$  & $T_{2, 1}$  &$T_{2, 2}$ \\ \hline
+%			1     & 10       & 20       & 10    &20   \\
+%			2     & 10       & 20       & 20    &10   \\
+%			3     & 10       & 10       & 10    &10   \\
+%			4     & 20       & 20       & 20    &20   \\ 
+%			5     & 20       & 40       & 20    &20   \\  \hline
+%			total & 70       & 110      & 80   &80   \\ \hline
+%		\end{tabular}
+%	\end{table}
+%	\end{center}
+%
+	\begin{center}
+	    \begin{table}\centering
+		\caption{My caption}\label{table:reference}
+		\begin{tabular}{ccccc} \\ \hline
+		    &  \multicolumn{2}{c}{Exp. 1} & \multicolumn{2}{c}{Exp. 2} \\
+		    % Gene  & $T_{1, 1}$ & $T_{1, 2}$  & $T_{2, 1}$  &$T_{2, 2}$ \\ \hline
+		    Gene  & Control & Treatment & Control & Treatmetn \\
+		    \hline
+		    1     & 10       & 20       & 10    &20   \\
+		    2     & 10       & 20       & 10    &20   \\
+		    3     & 10       & 20       & 10    &10   \\
+		    4     & 10       & 10       & 10    &10   \\ 
+		    5     & 10       & 10       & 10    &10   \\  
+		\end{tabular}
+	    \end{table}
+	\end{center}
+
 In the Introduction, we also argued that using an explicit set of genes as
 reference for normalization can improve interpretability of DE results,
 especially when one wants to compare results from two or more experiments, in
 the sense that DE can always be interpreted as relative to the explicit
-reference gene set used. We use a toy example to illustrate this point in Table \ref{table:reference}, in which we consider two experiemnts, each comparing two treatments for a total number of 5 genes. Columns 2--5 are the mean expression levels for each treatment. In Experiment 1, expression levels of genes 1, 2, and 5 represent the most typical pattern and therefore they are used as reference genes; as a result, genes 3 and 4 will be declared as DE. In Experiment 2, expression levels of gene 3--5 are most typical and therefore used as reference genes, and genes 1 and 2 will be considered as DE. However, when comparing the two experiments and we use genes 3 and 4 as commen reference, genes 1 and 2 will be declared as DE in both experiments and gene 5 will be considered as DE in experiment 1 but not DE in experiment 2.
-	\begin{center}
-	\begin{table}\centering
-		\caption{My caption}\label{table:reference}
-		\begin{tabular}{ccccc} \\ \hline
-			&  \multicolumn{2}{c}{Exp. 1} & \multicolumn{2}{c}{Exp. 2} \\
-			Gene  & $T_{1, 1}$ & $T_{1, 2}$  & $T_{2, 1}$  &$T_{2, 2}$ \\ \hline
-			1     & 10       & 20       & 10    &20   \\
-			2     & 10       & 20       & 20    &10   \\
-			3     & 10       & 10       & 10    &10   \\
-			4     & 20       & 20       & 20    &20   \\ 
-			5     & 20       & 40       & 20    &20   \\  \hline
-			total & 70       & 110      & 80   &80   \\ \hline
-		\end{tabular}
-	\end{table}
-	\end{center}
-	
+reference gene set used. We use a toy example to illustrate this point in
+Table \ref{table:reference} where we examine the mean counts for 5 genes in two
+two-group comparison experiments. If we use different reference gene set for
+count normalization, for example, we use genes 1--3 as reference in experiment
+1, but use genes 3--5 as reference in experiment 2, we will conclude that gene
+3 is not DE in either experiment. If we use a common reference gene
+set---either genes 1--3 or genes 3--5---for normalization, however, we will be
+able to discover, in either case, that the DE behavior of gene 3 is different
+in the two experiments. Note that the DE conclusion will be different in both
+experiments depending on the reference genes used: if genes 1--3 are used as
+reference, gene 3 is not DE in experiment 1, but will be DE in experiment 2;
+if genes 3--5 are used as reference, gene 3 will be considered DE in
+experiment 1, but not DE in experiment 2. The point is, in either case, we
+will notice that the DE behavior of gene 3 is different between the two
+experiments. This information will be lost if one uses different reference
+sets to assess DE in the two experiments.
+
+
+% Columns 2--5 are the mean counts for each treatment. 
+%In Experiment 1, expression levels of genes 1, 2, and 5 represent
+%the most typical pattern and therefore they are used as reference genes; as a
+%result, genes 3 and 4 will be declared as DE. In Experiment 2, expression
+%levels of gene 3--5 are most typical and therefore used as reference genes,
+%and genes 1 and 2 will be considered as DE. However, when comparing the two
+%experiments and we use genes 3 and 4 as commen reference, genes 1 and 2 will
+%be declared as DE in both experiments and gene 5 will be considered as DE in
+%experiment 1 but not DE in experiment 2.
+%
+
 In practice, we recommend using the top 1000 most stably genes for estimating
 normalization factors. The key is to avoid using too few (e.g., less than 10)
 or too many (e.g., using all genes): intuitively, using too few, the estimates will be
