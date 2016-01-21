@@ -255,46 +255,123 @@ The rest of the paper is organized as follows: in Section \ref{section:Methods},
 
 
 \section{Methods} \label{section:Methods}
-(Overview) In this section, we discuss the data preparation and our method of identifying stably expressed genes. In Section \ref{section:DataCollection}, we describe the steps for collecting and processing data. In Section \ref{section:countNormalization}, we introduce Anders and Huber's method that will be used for count normalization in our model. In Section \ref{subsection:OurMethod}  we fit a generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} and estimate three variance components for each gene: the \textit{between-sample}, \textit{between-treatment} and \textit{between-experiment} variances.
+(Overview) In this section, we discuss the data preparation and our method of
+identifying stably expressed genes. In Section \ref{section:DataCollection},
+we describe the steps for collecting and processing data. In Section
+\ref{section:countNormalization}, we introduce Anders and Huber's method that
+will be used for count normalization in our model. In Section
+\ref{subsection:OurMethod}  we describe a generalized linear mixed model (GLMM) \citep{mccullagh1989generalized} and estimate three variance components for each gene: the \textit{between-sample}, \textit{between-treatment} and \textit{between-experiment} variances.
  The \textit{total variance} is defined to be the expression stability measure associated with that gene. Genes with smaller total variance are considered to be more stably expressed. 
 
 
 
-\subsection{Data collection}\label{section:DataCollection}
-The \textit{Gene Expression Omnibus} (GEO) repository at \textit{National Center for Biotechnology Information} (NCBI, \url{http://www.ncbi.nlm.nih.gov/}) contains a large number of RNA-Seq experiments. However, the RNA-Seq read counts are either processed by different aligners or not directly available at NCBI. For this reason, we arrange a pipeline based on the NCBI \textit{Sequence Read Archive} (SRA) Toolkit (version 2.3.5-2) and the Subread aligner (version 1.16.2, implemented in R software, \cite{liao2013subread}) to process raw FASTQ data into read counts. The pipeline, implemented using R software, is summarized as follows: Step 1,  SRA format files of Arabidopsis samples are retrieved from GEO repository, and then converted to FASTQ files using SRA Toolkit;  %\url{http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?cmd=show&f=software&m=software&s=software},
-Step 2, short reads in FASTQ files are aligned to the Arabidopsis reference genome downloaded from the\textit{ Ensembl plants FTP server} (\url{http://plants.ensembl.org/info/data/ftp/index. html});
- %As suggested by\cite{anders2013count}, "FASTA(DNA)" link was chosen because samples were aligned to the genome. .  
-Step 3, read counts are summarized at the gene level
-% using annotation \verb"Arabidopsis_thaliana.TAIR10.22.gtf" 
- and stored as data matrix. % Default options for all functions were used except that the annotation file is set to be \verb"Arabidopsis_thaliana.TAIR10.22.gtf" in \verb|featureCounts()|, which is desired for matching the short reads to Arabidopsis genes. % The multi-mapping or multi-overlapping reads were not counted (included in the default option).
+\subsection{RNA-Seq data collection and processing}\label{section:DataCollection}
+For evaluating the gene expression stability, we prepared RNA-Seq data for 209
+Arabidopsis samples in 23 experiments.
+
+\subsubsection*{Selecting experiments} 
+The \textit{Gene Expression Omnibus} (GEO) repository at \textit{National
+Center for Biotechnology Information} (NCBI,
+\url{http://www.ncbi.nlm.nih.gov/}) stores raw sequencing data from a large
+number of RNA-Seq experiments.  For this study, we restrict our attention to
+Arabidopsis experiments satisfying the following conditions: 1.  Ecotype =
+"Columbia" (we kept only the Columbia samples from experiments that compare
+Columbia samples to other ecotypes); 2. Library strategy= "RNA-Seq"; 3.
+Library source = "transcriptomic"; 4.  Library selection= "cDNA"; 5.  Library
+layout = "Single End"; 6. There are at least 2 biological replicates for each
+treatment. We screened all the Arabidopsis experiments available from the NCBI
+GEO repository up to May 31, 2015 and downloaded raw RNA-Seq data (SRA files)
+from 49 experiments. % Each data set is named by its unique accession number. 
+
+ 
+We assembled our own in-house pipeline to process all the raw RNA-Seq data:
+align the raw RNA-Seq reads to the reference genome and summarize the read counts at the 
+gene level. In the GEO repository, the
+mapped read counts are unavailable for some experiments and the available ones
+are from different processing pipelines.  
+Our pipeline, implemented using the software R \citep{Rpackage}, is summarized as follows: 
+\begin{enumerate}
+    \item Convert the SRA files to FASTQ files using the NCBI SRA Toolkit (version 2.3.5-2,  \url{http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?cmd=show&f=software&m=software&s=software}). 
+    \item
+	Align short reads in FASTQ files,  using the
+	Subread aligner (RSubread, version 1.16.2, \citealt{liao2013subread}) in the software R
+	\citep{ Rpackage}, to the Arabidopsis reference genome
+	downloaded from the \textit{ Ensembl plants FTP server} (\url{http://plants.ensembl.org/info/data/ftp/index. html}). 
+	
+
+ %As suggested by\cite{anders2013count}, "FASTA(DNA)" link was chosen because
+ %samples were aligned to the genome. .  
+ \item
+     Summarize the read counts at the gene level using the \verb|featureCounts()| function from the
+     Subread aligner
+     % using annotation \verb"Arabidopsis_thaliana.TAIR10.22.gtf" 
+     and store the read counts as data matrix.  
+     % Default options for all functions were used The
+     The annotation file is set to be \verb"Arabidopsis_thaliana.TAIR10.22.gtf" in
+     \verb|featureCounts()|, which is desired for matching the short reads to
+     Arabidopsis genes. % The Multi-mapping or multi-overlapping reads were not counted (the default option).  
+\end{enumerate}
+Subread aligner is a recently developed sequence mapping tool that adopt a seed-and-vote paradigm to map the short reads to the genome location. It uses a relatively large number of short seeds (called subreads) extracted from each read and allows all the seeds to vote on the optimal location. Compared to other alighers such as Bowite 2 \citep{langmead2012fast} or BWA \citep{li2009fast}, Subread is both faster and more accurate \citep{liao2013subread}. For people familiar with R, it also has the advantage that it is completely implemented in R. 
 
 
-  (\textbf{Selecting experiments}) For this study, we restrict our attention to experiments satisfying all the following conditions:  1. Ecotype = "Columbia" (as a result, we might only choose the Columbia samples when the experiment is done to compare Columbia with other ecotypes.); 2. Library strategy= "RNA-Seq"; 3. Library source = "transcriptomic"; 4. Library selection= "cDNA"; 5. Library layout = "Single End"; 6. there are at least 2 biological replicates for each treatment. We screened all the Arabidopsis experiments available at NCBI up to May 31, 2015, and processed a total of 49 data sets. Each data set is named by its unique accession number. 
-    
+% We compared results from the
+% above pipeline to results from a pipeline based on Bowtie 2 and TopHat \citep{trapnell2009tophat}, the results
+% are consistent in the sense that the variation in read counts from the two
+% pipelines are Poisson (???, similar as read counts from two technical
+% replicates).
 
-  
-   
-   
-  (\textbf{Three groups of experiments}) \cite{czechowski2005genome}, \cite{hruz2011refgenes}, and
-   \cite{dekkers2012identification} show that transcriptomes vary across different tissue types and development stages. For this reason, we separated the data sets into three groups: the \textit{seedling group} where only Arabidopsis seedling are included, the \textit{leaf group} where only Arabidopsis leaves are included, and the \textit{multi-tissue group} where different tissue types are included. Within each group, we pre-screened experiments by data quality: we chose experiments with initial normalization factors (discussed in Section \ref{section:countNormalization}) ranging from 0.70 to 1.30; that is, the experiment is retained only when the minimun of normalization factors is greater than 0.70 and the maximun of normlization factors is less than 1.30. 
-   
-    Eventually, we obtained 23 data sets (with 209 biological samples): 10 experiments (70 samples) for the seedling group, 5 experiments (60 samples) for the leaf group and 8 experiments (79 samples) for the multi-tissue group (that is: shoot apical,  root tip, primary root, inflorescences and siliques, hypocotyl, flower, carpels, aerial tissue). Samples from different experiments were merged by their unique gene IDs, and then stored as read count matrices. A brief description of the data sets can be found in Table (REF) of the online supplementary material. More details for each experiment are also accessible at NCBI via the unique accession number provided in Table (REF).
-   
-   
-	 (Selecting genes) Prior to analysis, we removed genes with low overall counts as suggested by \cite{anders2013count}. Filtering lowly-expressed genes is helpful not only because such genes provide little information about expression level,  but also because they will cause convergence failure to our model. In practice, convergence issue can be avoided by removing genes with overall mean count less than 3. Table \ref{table:TableSet3} summarizes the three groups after lowly-expressed genes are removed.
-   
-   \begin{table}[h]
-   	\centering
-   	\caption[3.2]{data set summary}
-   	\begin{tabular}{lrrrr} \hline
-   		Group & \#  experiments & \# treatments  & \# samples & \# genes \\ \hline
-   		Seedling &10 & 31 &70  &24379  \\
-   		Leaf &5 & 28 & 60 &20967  \\
-   		Multi-tissue &8 &35  &79  & 23666\\ \hline
-   		 \label{table:TableSet3}
-   	\end{tabular}
-   \end{table}
-   
+
+(\textbf{Three groups of experiments}) \cite{czechowski2005genome}, \cite{hruz2011refgenes}, and
+\cite{dekkers2012identification} show that gene expression vary across
+different tissue types and development stages. For this reason, 
+
+We divided the experiments into three groups: the \textit{seedling group}
+where only Arabidopsis seedling are included, the \textit{leaf group} where
+only Arabidopsis leaves are included, and the \textit{multi-tissue group}
+where different tissue types are included. Within each group, we pre-screened
+experiments by data quality: we chose experiments with initial normalization
+factors (discussed in Section \ref{section:countNormalization}) ranging from
+0.70 to 1.30; that is, the experiment is retained only when the minimum of
+normalization factors is greater than 0.70 and the maximum of normalization
+factors is less than 1.30. 
+If the initial estimated normalizations is too different from 1, it indicates
+the read counts distribution in the corresponding sample is markedly different
+from the distributions of the rest of the samples. Such samples may demand
+additional attention before being incorporated in studies that we intend to do
+\dots.
+
+
+Eventually, we obtained 23 data sets (with 209 biological samples): 10
+experiments (70 samples) for the seedling group, 5 experiments (60 samples)
+for the leaf group and 8 experiments (79 samples) for the multi-tissue group
+(that is: shoot apical,  root tip, primary root, inflorescences and siliques,
+hypocotyl, flower, carpels, aerial tissue). Samples from different experiments
+were merged by their unique gene IDs, and then stored as read count matrices.
+A brief description of the data sets can be found in Table (REF) of the online
+supplementary material. More details for each experiment are also accessible
+at NCBI via the unique accession number provided in Table (REF).
+
+
+(Selecting genes) Prior to analysis, we removed genes with low overall counts
+as suggested by \cite{anders2013count}. Filtering lowly-expressed genes is
+helpful not only because such genes provide little information about
+expression level,  but also because they will cause convergence failure to our
+model. In practice, convergence issue can be avoided by removing genes with
+overall mean count less than 3. Table \ref{table:TableSet3} summarizes the
+three groups after lowly-expressed genes are removed.
+
+\begin{table}[h]
+    \centering
+    \caption[3.2]{data set summary}
+    \begin{tabular}{lrrrr} \hline
+	Group & \#  experiments & \# treatments  & \# samples & \# genes \\ \hline
+	Seedling &10 & 31 &70  &24379  \\
+	Leaf &5 & 28 & 60 &20967  \\
+	Multi-tissue &8 &35  &79  & 23666\\ \hline
+	\label{table:TableSet3}
+    \end{tabular}
+\end{table}
+
 
 %\textbf{Moved from introduction part, or better to put it in discussion part?}
 %\cite{czechowski2005genome} and \cite{dekkers2012identification} adopted similar approach for statistical analysis for identifying stably expressed genes, and both used Arabidopsis microarray data. Briefly, for each gene the mean expression and the standard deviation (SD) over all biological samples are calculated, and the coefficients of variation (CV), which is the ratio of SD to mean expression, are obtained. Genes with lower CVs are expected to be more stably expressed. This simple approach, however, does not provide us any information about possible sources, except the amounts,  of variation.  \textbf{}\\ 
@@ -422,8 +499,7 @@ in each sample and the mean is computed over all samples.
 % 2.0 to 499.0 for seedling, from 0.2 to 693.4 for leaves, and 0.4 to 278.8,
 % constituting a broad range of expression values.
 
-It shows from comparison of the lists of top 1000 genes in the three groups that
-they share 106 genes in common (see supplement material for detail).  These
+The lists of top 1000 genes in the three groups share 106 genes in common (see supplement material for detail).  These
 genes are stably expressed under a wide range of experimental conditions and
 in different tissue types, and thus may be worth further study. This list of
 $106$ genes has significant overlap with the top $100$ stably expressed genes
@@ -478,7 +554,7 @@ and Table \ref{table:15genes} summarizes the variance components estimated from 
 GLMM in \ref{subsection:OurMethod}. 
 
 The five house-keeping genes show large total variation with all three
-variance-components relative large as compared to the other 10 genes. This is
+variance-components relatively large as compared to the other 10 genes. This is
 consistent with Czechowski's observation that house-keeping genes are not necessarily stably
 expressed according to a numerical measure. Three of the five
 stably-expressed genes identified by Czechowski are among the top $1000$
@@ -542,7 +618,7 @@ identified under different scenarios where one or more of the above three
 factors differ.  We then further discuss the subtle roles played by the
 specific stability measure and the reference gene set by comparing the total
 variance $\hat\sigma^2$ measure from the GLMM (see equation (\ref{eq:GLMM}))
-to the $M$-value measure used in geNorm \citep{vandesompele2002accurate}.
+to the $M$-value measure used in the geNorm method \citep{vandesompele2002accurate}.
 Last, we discuss the effect of an iterative elimination procedure used by
 geNorm.
 
@@ -562,7 +638,7 @@ The five lists are:
 100 top stably expressed genes from the leaf group according to the total variance $\hat\sigma^2$ from the GLMM; 
 \item[$L_4$:]
 100 stably expressed genes identified from a developmental series of microarray
-experiments by \cite{czechowski2005genome} using the CV measure; 
+experiments by \cite{czechowski2005genome} using the CV measure (REF); 
 \item[$L_5$:] 50 stably expressed genes identified by \cite{dekkers2012identification} from microarray
 seed experiments using the CV measure.  
 \end{enumerate}
@@ -683,7 +759,7 @@ genes 1--3 become the most stably expressed.  With this understanding, one
 could and should make a concious decision on whether such a behavior as
 described above is desirable or not.  
 
-The point we want to emphasize is that the gene stability is relative concept
+The point we want to emphasize is that the gene stability is a relative concept
 and the stability ranking depends on which set of genes we use as reference.
 In an iterative elimination procedure, the reference gene set will change
 after each iteration. The procedure can thus give surprising results and the
@@ -829,12 +905,12 @@ reference gene set used. We use a toy example to illustrate this point in
 Table \ref{table:reference} where we examine the mean counts for 5 genes in two
 two-group comparison experiments. If we use different reference gene set for
 count normalization, for example, we use genes 1--3 as reference in experiment
-1, but use genes 3--5 as reference in experiment 2, we will conclude that gene
+1, but use genes 3--5 as reference in experiment 2, we may conclude that gene
 3 is not DE in either experiment. If we use a common reference gene
 set---either genes 1--3 or genes 3--5---for normalization, however, we will be
 able to discover, in either case, that the DE behavior of gene 3 is different
-in the two experiments. Note that the DE conclusion will be different in both
-experiments depending on the reference genes used: if genes 1--3 are used as
+in the two experiments. Note that the DE conclusion in both
+experiments will depend on the reference genes used: if genes 1--3 are used as
 reference, gene 3 is not DE in experiment 1, but will be DE in experiment 2;
 if genes 3--5 are used as reference, gene 3 will be considered DE in
 experiment 1, but not DE in experiment 2. The point is, in either case, we
@@ -856,10 +932,11 @@ sets to assess DE in the two experiments.
 
 In practice, we recommend using the top 1000 most stably genes for estimating
 normalization factors. The key is to avoid using too few (e.g., less than 10)
-or too many (e.g., using all genes): intuitively, using too few, the estimates will be
-variable; using too many, the results will be influenced by less stably
+or too many (e.g., using all genes): intuitively, using too few, the estimates
+will be unstable;
+using too many, the results will be influenced by less stably
 expressed genes.  Our simple simulations suggest that using between 100 to
-10000 genes seems to give stable results.  In this first set of three
+10000 genes seems to give stable results.  In the first set of three
 examples, we use Anders and Huber's method (see equation
 (\ref{eq:normfactors})) to estimate normalization factors for samples in each
 of the seedling, leaf and multi-tissue groups of experiments (see Section \ref{section:DataCollection}).  We
@@ -871,7 +948,7 @@ reference. The plots and correlation coefficients suggest using between 100
 and 1000 genes tend to give similar normalization factor estimates. We also
 used the top 10, 100, 1000, and 10000 stably expressed genes identified from
 the seedling group as reference set for estimating normalization factors for a
-set of six seedling samples from a different experiment. The largest Pearson
+set of six seedling samples from a new experiment. The largest Pearson
 correlation $0.995$ is between the normalization factors estimated using the
 top $1000$ and top $10000$ stably expressed genes as reference.
 
