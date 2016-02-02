@@ -394,27 +394,41 @@ In this paper, we choose Anders and Huber's method \citep{anders2010differential
   \end{equation}
  The NBPSeq package \citep{di2014package} has an inbuilt function for this procedure and it will be used for count normalization in this paper. 
 
-We apply an iterative procedure to estimate the normalization factors: first, we use all the genes to calculate the initial normalization factors; then, we fit a GLMM, incorporating the initial normalization factors as an offset term, to each gene and estimate the variance components (for more detail, see Section \ref{subsection:OurMethod}); next, we select the top 1000 stably expressed genes ---  ranking based on the total variance --- as reference genes to recalculate the normalization factors. The procedure is repeated until the genes in top 1000 list don't change much. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and those from the second iteration according to our stability measure. We therefore iterated only once to obtain normalization factors for GLMM in each of the three groups in Table \ref{table:TableSet3}.  
+We apply an iterative procedure to estimate the normalization factors: first, we use all the genes to calculate the initial normalization factors; then, we fit a GLMM, incorporating the initial normalization factors as an offset term, to each gene and estimate the variance components (for more detail, see Section \ref{subsection:OurMethod}); next, we select the top 1000 stably expressed genes ---  ranking based on the total variance --- as reference genes to recalculate the normalization factors. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and those from the second iteration according to our stability measure. We therefore iterated only once to obtain normalization factors for GLMM in each of the three groups in Table \ref{table:TableSet3}.  
 
-\subsection{Poisson log-linear mixed-effects regression model}\label{subsection:OurMethod} 
+\subsection{Poisson log-linear mixed-effects regression model and the total
+variance measure of expression stability}\label{subsection:OurMethod} 
 % (Each individual count is model as a Poisson distribution. The count mean is
 % modeled through a log-linear mixed-effects regression model.)
+We use a Poisson log-linear mixed-effects regression model to model the
+RNA-Seq counts mapped to each gene and measure gene expression stability using
+a total variance measure.
 
-
-Let $Y_{ijkl}$ represent a random variable for the number of mapped reads for $i$th gene
-in $j$th observational unit of $k$th treatment group in $l$th experiment.
-The subscript $i$ is omitted since only one gene is examined at a time
-by the GLMM \citep{mcculloch2001generalized} given below
-\begin{equation}\label{eq:GLMM}
-	\begin{aligned}
-	  Y_{jkl} & \sim \text{Poisson}(\mu_{jkl}) \\
-	  \log( \mu_{jkl}) &= \xi + \log(R_{jkl}N_{jkl})+ \alpha_l + \beta_{k(l)} + \epsilon_{jkl}.
-	\end{aligned}
+Let the random variable $Y_{ijkl}$ be the number RNA-Seq reads mapped to gene
+$i$ in sample $j$ from treatment group $k$  in experiment $l$. We will fit
+regression models to each gene separately and suppress subscript $i$ from the
+model equations.
+For each gene, we fit a Poisson log-linear mixed-effects regression model: 
+%we fit the following generalized linear mixed model (GLMM, \citet{mcculloch2001generalized}): 
+\begin{equation}
+  Y_{jkl} \sim \text{Poisson}(\mu_{jkl})
 \end{equation}
-In equation (\ref{eq:GLMM}), $\xi$ is a fixed parameter for the log mean of the gene under study (it may change acorss different genes), 
-$N_{jkl}$ is the library size (column sum for each sample), and $R_{jkl}$ is the normalization factor discussed in Section (\ref{section:countNormalization}). The product term $R_{jkl}N_{jkl}$ is called \textit{normalized library size} in DE analysis. 
-
-The $\alpha$, $\beta$, and $\epsilon$, are, respectively, \textit{random effects} for the experiment effect, the treatment effect nested within each experiment, and the effect for biological samples. The experiment effect $\alpha$ in equation (\ref{eq:GLMM}) is treated as a random term  because we view the collected data sets as a random sample from the pool of all Arabidopsis RNA-Seq experiments. The treatment effect $\beta$, nested within each experiment, is also considered as random. The effect for sample $\epsilon$ plays a similar role as the over-dispersion, which represents extra-Poisson variation in read counts under a negative binomial model (\citealt{anders2010differential,di2011nbp}). We assume that $\alpha$, $\beta$ and $\epsilon$ are mutually independent, and  
+\begin{equation}\label{eq:GLMM}
+	  \log( \mu_{jkl}) = \xi + \log(R_{jkl}N_{jkl})+ \alpha_l + \beta_{k(l)} + \epsilon_{jkl}.
+\end{equation}
+In model (\ref{eq:GLMM}), $N_{jkl}$ is the library size (the sum of RNA-Seq
+counts mapped to all genes retained in each sample) and $R_{jkl}$ is the normalization factor discussed in
+Section (\ref{section:countNormalization}). We will call $R_{jkl}N_{jkl}$ 
+the \textit{normalized library size}.
+$\xi$ is a fixed-effect term for the baseline log mean for the counts. 
+$\alpha$, $\beta$, and $\epsilon$ are \textit{random-effect terms} for the
+experiment effect, the treatment effect nested within each experiment, and the
+sample effect respectively. The experiment effect $\alpha$ is treated as a
+random term because we view the collected data sets as a random sample from
+the pool of all Arabidopsis RNA-Seq experiments. The treatment effect $\beta$ is also treated as random for a similar consideration. The sample effect $\epsilon$ plays a similar role as the over-dispersion, which
+represents extra-Poisson variation in read counts under a negative binomial
+model (\citealt{anders2010differential,di2011nbp}). We assume that $\alpha$,
+$\beta$ and $\epsilon$ are mutually independent, and  
 %   \[ \log( \mu_{ijk}) = \xi + \log(R_{ijk}N_{ijk})+ \alpha_k + \beta_{j(k)} + \epsilon_{ijk} \]
   \[\alpha_l\sim N(0, \sigma^2_{\text{experiment}}),~~
   \beta_{k(l)}\sim N(0, \sigma^2_{\text{treatment}}),~~
@@ -423,7 +437,8 @@ where $\sigma_{\text{experiment}}^2$, $\sigma_{\text{treatment}}^2$ and $\sigma_
 %, and capture the\textit{between-experiment}, \textit{between-treatment} and \textit{between-sample} variation correspondingly.  
 The \textit{between-sample} variance quantifies the variation in biological samples, the \textit{between-treatment} variance accounts for the variation in treatment conditions (e.g., genotype, growth medium), and the \textit{between-experiment} variance includes all other possible variations that are difficult to be separated statistically, for example, lab personnel and conditions, day light hours, age of the plants, temperature, sequencing platform, etc.
 
-The stability measure of a gene is defined by the estimated \textit{total variance},
+
+ The parameter $(\xi, \sigma_{\text{experiment}}^2, \sigma_{\text{treatment}}^2, \sigma_{\text{sample}}^2)$ is estimated from \verb|glmer()| function of R package \verb"lme4" (\cite{bates2012lme4}, version 1.1.7), which uses a Gaussian-Hermite quadrature to approximate the likelihood function. Default options are used except that \verb"optimizer='bobyqa'". The stability measure of a gene is defined by the estimated \textit{total variance},
  \begin{equation}\label{eq:totalVariance}
  \hat \sigma^2 =\hat\sigma_{\text{sample}}^2+ \hat\sigma_{\text{treatment}}^2+ \hat\sigma_{\text{experiment}}^2.
  \end{equation}
@@ -1089,30 +1104,6 @@ A limitation of this study is that the inherent design structures are not taken 
 \section{Appendix}
 
 
-\subsection*{ Estimation of Variance Components and Identification of Stably Expressed Genes}
-
-
-
-The estimation procedure starts from the joint density function of $\bm Y=(Y_{jkl})'$ given $\bm \mu= (\mu_{jkl})'$, 
-\[f(\bm Y|\bm \mu )=\prod_{ j, k,l}f(y_{jkl}|\mu_{jkl})=\prod_{j,k,l}\frac{[\mu_{jkl}]^{y_{jkl}}\exp(-\mu_{jkl})}{y_{jkl}!}\]
-A re-expression of  (\ref{eq:GLMM}) in matrix form gives 
-\[\log\bm \mu= \bm \xi + \log{\bm{NR}} + \bm {Z_1\alpha} + \bm{Z_2\beta} + \bm \epsilon \]
-where $\bm \xi = \bm 1\cdot\xi$ and $\bm 1$ is a vector of 1s, $\bm Z_1$ is the design matrix for random effects $\bm \alpha=(\alpha_l)$, and $\bm Z_2$ is the design matrix for random effects $\bm \beta $. 
-Therefore  $\bm\mu  \sim \log N(\bm \mu_0, \bm \Sigma)$ where 
-$$\bm \mu_0 =\bm\xi + \log(\bm {NR}),$$ 
-$$\bm \Sigma = \sigma_1^2\bm {Z_1Z_1'} + \sigma_2^2\bm {Z_2 Z_2'} +\sigma_0^2 \bm I$$
-and $\bm I$ is an identity matrix of dimension $Q$ where $Q$ is the total number of biological samples. 
-And 
-\[f(\bm \mu |\bm \mu_0, \bm \Sigma)=\prod_{j,k,l} \mu_{jkl}^{-1}\cdot \frac{1}{ \sqrt{(2\pi)^Q|\bm\Sigma|}}\exp[-\frac{1}{2} {(\log\bm \mu - \bm \mu_0)^T\bm \Sigma^{-1}(\log\bm \mu - \bm \mu_0)}]\]
-the joint density is then
-\[f(\bm Y, \bm \mu |\bm \mu_0, \bm \Sigma) =\frac{1}{\sqrt{(2\pi)^Q|\bm \Sigma|}}\exp[-\bm 1^T\bm \mu - -\frac{1}{2} {(\log\bm \mu - \bm \mu_0)^T\bm \Sigma^{-1}(\log\bm \mu - \bm \mu_0)}]\prod_{jkl}\frac{[\mu_{jkl}]^{y_{jkl}-1}}{y_{jkl}!}\]
-Therefore the likelihood function or the marginal distribution is 
-\begin{equation}\label{q2}
-L(\xi, \sigma_1^2, \sigma_2^2, \sigma_3^2|\bm Y)=f(\bm Y|\bm \xi, \bm \Sigma)= \int_{\bm{\alpha,\beta,\epsilon}} f(\bm Y, \bm \alpha, \bm \beta, \bm \epsilon |\bm \mu_0, \bm \Sigma)d\bm \alpha d \bm\beta d\bm \epsilon 
-\end{equation}
-where the integral in (\ref{q2}) can be approximated by Gaussian-Hermite (GH) quadrature. The estimate of $\bm\theta = (\xi, \sigma_0^2, \sigma_1^2, \sigma_2^2)'$ is obtained by maximizing the log-likelihood after GH approximation.  This procedure is done with \verb"glmer()"  in \verb"lme4"  package (\cite{bates2012lme4}, version 1.1.7)  with option  "optimizer= 'bobyqa' " 
-
-
 \section{Supplementary Material}
 
 The details of experimental data is summarized as below
@@ -1229,3 +1220,33 @@ The details of experimental data is summarized as below
 %\end{figure} 
 %
 %
+
+
+
+
+
+
+
+\subsection*{ Estimation of Variance Components and Identification of Stably Expressed Genes}
+
+
+
+The estimation procedure starts from the joint density function of $\bm Y=(Y_{jkl})'$ given $\bm \mu= (\mu_{jkl})'$, 
+\[f(\bm Y|\bm \mu )=\prod_{ j, k,l}f(y_{jkl}|\mu_{jkl})=\prod_{j,k,l}\frac{[\mu_{jkl}]^{y_{jkl}}\exp(-\mu_{jkl})}{y_{jkl}!}\]
+A re-expression of  (\ref{eq:GLMM}) in matrix form gives 
+\[\log\bm \mu= \bm \xi + \log{\bm{NR}} + \bm {Z_1\alpha} + \bm{Z_2\beta} + \bm \epsilon \]
+where $\bm \xi = \bm 1\cdot\xi$ and $\bm 1$ is a vector of 1s, $\bm Z_1$ is the design matrix for random effects $\bm \alpha=(\alpha_l)$, and $\bm Z_2$ is the design matrix for random effects $\bm \beta $. 
+Therefore  $\bm\mu  \sim \log N(\bm \mu_0, \bm \Sigma)$ where 
+$$\bm \mu_0 =\bm\xi + \log(\bm {NR}),$$ 
+$$\bm \Sigma = \sigma_1^2\bm {Z_1Z_1'} + \sigma_2^2\bm {Z_2 Z_2'} +\sigma_0^2 \bm I$$
+and $\bm I$ is an identity matrix of dimension $Q$ where $Q$ is the total number of biological samples. 
+And 
+\[f(\bm \mu |\bm \mu_0, \bm \Sigma)=\prod_{j,k,l} \mu_{jkl}^{-1}\cdot \frac{1}{ \sqrt{(2\pi)^Q|\bm\Sigma|}}\exp[-\frac{1}{2} {(\log\bm \mu - \bm \mu_0)^T\bm \Sigma^{-1}(\log\bm \mu - \bm \mu_0)}]\]
+the joint density is then
+\[f(\bm Y, \bm \mu |\bm \mu_0, \bm \Sigma) =\frac{1}{\sqrt{(2\pi)^Q|\bm \Sigma|}}\exp[-\bm 1^T\bm \mu - -\frac{1}{2} {(\log\bm \mu - \bm \mu_0)^T\bm \Sigma^{-1}(\log\bm \mu - \bm \mu_0)}]\prod_{jkl}\frac{[\mu_{jkl}]^{y_{jkl}-1}}{y_{jkl}!}\]
+Therefore the likelihood function or the marginal distribution is 
+\begin{equation}\label{q2}
+L(\xi, \sigma_1^2, \sigma_2^2, \sigma_3^2|\bm Y)=f(\bm Y|\bm \xi, \bm \Sigma)= \int_{\bm{\alpha,\beta,\epsilon}} f(\bm Y, \bm \alpha, \bm \beta, \bm \epsilon |\bm \mu_0, \bm \Sigma)d\bm \alpha d \bm\beta d\bm \epsilon 
+\end{equation}
+where the integral in (\ref{q2}) can be approximated by Gaussian-Hermite (GH) quadrature. The estimate of $\bm\theta = (\xi, \sigma_0^2, \sigma_1^2, \sigma_2^2)'$ is obtained by maximizing the log-likelihood after GH approximation.  This procedure is done with \verb"glmer()"  in \verb"lme4"  package (\cite{bates2012lme4}, version 1.1.7)  with option  "optimizer= 'bobyqa' " 
+
