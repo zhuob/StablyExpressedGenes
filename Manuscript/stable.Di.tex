@@ -297,7 +297,7 @@ sequencing data and summarized the results as count matrices of mapped RNA-Seq
 short reads (see details below).  We removed genes with low mean numbers (less
 than 3) of mapped read counts.  Such genes tend to be more prone to sequencing
 noise, less interesting to biologists, and also cause convergence issues when
-fitting our model. Many other researchers (such as \citealt{anders2013count})
+fitting statistical models. Many other researchers (such as \citealt{anders2013count})
 recommend removing such genes before analyzing RNA-Seq data.  The number of
 remaining genes in each group is also summarized in Table
 \ref{table:TableSet3}.
@@ -325,13 +325,14 @@ mapped read counts are unavailable for some experiments and the available ones
 are from different processing pipelines.  
 Our pipeline, implemented using the software R \citep{Rpackage}, is summarized as follows: 
 \begin{enumerate}
-    \item Convert the Sequence Read Archive (SRA) files to FASTQ files using the NCBI SRA Toolkit (version 2.3.5-2,  \url{http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?cmd=show&f=software&m=software&s=software}). 
+    \item Convert the Sequence Read Archive (SRA) files to FASTQ files using the NCBI SRA Toolkit (\cite{leinonen2010sequence}, version 2.3.5-2). %\url{http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?cmd=show&f=software&m=software&s=software}). 
     \item
 	Align short reads in FASTQ files,  using the \verb|align()| function from 
 	Subread aligner (RSubread, version 1.16.2, \citealt{liao2013subread}) in the software R
-	\citep{ Rpackage}, to the Arabidopsis reference genome
+	\citep{ Rpackage}, to the Arabidopsis reference genome \verb|Arabidopsis_thaliana.TAIR10.22.dna.toplevel.fa |
 	downloaded from the \textit{ Ensembl plants FTP server} (\url{http://plants.ensembl.org/info/data/ftp/index. html}). 
-	
+	 
+
 
  %As suggested by\cite{anders2013count}, "FASTA(DNA)" link was chosen because
  %samples were aligned to the genome. .  
@@ -341,9 +342,8 @@ Our pipeline, implemented using the software R \citep{Rpackage}, is summarized a
      % using annotation \verb"Arabidopsis_thaliana.TAIR10.22.gtf" 
      and store the read counts as data matrix.  
      % Default options for all functions were used The
-     The annotation file is set to be \verb"Arabidopsis_thaliana.TAIR10.22.gtf" in
-     \verb|featureCounts()|, which is desired for mapping the short reads to
-     Arabidopsis genes. % The Multi-mapping or multi-overlapping reads were not counted (the default option).  
+     The annotation file \verb"Arabidopsis_thaliana.TAIR10.22.gtf" is downloaded from Ensembl plat FTP server. The Multi-mapping or multi-overlapping reads were not counted.  
+
 \end{enumerate}
 Subread aligner is a recently developed sequence mapping tool that adopts a
 seed-and-vote paradigm to map the RNA-Seq short reads to the genome. 
@@ -354,8 +354,7 @@ faster.
 Compared to other alighers such as Bowite 2 \citep{langmead2012fast} or BWA
 \citep{li2009fast}, Subread aligner is both faster and more accurate
 \citep{liao2013subread}. We compared results from the above
-pipeline to results from a pipeline based on Bowtie 2 and TopHat
-\citep{trapnell2009tophat} over several RNA-Seq experiment data, and Rsubread
+pipeline to results from a pipeline described in \cite{anders2013count} over several RNA-Seq experiment data, and Rsubread
 was more than three times faster and successfully mapped more reads to the
 reference genome.  For people familiar with R, it also has the advantage
 that it is completely implemented in R.
@@ -385,14 +384,25 @@ attention before being incorporated in studies that we intend to do.
 
 \subsection{Count normalization}\label{section:countNormalization}
 
-%Many existing normalization methods, such as the trimmed mean of M-values normalization method (TMM) \citep{robinson2010scaling} and Anders and Huber's normalization \citep{anders2010differential}, assume that the majority of the genes are not DE within an experiment. Effectively, these methods use genes with relatively small observed fold changes under a single experiment as a reference gene set in normalization. 
-In this paper, we choose Anders and Huber's method \citep{anders2010differential} to estimate normalization factors.  Briefly, let $y_{ij}$ denote the read count for $i$th gene of $j$th sample ($m$ genes and $n$ samples in total). A pseudo-reference sample $j_0$ is created, with gene $i$th expression value defined as the geometric mean of the same gene over all real samples, 
-\[ y_{i,0} = (\prod_{j=1}^ny_{i,j})^{1/n},  i=1, \ldots, m. \]
- The \textit{normalization factor} for sample $j$ is then calculated as the median of the fold-changes between sample $j$ and the pseudo-reference sample $j_0$ over all genes,
-  \begin{equation}\label{eq:normfactors} 
- R_j = \text{median}(\dfrac{y_{1,j}}{y_{1,j_0}}, \ldots, \dfrac{y_{n,j}}{y_{n,j_0}}).
-  \end{equation}
- The NBPSeq package \citep{di2014package} has an inbuilt function for this procedure and it will be used for count normalization in this paper. 
+(The role of normalization in our method.)
+
+%Count normalization is needed for adjusting differences in sequencing depths or library sizes due to chance variation in sample preparation.
+In our model, normalization is used to adjust for the reduction/increase in relative read frequencies due to chance variation in sample preparation. Both TMM \citep{robinson2010scaling} and Anders and Huber's method \citep{anders2010differential} use genes with relatively small observed fold changes as reference genes in normalization. 
+%of non-differentially expressing genes simply to accommodate the increased or decreased relative read frequencies of truly differentially expressing genes
+We choose Anders and Huber's method to estimate normalization factors.  Briefly, let $y_{ij}$ denote the read count for $i$th gene of $j$th sample ($m$ genes and $n$ samples in total). We first create a pseudo-reference sample, defining gene $i$th expression value by the geometric mean of the same gene over all real samples,
+\begin{equation}
+ y_{i,0} = (\prod_{j=1}^ny_{i,j})^{1/n},  i=1, \ldots, m. 
+\end{equation} 
+Next we calculate the median of the fold-changes in relative frequency between sample $j$ and the pseudo-reference sample over all genes,
+\begin{equation}\label{eq:normfactors} 
+    R'_j = \text{median}\left(\dfrac{y_{1,j}/N_j}{y_{1,0}/N_{0}}, \ldots, \dfrac{y_{m,j}/N_j}{y_{m,0}/N_{0}}\right),
+\end{equation}
+where $N_j$ is the library size for sample $j$ (the sum of RNA-Seq
+counts mapped to all genes retained in each sample). Last, The \textit{normalization factor}  $R_j$ for sample $j$ is then calculated as 
+\begin{equation}
+R_j = \dfrac{R'_j}{(\prod_{j=1}^{n}R'_j)^{1/n}}.
+\end{equation}
+The NBPSeq package \citep{di2014package} has an inbuilt function for this procedure and it will be used for count normalization in this paper. 
 
 We apply an iterative procedure to estimate the normalization factors: first, we use all the genes to calculate the initial normalization factors; then, we fit a GLMM, incorporating the initial normalization factors as an offset term, to each gene and estimate the variance components (for more detail, see Section \ref{subsection:OurMethod}); next, we select the top 1000 stably expressed genes ---  ranking based on the total variance --- as reference genes to recalculate the normalization factors. In practice, over $950$ genes are overlapped between top 1000 genes from the first iteration and those from the second iteration according to our stability measure. We therefore iterated only once to obtain normalization factors for GLMM in each of the three groups in Table \ref{table:TableSet3}.  
 
@@ -400,53 +410,87 @@ We apply an iterative procedure to estimate the normalization factors: first, we
 variance measure of expression stability}\label{subsection:OurMethod} 
 % (Each individual count is model as a Poisson distribution. The count mean is
 % modeled through a log-linear mixed-effects regression model.)
-We use a Poisson log-linear mixed-effects regression model to model the
+We fit a Poisson log-linear mixed-effects regression model to the
 RNA-Seq counts mapped to each gene and measure gene expression stability using
 a total variance measure.
 
-Let the random variable $Y_{ijkl}$ be the number RNA-Seq reads mapped to gene
+% the random variable
+Let $Y_{ijkl}$ be the number of RNA-Seq reads mapped to gene
 $i$ in sample $j$ from treatment group $k$  in experiment $l$. We will fit
 regression models to each gene separately and suppress subscript $i$ from the
-model equations.
-For each gene, we fit a Poisson log-linear mixed-effects regression model: 
+model equations.  For each gene, we fit a Poisson log-linear mixed-effects regression model 
 %we fit the following generalized linear mixed model (GLMM, \citet{mcculloch2001generalized}): 
 \begin{equation}
-  Y_{jkl} \sim \text{Poisson}(\mu_{jkl})
+  Y_{jkl} \sim \text{Poisson}(\mu_{jkl}),
 \end{equation}
 \begin{equation}\label{eq:GLMM}
-	  \log( \mu_{jkl}) = \xi + \log(R_{jkl}N_{jkl})+ \alpha_l + \beta_{k(l)} + \epsilon_{jkl}.
+	  \log( \mu_{jkl}) = \log(R_{jkl}N_{jkl})+ \xi + \alpha_l + \beta_{k(l)} + \epsilon_{jkl},
 \end{equation}
-In model (\ref{eq:GLMM}), $N_{jkl}$ is the library size (the sum of RNA-Seq
-counts mapped to all genes retained in each sample) and $R_{jkl}$ is the normalization factor discussed in
+which is a specific type of generalized linear mixed model (GLMM, \citet{mcculloch2001generalized}). 
+In equation (\ref{eq:GLMM}), $N_{jkl}$ and $R_{jkl}$ are the library size and normalization factor discussed in
 Section (\ref{section:countNormalization}). We will call $R_{jkl}N_{jkl}$ 
 the \textit{normalized library size}.
-$\xi$ is a fixed-effect term for the baseline log mean for the counts. 
-$\alpha$, $\beta$, and $\epsilon$ are \textit{random-effect terms} for the
-experiment effect, the treatment effect nested within each experiment, and the
-sample effect respectively. The experiment effect $\alpha$ is treated as a
-random term because we view the collected data sets as a random sample from
-the pool of all Arabidopsis RNA-Seq experiments. The treatment effect $\beta$ is also treated as random for a similar consideration. The sample effect $\epsilon$ plays a similar role as the over-dispersion, which
-represents extra-Poisson variation in read counts under a negative binomial
-model (\citealt{anders2010differential,di2011nbp}). We assume that $\alpha$,
-$\beta$ and $\epsilon$ are mutually independent, and  
+$\xi$ is a fixed-effect term for the baseline log mean of the {\em relative
+counts} (counts divided by the normalized library sizes). 
+$\alpha$, $\beta$, and $\epsilon$ % are \textit{random-effect terms} for
+represent the experiment effect, the treatment effect (nested within each
+experiment), and the sample effect respectively. 
+We view  $\alpha$, $\beta$ and $\epsilon$ as random effects and assume that
+they are independent and follow normal distributions:
 %   \[ \log( \mu_{ijk}) = \xi + \log(R_{ijk}N_{ijk})+ \alpha_k + \beta_{j(k)} + \epsilon_{ijk} \]
   \[\alpha_l\sim N(0, \sigma^2_{\text{experiment}}),~~
   \beta_{k(l)}\sim N(0, \sigma^2_{\text{treatment}}),~~
-  \epsilon_{jkl}\sim N(0, \sigma_{\text{sample}}^2).\]
-where $\sigma_{\text{experiment}}^2$, $\sigma_{\text{treatment}}^2$ and $\sigma_{\text{sample}}^2$ are called \textit{variance-components}.
-%, and capture the\textit{between-experiment}, \textit{between-treatment} and \textit{between-sample} variation correspondingly.  
-The \textit{between-sample} variance quantifies the variation in biological samples, the \textit{between-treatment} variance accounts for the variation in treatment conditions (e.g., genotype, growth medium), and the \textit{between-experiment} variance includes all other possible variations that are difficult to be separated statistically, for example, lab personnel and conditions, day light hours, age of the plants, temperature, sequencing platform, etc.
+  \epsilon_{jkl}\sim N(0, \sigma_{\text{sample}}^2),\]
+where $\sigma_{\text{experiment}}^2$, $\sigma_{\text{treatment}}^2$ and
+$\sigma_{\text{sample}}^2$ are called \textit{variance-components}---they
+quantify the overall variances of the corresponding random effect terms. 
 
 
- The parameter $(\xi, \sigma_{\text{experiment}}^2, \sigma_{\text{treatment}}^2, \sigma_{\text{sample}}^2)$ is estimated from \verb|glmer()| function of R package \verb"lme4" (\cite{bates2012lme4}, version 1.1.7), which uses a Gaussian-Hermite quadrature to approximate the likelihood function. Default options are used except that \verb"optimizer='bobyqa'". The stability measure of a gene is defined by the estimated \textit{total variance},
+% Note that at each level, there can be multiple biological, technical, and unidentified sources contributing to RNA-Seq count variations. 
+The sample effect $\epsilon$ represents the
+extra-Poisson variation in read counts among samples in the same treatment groups and plays a similar role as the
+\textit{over-dispersion} parameter in a negative binomial model
+(\citealt{anders2010differential,di2011nbp}). 
+The experiment effect, $\alpha_l$, accounts for all sources of variation at
+the experiment level, including differences in lab personnel and conditions,
+day light hours, age of the plants, temperature, sequencing platform, and
+other unidentified sources. The contributions from these different
+experiment-level sources are often difficult to separate statistically.
+The experiment effect $\alpha$ is treated as a random term because we view the
+collected data sets as a random sample from the pool of all Arabidopsis
+RNA-Seq experiments.  
+
+
+%The \textit{between-sample} variance $\sigma_{\text{sample}}^2$ quantifies the
+%variation in the log mean expression that is attributable to biological sample
+%variation, the \textit{between-treatment} variance
+%$\sigma_{\text{treatment}}^2$ accounts for expression variation due to
+%different treatments (e.g., genotype, growth medium), and 
+%the
+%\textit{between-experiment} variance $\sigma_{\text{experiment}}^2$ 
+%
+
+We define the stability measure as the estimated \textit{total variance},
  \begin{equation}\label{eq:totalVariance}
  \hat \sigma^2 =\hat\sigma_{\text{sample}}^2+ \hat\sigma_{\text{treatment}}^2+ \hat\sigma_{\text{experiment}}^2.
  \end{equation}
+The parameters $(\xi, \sigma_{\text{experiment}}^2,
+\sigma_{\text{treatment}}^2, \sigma_{\text{sample}}^2)$ are estimated from
+\verb|glmer()| function of R package \verb"lme4" (\cite{bates2012lme4},
+version 1.1.7), which uses a Gaussian-Hermite quadrature to approximate the
+likelihood function. 
 %For each gene, we estimate variance components $\hat\sigma_{\text{sample}}^2,  \hat\sigma_{\text{treatment}}^2,  \hat\sigma_{\text{experiment}}^2$  from (\ref{eq:GLMM}) and calculate the total variance $\hat\sigma^2$.
-We rank all the genes according to their $\hat\sigma^2$s, and consider highly ranked (e.g., top 1000) genes to be stably expressed. 
+We rank all the genes according to their $\hat\sigma^2$s, and consider highly
+ranked (e.g., top 1000) genes to be stably expressed. 
+
+The normal models for the random effects are the most commonly in the GLMM
+settings. They are likely simplification of reality \ldots; good starting
+point; should be adequate for quatifying count variation..
+
 
 \subsection{Other stability measures}\label{subsection:OtherStabilityMeasure}
-For microarray gene expression data, there are many gene expression stability measures. These include, among others, the \textit{$M$-value} in \textit{geNorm} \citep{vandesompele2002accurate}, the \textit{$\rho$ value} in \textit{NormFinder} \citep{andersen2004normalization}, and the \textit{CV} measure (coefficient of variation, calculated as \textit{standard deviation/mean}) used in \cite{czechowski2005genome} and \cite{dekkers2012identification}. Every of the three measures considers genes associated with smaller values as more stably expressed in its own right. The $M$-value measure for a set of $m_0$ genes works as follows: first, it calculates the ratios (for log-transformed data) of gene $i_1$ to gene $i_2$ across all samples, and takes the standard deviation of the ratios (called \textit{relative variation} of gene $i_1$ to gene $i_2$); then the $M$-value for gene $i_1$ is obtained by taking the average of $m_0-1$ relative variations, one for each pair of gene $i_1$ and the remaining $m_0-1$ genes. NormFinder uses a linear mixed model to estimate the between-group and within-group variations from expression values of microarray data, and then combines the two variations by a Bayesian formulation. For a future experiment, the $\rho$-value for gene $i$ is defined as the absolute value of posterior mean plus one standard prediction deviation of that gene. 
+For microarray gene expression data, there are many stability measures. These include, among others, the \textit{$M$-value} in geNorm \citep{vandesompele2002accurate}, the \textit{$\rho$ value} in NormFinder \citep{andersen2004normalization}, and the \textit{CV} measure (coefficient of variation, calculated as \textit{standard deviation/mean}) used in \cite{czechowski2005genome} and \cite{dekkers2012identification}. Each of the three measures considers genes associated with smaller values as more stably expressed in its own right. The $M$-value measure for a set of $m_0$ genes works as follows: first, it calculates the \textit{relative variation} of gene $i_1$ to gene $i_2$
+by the standard deviation of the ratios of gene $i_1$ to gene $i_2$ (for log-transformed data) across all samples; then the $M$-value for gene $i_1$ is obtained by taking the average of $m_0-1$ relative variations, one for each pair of gene $i_1$ and the remaining $m_0-1$ genes; next, each of the $m_0$ genes is assigned a $M$ value that can be used to rank the genes in terms of stability measure. NormFinder uses a linear mixed model to estimate the between-group and within-group variations from expression values of microarray data, and then combines the two variations by a Bayesian formulation. For a future experiment, the $\rho$-value for gene $i$ is defined as the absolute value of posterior mean plus one standard prediction deviation of that gene. 
 	
 Stability measures differ in summarizing variation of gene expression profiles. The total variance $\hat{\sigma}^2$ considers genes to be stably expressed when they have low $\hat{\sigma}^2$ in the estimated log relative mean counts; the $M$-value in geNorm identifies as stably expressed those genes that are most similar to each other; and the CV measure tends to select highly expressed genes as stable since those genes tend to have smaller dispersion \citep{hruz2011refgenes}. 
 
