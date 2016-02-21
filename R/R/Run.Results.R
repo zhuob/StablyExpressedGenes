@@ -73,6 +73,17 @@ print( length(overlap_gene) )# 106
 write.csv(overlap_gene, paste(TablePath, "OverlappedGeneFromThreeSetsTop1000.csv", sep=""),row.names = F)
 
 
+# Venn diagram
+require(gplots)
+top1000seedling <- var_seedling$var.comp$Gene[var_seedling$var.comp$Rank <=1000]
+
+top1000tissue <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank <=1000]
+top1000leaf <- var_leaf$var.comp$Gene[var_leaf$var.comp$Rank <=1000]
+venn1 <- length(intersect(top1000seedling, top1000tissue))
+venn2 <- length(intersect(top1000seedling, top1000leaf))
+venn3 <- length(intersect(top1000leaf, top1000tissue))
+venn(list(Leaf = top1000leaf, Seedling = top1000seedling, Multi_tissue = top1000tissue))
+
 #########  SECTION 2 ---------------------------------------
 
 cat("producing results in section 2...\n")

@@ -12,6 +12,10 @@
 \usepackage{float}  % PUT FIGURE HERE
 \usepackage{multirow}
 \usepackage{booktabs} % Create TABS
+\usepackage{caption}
+\captionsetup[figure]{labelfont=bf}
+\captionsetup[table]{labelfont=bf}
+
 %\usepackage{array,arydshln}  % CREATE DASH LINE
 \title{Identification of stably expressed genes from Arabidopsis RNA-Seq data}
 \date{} % Today's date or a custom date
@@ -428,7 +432,7 @@ model equations.  For each gene, we fit a Poisson log-linear mixed-effects regre
 \end{equation}
 which is a specific type of generalized linear mixed model (GLMM, \citet{mcculloch2001generalized}). 
 In equation (\ref{eq:GLMM}), $N_{jkl}$ and $R_{jkl}$ are the library size and normalization factor discussed in
-Section (\ref{section:countNormalization}). We will call $R_{jkl}N_{jkl}$ 
+Section \ref{section:countNormalization}. We will call $R_{jkl}N_{jkl}$ 
 the \textit{normalized library size}.
 $\xi$ is a fixed-effect term for the baseline log mean of the {\em relative
 counts} (counts divided by the normalized library sizes). 
@@ -437,29 +441,33 @@ represent the experiment effect, the treatment effect (nested within each
 experiment), and the sample effect respectively. 
 We view  $\alpha$, $\beta$ and $\epsilon$ as random effects and assume that
 they are independent and follow normal distributions:
-%   \[ \log( \mu_{ijk}) = \xi + \log(R_{ijk}N_{ijk})+ \alpha_k + \beta_{j(k)} + \epsilon_{ijk} \]
-  \[\alpha_l\sim N(0, \sigma^2_{\text{experiment}}),~~
+
+\begin{equation}\label{eq:normalassumption}
+  \alpha_l\sim N(0, \sigma^2_{\text{experiment}}),~~
   \beta_{k(l)}\sim N(0, \sigma^2_{\text{treatment}}),~~
-  \epsilon_{jkl}\sim N(0, \sigma_{\text{sample}}^2),\]
+  \epsilon_{jkl}\sim N(0, \sigma_{\text{sample}}^2),
+\end{equation}
 where $\sigma_{\text{experiment}}^2$, $\sigma_{\text{treatment}}^2$ and
 $\sigma_{\text{sample}}^2$ are called \textit{variance-components}---they
 quantify the overall variances of the corresponding random effect terms. 
 
 
 % Note that at each level, there can be multiple biological, technical, and unidentified sources contributing to RNA-Seq count variations. 
+(Sarah: Should effect be singular or plural?)
 The sample effect $\epsilon$ represents the
-extra-Poisson variation in read counts among samples in the same treatment groups and plays a similar role as the
+extra-Poisson variation in read counts among samples in the same treatment
+group and $\sigma_{\text{sample}}^2$ plays a similar role as the
 \textit{over-dispersion} parameter in a negative binomial model
 (\citealt{anders2010differential,di2011nbp}). 
 The experiment effect, $\alpha_l$, accounts for all sources of variation at
 the experiment level, including differences in lab personnel and conditions,
 day light hours, age of the plants, temperature, sequencing platform, and
 other unidentified sources. The contributions from these different
-experiment-level sources are often difficult to separate statistically.
-The experiment effect $\alpha$ is treated as a random term because we view the
-collected data sets as a random sample from the pool of all Arabidopsis
-RNA-Seq experiments.  
-
+experiment-level sources are often difficult to separate statistically. 
+We treat the experiment effect $\alpha$ as a random effect because we view the
+collected experiments as a random sample from the pool of all Arabidopsis
+RNA-Seq experiments. In a DE test, $\beta$ is usually considered as a
+fixed-effect term \dots, here \dots
 
 %The \textit{between-sample} variance $\sigma_{\text{sample}}^2$ quantifies the
 %variation in the log mean expression that is attributable to biological sample
@@ -483,13 +491,11 @@ likelihood function.
 We rank all the genes according to their $\hat\sigma^2$s, and consider highly
 ranked (e.g., top 1000) genes to be stably expressed. 
 
-The normal models for the random effects are the most commonly in the GLMM
-settings. They are likely simplification of reality \ldots; good starting
-point; should be adequate for quatifying count variation..
+The normal assumption for the random effects in equation (\ref{eq:normalassumption}) are the most common in the GLMM settings. The normality is likely a simplification of reality, yet it is a good starting point and should be adequate for quantifying count variation.
 
 
 \subsection{Other stability measures}\label{subsection:OtherStabilityMeasure}
-For microarray gene expression data, there are many stability measures. These include, among others, the \textit{$M$-value} in geNorm \citep{vandesompele2002accurate}, the \textit{$\rho$ value} in NormFinder \citep{andersen2004normalization}, and the \textit{CV} measure (coefficient of variation, calculated as \textit{standard deviation/mean}) used in \cite{czechowski2005genome} and \cite{dekkers2012identification}. Each of the three measures considers genes associated with smaller values as more stably expressed in its own right. The $M$-value measure for a set of $m_0$ genes works as follows: first, it calculates the \textit{relative variation} of gene $i_1$ to gene $i_2$
+For microarray gene expression data, there are many stability measures. These include, among others, the \textit{$M$-value} in geNorm \citep{vandesompele2002accurate}, the \textit{$\rho$-value} in NormFinder \citep{andersen2004normalization}, and the \textit{CV} measure (coefficient of variation, calculated as \textit{standard deviation/mean}) used in \cite{czechowski2005genome} and \cite{dekkers2012identification}. Each of the three measures considers genes associated with smaller values as more stably expressed in its own right. The $M$-value measure for a set of $m_0$ genes works as follows: first, it calculates the \textit{relative variation} of gene $i_1$ to gene $i_2$
 by the standard deviation of the ratios of gene $i_1$ to gene $i_2$ (for log-transformed data) across all samples; then the $M$-value for gene $i_1$ is obtained by taking the average of $m_0-1$ relative variations, one for each pair of gene $i_1$ and the remaining $m_0-1$ genes; next, each of the $m_0$ genes is assigned a $M$ value that can be used to rank the genes in terms of stability measure. NormFinder uses a linear mixed model to estimate the between-group and within-group variations from expression values of microarray data, and then combines the two variations by a Bayesian formulation. For a future experiment, the $\rho$-value for gene $i$ is defined as the absolute value of posterior mean plus one standard prediction deviation of that gene. 
 	
 Stability measures differ in summarizing variation of gene expression profiles. The total variance $\hat{\sigma}^2$ considers genes to be stably expressed when they have low $\hat{\sigma}^2$ in the estimated log relative mean counts; the $M$-value in geNorm identifies as stably expressed those genes that are most similar to each other; and the CV measure tends to select highly expressed genes as stable since those genes tend to have smaller dispersion \citep{hruz2011refgenes}. 
@@ -952,7 +958,7 @@ seedling group will provide different biological contexts.
 		    2     & 10       & 20       & 10    &20   \\
 		    3     & 10       & 20       & 10    &10   \\
 		    4     & 10       & 10       & 10    &10   \\ 
-		    5     & 10       & 10       & 10    &10   \\  
+		    5     & 10       & 10       & 10    &10   \\   \hline
 		\end{tabular}
 	    \end{table}
 	\end{center}
