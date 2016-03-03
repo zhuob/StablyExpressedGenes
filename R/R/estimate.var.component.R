@@ -136,7 +136,7 @@ iteration.GLMM <- function(data, niter = 1, filter.factor=3, topgene = 1000){
   cat("Run GLMM without reference genes...  \n" )
   var.obj <- estimate.var.component(data, reference = NULL, filter.factor = filter.factor)
   
-  for ( iter in niter){
+  for ( iter in 1:niter){
     cat("\n Begin Iteration", iter, " \n")
     refer <- var.obj$var.comp$Gene[var.obj$var.comp$Rank <=  topgene]
     var.obj2 <- estimate.var.component(data = var.obj, reference = refer, filter.factor = filter.factor)
