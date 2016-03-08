@@ -1,12 +1,21 @@
-\documentclass[11pt, a4paper]{article}
+\documentclass[letterpaper,12pt]{article}
+\usepackage{dgjournal}   % copied from the journal
+\usepackage{mathptmx}	% copied from the journal
+\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib} % copied from the journal
+\usepackage{url}
+
+\usepackage{caption}
+\captionsetup[figure]{labelfont=bf}
+\captionsetup[table]{labelfont=bf}
+
 \usepackage{graphicx}
 \usepackage{amsmath, bm}
 \usepackage{natbib}
 \usepackage[utf8]{inputenc}    
 \usepackage{natbib}
 \usepackage[usenames,dvipsnames]{xcolor}
-\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
-\usepackage{hyperref}
+%\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % commented 
+%\usepackage{hyperref}
 \usepackage[outdir=./]{epstopdf}
 \usepackage{lscape}
 \usepackage{float}  % PUT FIGURE HERE
@@ -18,15 +27,24 @@
 
 
 
-\hypersetup{
-    colorlinks,
-    citecolor=blue,
-    filecolor=blue,
-    linkcolor=blue,
-    urlcolor=blue
-}
+%\hypersetup{
+%    colorlinks,
+%    citecolor=blue,
+%    filecolor=blue,
+%    linkcolor=blue,
+%    urlcolor=blue
+%}
 
 \begin{document}
+	
+	
+	\author{
+		LastName1, FirstName1\\
+		\texttt{first1.last1@xxxxx.com}
+		\and
+		LastName2, FirstName2\\
+		\texttt{first2.last2@xxxxx.com}
+	}
 
 Our main points include: 
 \begin{enumerate}
@@ -100,7 +118,7 @@ Our main points include:
 \end{enumerate}
 
 \newpage
-\maketitle
+%\maketitle
 
 \section*{Abstract}
 We examined RNA-Seq data on 209 biological samples from 23 different
@@ -109,10 +127,10 @@ expressed across biological samples, experiment conditions, and labs. We fit a
 random-effect model to the read counts for each gene and decompose the total
 variance into between-sample, between-treatment and between-experiment variance
 components. Identifying stably expressed genes is useful for count
-normalization and differential expression analysis. The variance component analysis is a first step towards
-understanding the sources and nature of the RNA-Seq count variation.
+normalization and differential expression analysis. The variance component analysis is a first step towards understanding the sources and nature of the RNA-Seq count variation.
 
 
+cited from the abstract of the paper: " Real-time PCR (qPCR) is the most accurate method of quantifying gene expression, provided that suitable endogenous controls are used to normalize the data"
 \section{Introduction}\label{section:Introduction}
 
 \textbf{(overview)}
@@ -133,7 +151,8 @@ analysis is a first step towards understanding the sources and nature of the
 RNA-Seq count variation.  To illustrate our methods, we examined RNA-Seq data
 on 209 Arabidopsis  samples from 23 different experiments carried out by
 different labs and identified genes that are stably expressed across
-biological samples, experiment conditions, and labs.  
+biological samples, experimental or environmental conditions, and experiments
+(labs).  
 
 A reference set of stably-expressed genes will be useful for count
 normalization.  A key task of RNA-Seq analysis is to detect DE genes under
@@ -157,7 +176,7 @@ distribution of the fold changes between samples.
 % for us to reliably estimate true fold changes.  
 If the experiment condition can affect expression levels of more than half of
 the genes, many of the existing normalization methods may be unreliable
-(\cite{loven2012revisiting}, \cite{wu2013use}).  This difficulty can be
+\citep{loven2012revisiting, wu2013use}.  This difficulty can be
 alleviated if one could identify a set of stably expressed genes whose
 expression levels are known or expected to not vary much under different
 experimental conditions. Our idea is to identify such a reference set based on
@@ -166,19 +185,24 @@ a large number of existing data sets.
 Our basic intuition is that a numerical quantification of expression
 stability---which typically measures certain aspects of RNA-Seq count
 variation---can be more reliably estimated by using more data sets.  There is,
-however, a caveat to this idea: as pointed out by \cite{hruz2011refgenes},
-universally stably expressed genes may not exist and a subset of stably
-expressed genes from a specific biological context may have less variability
-than those identified across varying tissues and conditions.  Many studies
-have shown that stably expressed genes are subject to change from one
-experiment to another, either due to varying experimental protocols, or due to
-different organs of a given species (\cite{reid2006optimized},
-\cite{hong2010identification}).  The top 100 stably expressed genes in
-Arabidopsis developmental series of \cite{czechowski2005genome} shared only 3
-genes with top 50 stably expressed genes identified from Arabidopsis seed
-samples by \cite{dekkers2012identification}.  In this study, we try to balance
-the generality and specificity by identifying different reference gene sets
-for different tissue types of Arabidopsis. 
+however, a caveat to this idea: as pointed out by \cite{fernandes2008selection} and \cite{hruz2011refgenes},
+% stably expressed genes identified under a wide range conditions may show more
+% variability under a more specific biological context than those genes
+% identified under that particular context.
+universally stably expressed genes may not exist. \cite{hruz2011refgenes} showed that a subset of stably
+expressed genes from a specific biological context may have more variability
+than other genes if examined across a broader range of samples and conditions.
+Many studies have shown that stably expressed genes are subject to change from
+one experiment to another due to different experimental protocols, different
+tissue types, or other varying conditions \citep{reid2006optimized,
+hong2010identification}.  The top 100 stably expressed genes in Arabidopsis
+developmental series of \citet{czechowski2005genome} shared only 3 genes with
+top 50 stably expressed genes identified from Arabidopsis seed samples by
+\citet{dekkers2012identification}.  In this study, we try to balance the
+generality and specificity by identifying different reference gene sets for
+different tissue types of Arabidopsis. 
+
+
 
 We can also think that when a normalization method is applied to a single data
 set, it effectively specifies an implicit reference set of stably expressed
@@ -189,8 +213,9 @@ sets. The internal and external reference sets will provide different contexts
 for the DE analysis: in other words, one can choose to answer different
 scientific questions by using different reference sets. In any case, we
 advocate  making the reference set explicit during a DE analysis and using a
-common reference set when analyzing multiple datasets. We will further discuss
-these points in the discussion Section \ref{section:discussion}.
+common reference set when analyzing multiple datasets. 
+
+% We will further discuss these points in the discussion Section \ref{section:discussion}.
 
 
 In this paper, we identify stably expressed genes from RNA-Seq data sets based
@@ -201,8 +226,8 @@ understand the biological functions of genes with numerically stable
 expression measures.  From an operational point of view, however, numerical
 stability is more tractable. In pre-genomic era, the so-called "\textit{house-keeping
 genes}" are often considered as candidates of reference genes for
-normalization (\cite{bustin2002quantification},
-\cite{andersen2004normalization}). House-keeping
+normalization \citep{bustin2002quantification, andersen2004normalization},
+(REF Fernandes et al.  2008). House-keeping
 genes are typically constitutive genes that
 maintain basic cellular function, and therefore are expected to express at
 relatively constant levels in non-pathological situations.  However, many
@@ -243,13 +268,9 @@ throughout development, \cite{czechowski2005genome} suggested stably expressed
 % \citep{dekkers2012identification}, breast tumor
 % tissues\citep{gur2009identification}, mouse (universal)
 % \citep{frericks2008toolbox} and so on.  
-Validation experiments (\cite{czechowski2005genome},
-\cite{dekkers2012identification}, \cite{huggett2005real},
-\cite{stamova2009identification}) showed that these genes are more stably
+\cite{andersen2004normalization} uses a linear mixed model to estimate the between-group and within-group variances from expression profiles of microarray data, and then combines the two variance components by a Bayesian formulation. For a future experiment, the stability value for a given gene is defined as the absolute value of posterior mean plus one standard prediction deviation of that gene.
+Validation experiments \citep{czechowski2005genome, dekkers2012identification, huggett2005real,stamova2009identification} showed that these genes are more stably
 expressed than traditional house-keeping genes.  
-
-
-
 
 The rest of the paper is organized as follows: in Section \ref{section:Methods}, we describe the data preparation steps and our method of identifying stably expressed genes; in Section \ref{section:Results}, we discuss the stably expressed genes and factors that might affact stability ranking; we also discuss results from variance component analysis and how to use the identified stably expressed genes for count normalization. (AND DISCUSSION...)
 
@@ -282,7 +303,7 @@ the three groups.
 % lowly-expressed genes provide little information about expression level, and 
 \begin{table}[h]
     \centering
-    \caption[3.2]{data set summary}
+    \caption{Summary statistics for three groups.}
     \begin{tabular}{lrrrr} \hline
 	Group & \#  experiments & \# treatments  & \# samples & \# genes \\ \hline
 	Seedling &10 & 31 &70  &24379  \\
@@ -329,7 +350,10 @@ Our pipeline, implemented using the software R \citep{Rpackage}, is summarized a
     \item
 	Align short reads in FASTQ files,  using the \verb|align()| function from 
 	Subread aligner (RSubread, version 1.16.2, \citealt{liao2013subread}) in the software R
-	\citep{ Rpackage}, to the Arabidopsis reference genome \verb|Arabidopsis_thaliana.TAIR10.22.dna.toplevel.fa |
+	\citep{ Rpackage}, to the Arabidopsis reference genome
+	   \begin{quote}
+	   	\verb|Arabidopsis_thaliana.TAIR10.22.dna.toplevel.fa |
+	   \end{quote} 
 	downloaded from the \textit{ Ensembl plants FTP server} (\url{http://plants.ensembl.org/info/data/ftp/index. html}). 
 	 
 
@@ -427,7 +451,8 @@ to a subset of genes selected based on an initial screening of mean expression
 level and fold changes. 
 
 We want to apply Anders and Huber's method to a subset of stably expressed
-genes based on our stability measure. But to identify the stably expressed
+genes based on our stability measure (i.e., taking the median from a subset of
+genes in equation~(\ref{eq:normfactors})). But to identify the stably expressed
 genes, we first need a set of initially estimated normalization factors.  So
 tackle this circular dependence, we use a one-step iteration method to estimate the
 normalization factors: 
@@ -637,9 +662,9 @@ is computed as
 in each sample and the mean is computed over all samples.
  
 \begin{figure}[] \begin{center}
-    \includegraphics[width=5cm,height=4cm]{Figures/cpm_seedling.eps}
-    \includegraphics[width=5cm,height=4cm]{Figures/cpm_leaves.eps}
-    \includegraphics[width=5cm,height=4cm]{Figures/cpm_tissue.eps}
+    \includegraphics[width=4.5cm,height=4cm]{Figures/cpm_seedling.eps}
+    \includegraphics[width=4.5cm,height=4cm]{Figures/cpm_leaves.eps}
+    \includegraphics[width=4.5cm,height=4cm]{Figures/cpm_tissue.eps}
     \caption{{\small{\label{cpm} mean CPM (see equation (\ref{eq:cpm})) for the top 1000 most stably expressed genes identified by the total variance $\hat{\sigma}^2$} from the seedling (left), leaf (middle) and multi-tissue
     (right) groups }. The mean CPM is computed over all samples for each gene.} \end{center} 
 \end{figure} 
@@ -717,9 +742,9 @@ and sensitivity.
 % \usepackage{multirow}
 \begin{table}[]
 	\centering
-	\caption{Variance components estimated from the multi-tissue group for 15 genes. Column 1 is the source: five stably expressed genes identified by the total variance $\hat{\sigma}^2$ (GLMM), five stably expressed identified by Czechowski according to the CV measure from a developmental series of microarray experiments (Czechowski), and  five traditional house-keeping genes (HKG). Columns 3--5 are the values of each variance components. Column 6 specifies each gene's rank according to the total variance $\hat{\sigma}^2$ in the multi-tissue group.}
+	\caption{Variance components estimated from the multi-tissue group for 15 genes. Column 1 is the source: five stably expressed genes identified by the total variance $\hat{\sigma}^2$ (GLMM), five stably expressed identified by Czechowski according to the CV measure from a developmental series of microarray experiments (Czechowski), and  five traditional house-keeping genes (HKG). Columns 3--5 are the estimated variance components. Column 6 specifies the ranking according to the total variance $\hat{\sigma}^2$ in the multi-tissue group.}
 	\label{table:15genes}
-	\begin{tabular}{llrrrr}\\ \hline
+	{\footnotesize\begin{tabular}{llrrrr}\\ \hline
 		Source                        & Gene      & betweeen-sample & between-treatment & between-experiment & Rank  \\  \hline
 		\multirow{5}{*}{GLMM}    & AT5G58100 & 0.0018          & 0.0008            & 0.0042             & 9     \\
 		& AT2G23140 & 0.0049          & 0.0058            & 0.0000             & 49    \\
@@ -736,7 +761,7 @@ and sensitivity.
 		& AT5G60390 & 0.0082          & 0.0169            & 0.2150             & 9573  \\
 		& AT4G05320 & 0.0092          & 0.0089            & 0.2299             & 9749  \\
 		& AT3G18780 & 0.0360          & 0.0107            & 0.4168             & 12623  \\   \hline
-	\end{tabular}
+	\end{tabular}}
 \end{table}
 
 % also, Czechowski's reference genes are
@@ -749,7 +774,7 @@ and sensitivity.
 	\includegraphics[width=15cm,height=6cm]{Figures/A2.eps}
 	\includegraphics[width=15cm,height=6cm]{Figures/A1.eps}
 	\caption{{\small{\label{expressinlevel1}
-			CPM of 15 genes for each sample in the multi-tissue group (described in Section \ref{section:DataCollection}):  five stably expressed genes identified by the total variance $\hat{\sigma}^2$ (top), five stably expressed identified by Czechowski according to the CV measure from a developmental series of microarray experiments (middle), and  five traditional house-keeping genes (bottom). Each block represent an experiment... }}}
+			CPM of 15 genes for each sample in the multi-tissue group (described in Section \ref{section:DataCollection}) across 79 samples:  five stably expressed genes identified by the total variance $\hat{\sigma}^2$ (top), five stably expressed identified by Czechowski according to the CV measure from a developmental series of microarray experiments (middle), and  five traditional house-keeping genes (bottom). }}}
 %	\caption{{\small{\label{expressinlevel1} CPM of 15 genes for each sample in the multi-tissue group:  five stably expressed genes identified by the total variance $\hat{\sigma}^2$ (top), five stably expressed identified by Czechowski according to the CV measure from a developmental series of microarray experiments (middle), and  five traditional house-keeping genes (bottom).}}
 \end{center}
 \end{figure} 
@@ -836,8 +861,8 @@ We have the following observations:
 
 \begin{figure}[h!]
     \begin{center}
-	\includegraphics[scale=0.5]{Figures/rankVSrank_RNA2.eps}
-	\caption{Recall percentage for list $L_1$ --- $L_5$ of \ref{list:L5}. We choose top 100 stably expresed genes for $L_1$--$L_4$, and top 50 stably expressed genes for $L_5$. $x$-axis is the number of most stably expressed genes in multi-tissue group according to the total variance measure, and $y$-axis shows the recall percentage (see equation (\ref{eq:recall}))  for each of the five lists.}
+	\includegraphics[scale=0.55]{Figures/rankVSrank_RNA2.eps}
+	\caption{Recall percentage for list $L_1$ --- $L_5$ (see Section \ref{list:L5}). We choose top 100 stably expresed genes for $L_1$--$L_4$, and top 50 stably expressed genes for $L_5$. $x$-axis is the number of most stably expressed genes in multi-tissue group according to the total variance measure, and $y$-axis shows the recall percentage (see equation (\ref{eq:recall}))  for each of the five lists.}
 	\label{fig:rankVSrank_RNA}
     \end{center}
 \end{figure}
@@ -984,10 +1009,10 @@ between leaf samples. )
 
  \begin{figure}[h]
 \begin{center}
-\includegraphics[width=5cm,height=4cm]{Figures/var_dens1.eps}
-\includegraphics[width=5cm,height=4cm]{Figures/var_dens2.eps}
-\includegraphics[width=5cm,height=4cm]{Figures/var_dens3.eps}
-\caption{ Density plot of percentages of variance components for the seedling, the leaf, and the multi-tissue groups (from left to right).}
+\includegraphics[width=4.5cm,height=4cm]{Figures/var_dens1.eps}
+\includegraphics[width=4.5cm,height=4cm]{Figures/var_dens2.eps}
+\includegraphics[width=4.5cm,height=4cm]{Figures/var_dens3.eps}
+\caption{ Density plot of percentages of variance components for the seedling, the leaf, and the multi-tissue groups.}
 \label{fig:densityplot}
 \end{center}
 \end{figure} 
@@ -995,8 +1020,8 @@ between leaf samples. )
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=0.8\linewidth]{Figures/top1000.eps}
-	\includegraphics[width=0.8\linewidth]{Figures/all.eps}
+	\includegraphics[width=1\linewidth]{Figures/top1000.eps}
+	\includegraphics[width=1\linewidth]{Figures/all.eps}
 	\caption{stacked bar plot of the three variance components for the multi-tissue group. Top: 20 genes randomly selected from top 1000 stably expressed genes; Bottom: 20 genes randomly selected from all the genes.}
 	\label{fig:all}
 \end{figure}
@@ -1004,18 +1029,36 @@ between leaf samples. )
 
 \subsection{Reference gene set for normalization}
 \label{Section:commonReference}
-
 Once we have ranked the genes according to our numerical stability measure
 (i.e, the total variance measure, $\hat\sigma^2$), one application is to use
 an explicit set of most stably expressed genes as reference genes for count
-normalization.  Existing normalization approaches are often applied to the
-single data set under study. This new approach allows investigators to
+normalization.  This new approach allows investigators to
 prescribe a specific biological context for evaluating gene stability by
 choosing the most relevant reference samples and experiments when computing
 the stability measure.  For example, the most stably expressed genes
 identified from the multi-tissue group and those identified from the seedling
-group will provide different biological contexts.
+group will provide different biological contexts.  In contrast, existing
+normalization approaches are often applied to the single data set under study.
+% We can think the differences between the two approaches as using external
+% control set and using an internal control set.
 
+\begin{center}
+    \begin{table}\centering
+	\caption{A toy example---using a common explicit set of reference genes  to compare among multiple experiments.}\label{table:reference}
+	\begin{tabular}{ccccc} \hline
+	    &  \multicolumn{2}{c}{Exp. 1} & \multicolumn{2}{c}{Exp. 2} \\
+	    % Gene  & $T_{1, 1}$ & $T_{1, 2}$  & $T_{2, 1}$  &$T_{2, 2}$ \\ \hline
+	    Gene  & Control & Treatment & Control & Treatmetn \\
+	    \hline
+	    1     & 10       & 20       & 10    &20   \\
+	    2     & 10       & 20       & 10    &20   \\
+	    3     & 10       & 20       & 10    &10   \\
+	    4     & 10       & 10       & 10    &10   \\ 
+	    5     & 10       & 10       & 10    &10   \\  
+	    \hline
+	\end{tabular}
+    \end{table}
+\end{center}
 
 %	\begin{center}
 %	\begin{table}\centering
@@ -1032,27 +1075,10 @@ group will provide different biological contexts.
 %		\end{tabular}
 %	\end{table}
 %	\end{center}
-	\begin{center}
-	    \begin{table}\centering
-		\caption{My caption}\label{table:reference}
-		\begin{tabular}{ccccc} \\ \hline
-		    &  \multicolumn{2}{c}{Exp. 1} & \multicolumn{2}{c}{Exp. 2} \\
-		    % Gene  & $T_{1, 1}$ & $T_{1, 2}$  & $T_{2, 1}$  &$T_{2, 2}$ \\ \hline
-		    Gene  & Control & Treatment & Control & Treatmetn \\
-		    \hline
-		    1     & 10       & 20       & 10    &20   \\
-		    2     & 10       & 20       & 10    &20   \\
-		    3     & 10       & 20       & 10    &10   \\
-		    4     & 10       & 10       & 10    &10   \\ 
-		    5     & 10       & 10       & 10    &10   \\  
-		\end{tabular}
-	    \end{table}
-	\end{center}
-
 In the Introduction, we also argued that using an explicit set of genes as
 reference for normalization can improve interpretability of DE results, in the
 sense that DE can always be interpreted as relative to the explicit reference
-gene set used. This new perspective is especially ??? when one wants to compare results from two
+gene set used. This new perspective is especially relevant when one wants to compare results from two
 or more experiments.
 We use a toy example to illustrate this point in
 Table \ref{table:reference} where we examine the mean counts for 5 genes in two
@@ -1085,9 +1111,9 @@ sets to assess DE in the two experiments.
 
 In practice, we recommend using the top 1000 most stably expressed genes for estimating
 normalization factors. The key is to avoid using too few (e.g., less than 10)
-or too many (e.g., using all genes): intuitively, using too few, the estimates
+or too many (e.g., using all genes) reference genes: intuitively, using too few, the estimates
 will be unstable;
-using too many, the results will be influenced by less stably
+using too many, the results may be subject to influence from highly unstably
 expressed genes.  Our simple simulations suggest that using between 100 to
 10000 genes seems to give stable results.  In the first set of three
 examples, we use Anders and Huber's method (see equation
@@ -1111,21 +1137,24 @@ top $1000$ and top $10000$ stably expressed genes as reference.
 
 
 \begin{figure}[h!]
-\begin{center}
-\includegraphics[scale=0.38]{Figures/norm1.eps}
-\includegraphics[scale=0.38]{Figures/norm2.eps}
-\includegraphics[scale=0.38]{Figures/norm3.eps}
-\includegraphics[scale=0.38]{Figures/norm4.eps}
-\caption{\label{fig:normfactor} matrix plot of normalization factors by choosing top 10, 100, 1000, and 10000 stably expressed genes for the seedling (top left), leaf (top right), multi-tissue (bottom left) groups. The bottom right plot shows the normalization factors of a new seedling experiment GSE66666 (sample size is 6) when using top 10--10000 stably expressed genes from seedling group as reference genes.}
-\end{center}
+	\begin{center}
+		\includegraphics[scale=0.34]{Figures/norm1.eps}
+		\includegraphics[scale=0.34]{Figures/norm2.eps}
+		\includegraphics[scale=0.34]{Figures/norm3.eps}
+		\includegraphics[scale=0.34]{Figures/norm4.eps}
+		\caption{\label{fig:normfactor} Matrix plot of normalization factors. Top 10, 100, 1000, and 10,000 stably expressed genes are chosen as reference to calculate the normalization factors for each of the three groups: the seedling (upper left), the leaf (upper right), and the multi-tissue (lower left) groups. The lower right plot shows the estimated normalization factors for a new seedling experiment (GSE66666, with sample size 6) when top 10---10,000 stably expressed genes from the seedling group are used as reference. The normalization factors are estimated by Anders and Huber's method.}
+	\end{center}
 \end{figure}
 
-  \section{Discussion}\label{section:discussion}
+  \section{Discussion and Conclusion}\label{section:discussion}
 In this paper, we advocate quantifying gene expression stability by applying a
-numerical stability measure to a large number of existing data sets.  This
-strategy has also been used by many for finding stably expressed genes using
-microarray data.  When using such a strategy, the outcome is determined by two
-factors: the data sources used and the specific numerical stability measure.
+numerical stability measure to a large number of existing data sets.  Similar
+strategy has also been used by many for finding stably expressed genes from
+microarray data. We argued that using an explicit reference gene set can
+improve intepretability of DE results, and furthermore, when comparing
+multiple experiments using a common reference set can avoid inconsistent
+conclusions.
+
 We emphasize that numerical stability is not equivalent to biological
 stability (??? Jeff).  (Ask Jeff about  ``biological stability'': do
 biologists talk about ``biological stability''?) For example, we demonstrated
@@ -1135,13 +1164,20 @@ Biological stability is a vague term and not easy to quantify.  Numerical
 stability is generally more tractable. (Some have argued that numerically
 identified stably expressed genes are more reliable. We feel that argument is
 somewhat circular??? The same numerical measure is used to both identify the
-stably expressed genes and to verify their stability.) It should be obvious
-but worth emphasizing that 1) different stability measures will give rise
-different ranking of gene stability and 2) the stability measure will also
-depend on the technology used for measuring gene expression: for example,
-microarray data and RNA-Seq data will give different sets of stably expressed
-genes.
+stably expressed genes and to verify their stability.) 
+It should be clear but worth emphasizing that when using a numerical measure
+to identify stably expressed genes, the outcome depends on multiple factors: the
+reference sample sets used, the technology used for measuring gene expression,
+and the specific numerical stability measure used.
 
+
+%It should be obvious
+%but worth emphasizing that 1) different stability measures will give rise
+%different ranking of gene stability and 2) the stability measure will also
+%depend on the technology used for measuring gene expression: for example,
+%microarray data and RNA-Seq data will give different sets of stably expressed
+%genes.
+%
 
   \textbf{Major findings of the study}
   Normalization is an essential step for accurate inference in RNA-Seq data analysis. Global normalization methods may lead to erroneous conclusions when they rely on inappropriate reference genes. In this study we identified three sets of stably expressed genes for different organs and tissues of Arabidopsis. We conclued that traditional HKGs are not necessarily stable under not only microarray, but also in RNA-Seq experiment when they are evaluated by numerical stability measures. While \cite{czechowski2005genome} identified novel reference genes for different experimental conditions, we demonstrated that they are not among the best candidates for RNA-Seq study. We recommend a set of 1000 reference genes to calculate normalization factors for RNA-Seq data.  
@@ -1328,7 +1364,8 @@ The details of experimental data is summarized as below
 \newpage
 
 
-\bibliographystyle{apalike}
+%\bibliographystyle{apalike}
+\bibliographystyle{DeGruyter}
 \bibliography{mybib}
 
 \end{document}
