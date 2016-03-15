@@ -21,6 +21,9 @@
 \usepackage{float}  % PUT FIGURE HERE
 \usepackage{multirow}
 \usepackage{booktabs} % Create TABS
+\usepackage{tabularx,ragged2e}
+\DeclareMathOperator{\median}{median}
+
 %\usepackage{array,arydshln}  % CREATE DASH LINE
 \title{Identification of stably expressed genes from Arabidopsis RNA-Seq data}
 \date{} % Today's date or a custom date
@@ -207,13 +210,14 @@ different tissue types of Arabidopsis.
 We can also think that when a normalization method is applied to a single data
 set, it effectively specifies an implicit reference set of stably expressed
 genes (those genes that have the least variation after normalization). We can think
-this as using an internal reference set. In contrast, what we are proposing is
-that one can also identify an external reference set by looking at past data
-sets. The internal and external reference sets will provide different contexts
-for the DE analysis: in other words, one can choose to answer different
-scientific questions by using different reference sets. In any case, we
-advocate  making the reference set explicit during a DE analysis and using a
-common reference set when analyzing multiple datasets. 
+this as using an internally identified reference set. In contrast, what we are
+proposing is that one can also identify a reference set externally by looking
+at past data sets. The internally and externally identified reference gene
+sets will provide different contexts for the DE analysis: in other words, one
+can choose to answer different scientific questions by using different
+reference sets. In any case, we advocate  making the reference set explicit
+during a DE analysis and using a common reference set when analyzing multiple
+datasets. 
 
 % We will further discuss these points in the discussion Section \ref{section:discussion}.
 
@@ -252,6 +256,13 @@ expressed according numerical measures either.
 For microarray data, there are many efforts to numerically find stably
 expressed genes by quantifying the variation of measured expression levels
 across a large number of microarray data sets.  For example,
+\cite{andersen2004normalization} used a linear mixed model to estimate the
+between-group and within-group variances from expression profiles of
+microarray experiments, and then quantified expression stability by combining
+the two variance components using a Bayesian formulation. 
+% For a future experiment, the stability value for a given gene is
+% defined as the absolute value of posterior mean plus one standard prediction
+% deviation of that gene.  
 \cite{czechowski2005genome} measured the expression stability of each gene
 using the coefficient of variation (CV). Genes with lower CVs are considered
 as more stably expressed.  By investigating 721 arrays under 323 conditions
@@ -268,9 +279,10 @@ throughout development, \cite{czechowski2005genome} suggested stably expressed
 % \citep{dekkers2012identification}, breast tumor
 % tissues\citep{gur2009identification}, mouse (universal)
 % \citep{frericks2008toolbox} and so on.  
-\cite{andersen2004normalization} uses a linear mixed model to estimate the between-group and within-group variances from expression profiles of microarray data, and then combines the two variance components by a Bayesian formulation. For a future experiment, the stability value for a given gene is defined as the absolute value of posterior mean plus one standard prediction deviation of that gene.
-Validation experiments \citep{czechowski2005genome, dekkers2012identification, huggett2005real,stamova2009identification} showed that these genes are more stably
-expressed than traditional house-keeping genes.  
+Validation experiments \citep{czechowski2005genome,
+dekkers2012identification, huggett2005real,stamova2009identification} showed
+that these genes are more stably expressed than traditional house-keeping
+genes.  
 
 The rest of the paper is organized as follows: in Section \ref{section:Methods}, we describe the data preparation steps and our method of identifying stably expressed genes; in Section \ref{section:Results}, we discuss the stably expressed genes and factors that might affact stability ranking; we also discuss results from variance component analysis and how to use the identified stably expressed genes for count normalization. (AND DISCUSSION...)
 
@@ -304,7 +316,7 @@ the three groups.
 \begin{table}[h]
     \centering
     \caption{Summary statistics for three groups.}
-    \begin{tabular}{lrrrr} \hline
+    \begin{tabular}{lp{3cm}p{3cm}p{2cm}p{2cm}} \hline
 	Group & \#  experiments & \# treatments  & \# samples & \# genes \\ \hline
 	Seedling &10 & 31 &70  &24379  \\
 	Leaf &5 & 28 & 60 &20967  \\
@@ -431,29 +443,48 @@ gene's geometric mean expression over all real samples,
 Next we calculate the median fold-change in relative frequency between
 each sample $j$ and the pseudo-reference sample,
 \begin{equation}\label{eq:normfactors} 
-    R'_j = \text{median}\left(\dfrac{y_{1,j}/N_j}{y_{1,0}/N_{0}}, \ldots, \dfrac{y_{m,j}/N_j}{y_{m,0}/N_{0}}\right),
+    R'_j = \median \left(\dfrac{y_{1,j}/N_j}{y_{1,0}/N_{0}}, \ldots, \dfrac{y_{m,j}/N_j}{y_{m,0}/N_{0}}\right),
 \end{equation}
 where $N_j$ is the library size for sample $j$ (the sum of RNA-Seq
-counts mapped to all genes retained in each sample). Last, The \textit{normalization factor}  $R_j$ for sample $j$ is then calculated as 
+counts mapped to all genes retained in each sample). Last, the
+\textit{normalization factor}  $R_j$ for sample $j$ is calculated as 
 \begin{equation}
+    \label{eq:norm3}
 R_j = \dfrac{R'_j}{(\prod_{j=1}^{n}R'_j)^{1/n}}.
 \end{equation}
 With the estimated normalization factors, the relative frequencies will be
-computed as $y_{ij}/{N_j R_j}$. The assumption made here is that the
-median fold change between relative frequencies in two samples should be 1. In
+computed as $y_{ij}/{N_j R_j}$, which we will call {\em normalized relative
+frequency}. The assumption made here is that the
+median fold change between normalized relative frequencies in two samples should be 1. In
 other words, this normalization method assumes that the majority of genes are
 not DE. The NBPSeq package \citep{di2014package} has an inbuilt function for
-this procedure and it will be used for count normalization in this paper. 
-
-The TMM method of \citet{robinson2010scaling} is based on a similar principle:
-assuming the majority of the genes are not DE. The TMM method can be applied
-to a subset of genes selected based on an initial screening of mean expression
-level and fold changes. 
+this procedure and it will be used for count normalization in this paper. With
+the estimates from equation~(\ref{eq:norm3}), we see that the median fold
+change in normalized relative frequencies between each sample and the pseudo-reference
+sample will be set to 1:
+\begin{equation}
+    \label{eq:medianfc}
+    \median \left(\dfrac{y_{1,j}/ N_jR_j'}{y_{1,0}/N_{0}R_0}, \ldots,
+    \dfrac{y_{m,j}/N_j R_j'}{y_{m,0}/N_{0}R_0} \right) = 1,
+\end{equation}
+where $R_0$ is ???.
 
 We want to apply Anders and Huber's method to a subset of stably expressed
-genes based on our stability measure (i.e., taking the median from a subset of
-genes in equation~(\ref{eq:normfactors})). But to identify the stably expressed
-genes, we first need a set of initially estimated normalization factors.  So
+genes based on our stability measure. Basically, we can estimate normalization
+factors by applying equation~(\ref{eq:normfactors} to a subset of reference
+genes. In doing so,  effectively, the median fold changes in
+equation~(\ref{eq:medianfc}) among these reference genes will be set to 1.
+% ??? We will call the median fold changes in equation (4) the reference median fold changes. ???  
+Other normalization methods may make different assumptions
+than Anders and Huber's, but some assumptions to similar effect seem
+unavoidable.  For example, the TMM method of \citet{robinson2010scaling} is
+based on a similar principle: assuming the majority of the genes are not DE.
+The TMM method can be applied to a subset of genes selected based on an
+initial screening of mean expression level and fold changes. In TMM method,
+one can also specify certain quantile (instead of the median) of the folder
+changes to be 1.
+
+But to identify the stably expressed genes, we first need a set of initially estimated normalization factors.  So
 tackle this circular dependence, we use a one-step iteration method to estimate the
 normalization factors: 
 \begin{enumerate}
@@ -474,9 +505,9 @@ iteration of steps 2 and 3, there would be $956$ overlapping genes between
 the top 1000 genes from the first iteration and those from the second
 iteration.
 
+
 % We therefore iterated only once to obtain normalization
 % factors for GLMM in each of the three groups in Table \ref{table:TableSet3}.  
-
 
 \subsection{Poisson log-linear mixed-effects regression model and the total
 variance measure of expression stability}\label{subsection:OurMethod} 
@@ -640,10 +671,9 @@ different tissue types (see Table \ref{table:TableSet3} for a summary).
 %seedlings; the leaf group consists 60 samples from 5 experiments on
 %Arabidopsis leaf; and the multi-tissue-type group consists 79 samples from
 %different 8 experiments on different tissues types.)
- As we mentioned in
-Introduction, absolutely stably expressed genes may not exist.  Choosing
-different sample sets as reference allows us to identify the stably expressed
-genes for different biological contexts.
+As we mentioned in Introduction, absolutely stably expressed genes may not
+exist.  Choosing different sample sets as reference allows us to identify the
+stably expressed genes for different biological contexts.
 
 % Method section \ref{section:{section:countNormalization}}: the group of seedling
 % experiments, the group of leafexperiments, the group of experiments on
@@ -943,7 +973,8 @@ after each iteration. The procedure can thus give surprising results and the
 adaption of it in practice should not be automatic.
 
  
-\begin{table}[ht] \centering \caption{A toy example showing the effect of iterative elimination. Columns 2 and 3 are expression levels for two samples, Column 4 is the ranking of genes by $M$-value without iterative elimination, and Column 5 is the ranking after two geNorm iterations.} \begin{tabular}{rrrrr}
+\begin{table}[ht] \centering \caption{A toy example showing the effect of iterative elimination. Columns 2 and 3 are expression levels for two samples, Column 4 is the ranking of genes by $M$-value without iterative elimination, and Column 5 is the ranking after two geNorm iterations.} 
+	\begin{tabular}{rrp{2cm}rp{2cm}rp{2cm}rp{2cm}}
     \hline & \multicolumn{2}{c}{Raw Counts} & \multicolumn{2}{c}{Rank}\\
      Gene & sample 1 & sample 2 & rank1 & rank2 \\ \hline 
     Gene1 & 1 & 1 & 3 & 1 \\ 
@@ -973,7 +1004,6 @@ adaption of it in practice should not be automatic.
 
 \subsection{Sources of variation}\label{Section:varianceComp}
 
-
 For each gene, the GLMM (equation (\ref{eq:GLMM}) of section
 \ref{subsection:OurMethod}) allows us to decompose total count variance into
 between-sample, between-treatment and between-experiment variance components.
@@ -1001,7 +1031,8 @@ between leaf samples. )
  
  \begin{center} \begin{table}[h!] \centering \caption{proportion of estimated
      variance components for the seedling, the leaf and the multi-tissue groups. Every entry represents the average proportion of a certain variance component, computed by averaging the ratios --- the variance component being considered to the total variance $\hat{\sigma}^2$ --- over all the genes.} \label{table:percentageofvariation}
-     \begin{tabular}{lrrr}\hline & Seedling & Leaf & Multi-tissue \\  \hline
+     \begin{tabular}{lp{3cm}p{2.5cm}p{3cm}}\hline
+     Source & Seedling & Leaf & Multi-tissue \\  \hline
 	 between-sample     & 12.3\%   & 16.0\% & 8.4\%           \\
 	 between-treatment  & 13.4\%   & 28.0\% & 6.6\%           \\
 	 between-experiment & 74.3\%   & 56.0\% & 85.0\%         \\ \hline
@@ -1009,6 +1040,7 @@ between leaf samples. )
 
  \begin{figure}[h]
 \begin{center}
+\includegraphics[width=15cm,height=1.5cm]{Figures/var_dens_legend.eps}
 \includegraphics[width=4.5cm,height=4cm]{Figures/var_dens1.eps}
 \includegraphics[width=4.5cm,height=4cm]{Figures/var_dens2.eps}
 \includegraphics[width=4.5cm,height=4cm]{Figures/var_dens3.eps}
@@ -1029,31 +1061,41 @@ between leaf samples. )
 
 \subsection{Reference gene set for normalization}
 \label{Section:commonReference}
+
 Once we have ranked the genes according to our numerical stability measure
 (i.e, the total variance measure, $\hat\sigma^2$), one application is to use
 an explicit set of most stably expressed genes as reference genes for count
-normalization.  This new approach allows investigators to
-prescribe a specific biological context for evaluating gene stability by
-choosing the most relevant reference samples and experiments when computing
-the stability measure.  For example, the most stably expressed genes
-identified from the multi-tissue group and those identified from the seedling
-group will provide different biological contexts.  In contrast, existing
-normalization approaches are often applied to the single data set under study.
+normalization.  This new approach allows investigators to prescribe a specific
+biological context for evaluating gene stability by choosing the most relevant
+reference samples and experiments when computing the stability measure.  For
+example, the most stably expressed genes identified from the multi-tissue
+group and those identified from the seedling group will provide different
+biological contexts. In contrast, existing normalization approaches are often
+applied to the single data set under study, and thus provides a single, narrow
+context.
+
 % We can think the differences between the two approaches as using external
 % control set and using an internal control set.
-A subtle point we want to make is that a reference set
-does not have to be absolutely stable to be useful as a reference set: we can
-slightly change our perspective and interpret all DE leaf as relative to the
-reference set.  For example, a fold change of 2 can be interpreted as the
-fold change of this gene is 2 more than those genes in the reference set. 
-he simple normalization methods discussed earlier (REFs) are
-effectively specifying an implicit set of genes as a referent set. Our
-proposal is to make the reference set explicit to improve interpretability of
-the leaf.  
 
-
-Furthermore, using an explicit common reference set becomes more
-useful when the interest is in comparing different experiments. 
+Even under a specific biological context,  it is almost impossible to know
+whether the genes in any reference set are absolutely stably expressed, even
+though commonly used normalization methods often enforce some assumptions on
+the reference gene set: for example, when we use Anders and Huber's
+method to estimate the normalization factors based on a subset of reference
+genes, roughly speaking, the median fold change among the reference genes will
+be set to 1 (see Section ??? for more details). A subtle point we want to make
+is that by the making the reference gene set explicit, we improve
+interpretability of the DE test results:  we can slightly change our
+perspective and interpret all DE results as relative to the reference gene
+set.  
+% a reference gene set does not have to be absolutely stably expressed to be
+% useful as a reference set: 
+For example, a fold change of 2 inferred from the GLMM model can be
+interpreted as the fold change of a gene is 2 times the true (but often
+unknowable) median fold change of the reference genes.  When one estimates the
+normalization factors based on all genes, one is effectively specifying an
+implicit set of genes as a referent set.  Our proposal is to make the
+reference set explicit to improve interpretability.  
 
 
 \begin{center}
@@ -1089,33 +1131,34 @@ useful when the interest is in comparing different experiments.
 %		\end{tabular}
 %	\end{table}
 %	\end{center}
-In the Introduction, we also argued that using an explicit set of genes as
-reference for normalization can improve interpretability of DE results, in the
-sense that DE can always be interpreted as relative to the explicit reference
-gene set used. 
+
+Furthermore, using an explicit common reference set becomes more
+useful when the interest is in comparing different experiments. 
+% In the Introduction, we also argued that using an explicit set of genes as
+% reference for normalization can improve interpretability of DE results, in the
+% sense that DE can always be interpreted as relative to the explicit reference
+% gene set used. 
 This new perspective is especially relevant when one wants to compare results from two
-or more experiments.
-For example,
-when two RNA-Seq data sets are separately normalized with different reference
-sets, a fold change of two observed in one experiment may not be directly
-comparable to a fold change of two observed in the other.  This concern can be
-alleviated by using a common set of reference genes.
-We use a toy example to illustrate this point in
-Table \ref{table:reference} where we examine the mean counts for 5 genes in two
+or more experiments. For example, when two RNA-Seq data sets are separately
+normalized with different reference sets, a fold change of two observed in one
+experiment may not be directly comparable to a fold change of two observed in
+the other.  This concern can be alleviated by using a common set of reference
+genes.  We use a toy example to illustrate this point in Table
+\ref{table:reference} where we examine the mean counts for 5 genes in two
 two-group comparison experiments. If we use different reference gene set for
 count normalization, for example, we use genes 1--3 as reference in experiment
 1, but use genes 3--5 as reference in experiment 2, we may conclude that gene
 3 is not DE in either experiment. If we use a common reference gene
 set---either genes 1--3 or genes 3--5---for normalization, however, we will be
 able to discover, in either case, that the DE behavior of gene 3 is different
-in the two experiments. Note that the DE conclusion in both
-experiments will depend on the reference genes used: if genes 1--3 are used as
-reference, gene 3 is not DE in experiment 1, but will be DE in experiment 2;
-if genes 3--5 are used as reference, gene 3 will be considered DE in
-experiment 1, but not DE in experiment 2. The point is, in either case, we
-will notice that the DE behavior of gene 3 is different between the two
-experiments. This information will be lost if one uses different reference
-sets to assess DE in the two experiments.
+in the two experiments. Note that the DE conclusion in both experiments will
+depend on the reference genes used: if genes 1--3 are used as reference, gene
+3 is not DE in experiment 1, but will be DE in experiment 2; if genes 3--5 are
+used as reference, gene 3 will be considered DE in experiment 1, but not DE in
+experiment 2. The point is, in either case, we will notice that the DE
+behavior of gene 3 is different between the two experiments. This information
+will be lost if one uses different reference sets to assess DE in the two
+experiments.
 
 
 % Columns 2--5 are the mean counts for each treatment. 
@@ -1198,7 +1241,7 @@ stably genes identified from different background will provide different
 biological contexts for evaluating different expression. In practice,
 researchers can choose the specific context. A practical challenge in applying
 such a philosophy is that no two experiments will have identical background,
-researchers have to decide what experiments can be considered comparable. This
+and researchers have to decide what experiments can be considered comparable. This
 is a difficult question, however, we believe it has to be asked from now on:
 biologists perform comparative experiments with the intension that the
 conclusions from a single experiment will be generalizable beyond the context
@@ -1276,7 +1319,7 @@ there is no guarantee such methods will work since a gene is well conserved
 does not necessarily mean it has stable gene expression.
 
 
-The R codes for reproducing results in this paper are available at Github:
+The R codes for reproducing results in this paper are available at Github: \url{https://github.com/zhuob/StablyExpressedGenes}
 
 %Our stretagy is to use an
 %iterative procedure: we rank all the genes based on our stability measure, and
