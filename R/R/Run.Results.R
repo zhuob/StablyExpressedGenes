@@ -37,22 +37,12 @@ cat("producing results in section 1...\n")
 
 
 # Figure 1: histogram of CPM for top 1000 stably-expressed genes
-
-setEPS()
-postscript(paste(FigurePath, "cpm_seedling.eps", sep=""))
 A1 <- plot.cpm(var_seedling,  1e3, "Seedling", textsize =c(10, 30, 20, 20))
-print(A1)
-dev.off()
-setEPS()
-postscript(paste(FigurePath, "cpm_leaves.eps", sep=""))
+ggsave(paste(FigurePath, "cpm_seedling.eps", sep =""), A1, width= 8, height= 5)
 A2 <- plot.cpm(var_leaf,  1e3, "Leaf", textsize =c(10, 30, 20, 20))
-print(A2)
-dev.off()
-setEPS()
-postscript(paste(FigurePath, "cpm_tissue.eps", sep=""))
+ggsave(paste(FigurePath, "cpm_leaves.eps", sep =""), A2, width= 8, height= 5)
 A3 <- plot.cpm(var_tissue,  1e3, "Multi-tissue", textsize =c(10, 30, 20, 20))
-print(A3)
-dev.off()
+ggsave(paste(FigurePath, "cpm_tissue.eps", sep =""), A3, width= 8, height= 5)
 
 ## produce 1000 stably-expressed genes for the three groups
 VarCompData <- c("tissue", "leaf", "seedling")
@@ -74,7 +64,8 @@ write.csv(overlap_gene, paste(TablePath, "OverlappedGeneFromThreeSetsTop1000.csv
 
 
 # Venn diagram
-require(gplots)
+
+require(VennDiagram)
 top1000seedling <- var_seedling$var.comp$Gene[var_seedling$var.comp$Rank <=1000]
 
 top1000tissue <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank <=1000]
@@ -82,42 +73,36 @@ top1000leaf <- var_leaf$var.comp$Gene[var_leaf$var.comp$Rank <=1000]
 venn1 <- length(intersect(top1000seedling, top1000tissue))
 venn2 <- length(intersect(top1000seedling, top1000leaf))
 venn3 <- length(intersect(top1000leaf, top1000tissue))
-venn(list(Leaf = top1000leaf, Seedling = top1000seedling, Multi_tissue = top1000tissue))
 
+# require(gplots)
+# venn(list(Leaf = top1000leaf, Seedling = top1000seedling, Multi_tissue = top1000tissue))
+ls <- list(Leaf = top1000leaf, Seedling = top1000seedling, Multi_tissue = top1000tissue)
+
+venn.plot <- venn.diagram(ls,height = 300, width = 300, resolution = 100,
+                          fill = c('yellow', 'purple', 'green'), "venn.png", imagetype = "png")
 #########  SECTION 2 ---------------------------------------
 
 cat("producing results in section 2...\n")
 
 
 # Figure 2: plot expression profile for the 15 genes
+textsize <- c(15, 1, 12, 15)  # legened, title, axis, axis.title
 # five traditional house-keeping genes
 figA <- c("AT3G18780", "AT5G12250","AT5G60390","AT4G05320","AT1G13440")  # HKG
+A4 <- plot.gene(figA, var_tissue, 1, 1e4,figure.num = NULL,textsize = textsize)
+ggsave(paste(FigurePath, "A1.eps", sep =""), A4, width= 13, height= 5)
+
 # FIVE GENES FROM CZECHOWSKI
 figB <- c("AT4G34270","AT1G13320","AT1G59830","AT4G33380","AT2G28390")   # NOVEL
-
-textsize <- c(15, 1, 12, 15)  # legened, title, axis, axis.title
-
-setEPS() 
-postscript(paste(FigurePath, "A1.eps", sep=""), width = 13, height = 5)
-A4 <- plot.gene(figA, var_tissue, 1, 1e4,figure.num = NULL,textsize = textsize)
-print(A4)
-dev.off()
-
-setEPS() 
-postscript(paste(FigurePath, "A2.eps", sep=""), width = 13, height = 5)
 A5 <- plot.gene(figB, var_tissue, 1, 1e4, figure.num = NULL, textsize)
-print(A5)
-dev.off()
+ggsave(paste(FigurePath, "A2.eps", sep =""), A5, width= 13, height= 5)
 
-
-setEPS() 
-postscript(paste(FigurePath, "A3.eps", sep=""), width = 13, height = 5)
 set.seed(102)  ## 102 or 107
 random.gene <- sample(1:100, 5)
 genelist <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% random.gene]
 A6 <- plot.gene(genelist,var_tissue, 1, 1e4, figure.num = NULL, textsize)
-print(A6)
-dev.off()
+ggsave(paste(FigurePath, "A3.eps", sep=""), A6, width = 13, height=5)
+
 
 ## table of variance components for the 15 genes
 gene_q <- show_plot_gene(figA, figB, genelist, var_tissue)
@@ -131,10 +116,11 @@ write.csv(gene_q, tableVarComp, row.names = F)
 
 cat("producing results in section 3...\n")
 # PLOT The figure
-setEPS() 
-postscript(paste(FigurePath, "rankVSrank_RNA2.eps", sep=""), width = 10, height = 5)
 xtext <- c( "number of most stably expressed Genes (Multi-tissue)", "L2", "L3", "recall percentage", "L1", "L4", "L5")
 A7 <- TopGene(var_tissue, var_seedling, var_leaf, cze_100, dek_50, geNorm, xtext)
+ggsave(paste(FigurePath, "rankVSrank_RNA2.eps", sep = ""), A7, width = 10, height = 5)
+
+
 print(A7)
 dev.off()
 
@@ -167,36 +153,26 @@ gene_ids1 <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% sample(1:100
 set.seed(110)
 gene_ids2 <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% sample(1:20000, 20) ] 
 
-setEPS() 
-postscript(paste(FigurePath, "top1000.eps", sep=""), width = 10, height = 5)
 A8 <- plot.stackedBar(gene_ids1, var_tissue, percent=F, figure.num = NULL, textsize=c(20, 20, 15, 20))
-print(A8)
-dev.off()
+ggsave(paste(FigurePath, "top1000.eps", sep = ""), A8, width = 10, height = 5)
 
-setEPS() 
-postscript(paste(FigurePath, "all.eps", sep=""), width = 10, height = 5)
 A9 <- plot.stackedBar(gene_ids2, var_tissue, percent=F, figure.num = NULL, textsize=c(20, 20, 15, 20))
-print(A9)
-dev.off()
+ggsave(paste(FigurePath, "all.eps", sep = ""), A9, width = 10, height = 5)
+
 
  ############# density plot
-setEPS() 
-postscript(paste(FigurePath, "var_dens1.eps", sep=""), width = 8, height = 5)
-A10 <- plot.density(var_seedling, "Seedling")
-print(A10)
-dev.off()
 
-setEPS() 
-postscript(paste(FigurePath, "var_dens2.eps", sep=""), width = 8, height = 5)
+A10 <- plot.density(var_seedling, "Seedling", legend=F)
+ggsave(paste(FigurePath, "var_dens1.eps", sep = ""), A10, width = 8, height = 5)
+
 A11 <- plot.density(var_leaf, "Leaf")
-print(A11)
-dev.off()
+ggsave(paste(FigurePath, "var_dens2.eps", sep = ""), A11, width = 8, height = 5)
 
-setEPS() 
-postscript(paste(FigurePath, "var_dens3.eps", sep=""), width = 8, height = 5)
 A12 <- plot.density(var_tissue, "Multi-tissue")
-print(A12)
-dev.off()
+ggsave(paste(FigurePath, "var_dens3.eps", sep = ""), A12, width = 8, height = 5)
+
+legend <- plot.density(var_tissue, "legend", legend=T)
+ggsave(paste(FigurePath, "var_dens_legend.eps", sep = ""), legend, width = 10, height = 1)
 
 ############# variance percentage
 # produce the table 

@@ -16,6 +16,8 @@ library(reshape2)
 library(scales)
 library(NBPSeq)
 library(GGally)
+library(gridExtra)
+library(grid)
 
 ##### Figure in Section 4.1 --------------------------------------
 
@@ -245,7 +247,7 @@ plot.stackedBar <- function(gene_ids, set, percent =F, figure.num, textsize = re
         theme( legend.text = element_text(size = textsize[1]),
                legend.position="top",
                plot.title = element_text(size = textsize[2]), 
-               axis.text.x = element_text(size=textsize[3],angle = 90, hjust = 1),
+               axis.text.x = element_text(size=textsize[3],angle = 45, hjust = 1),
                axis.text.y = element_text(size = textsize[3]),
                axis.title=element_text(size=textsize[4],face="bold")) +
         labs( y="variance", title=figure.num) +
@@ -271,7 +273,7 @@ plot.stackedBar <- function(gene_ids, set, percent =F, figure.num, textsize = re
             theme( legend.text = element_text(size = textsize[1]),
                    legend.position="top",
                    plot.title = element_text(size = textsize[2]), 
-                   axis.text.x = element_text(size=textsize[3],angle = 90, hjust = 1),
+                   axis.text.x = element_text(size=textsize[3],angle = 45, hjust = 1),
                    axis.text.y = element_text(size = textsize[3]),
                    axis.title=element_text(size=textsize[4],face="bold") ) +
             labs( y="percentage of total variance", title=figure.num) +
@@ -286,7 +288,7 @@ plot.stackedBar <- function(gene_ids, set, percent =F, figure.num, textsize = re
 
 
 
-plot.density <- function(set, figure.num, textsize = rep(20, 4))
+plot.density <- function(set, figure.num, textsize = rep(30, 4), legend = F)
 {
     var.s <- set$var.comp
     var.s.percent <- data.frame(matrix(nrow=dim(var.s)[1], ncol=0))
@@ -299,16 +301,43 @@ plot.density <- function(set, figure.num, textsize = rep(20, 4))
 
 
     colnames(mdata) <- c("Gene", "Source", "percentage")
-    mgg <- ggplot(mdata, aes(x=percentage, color = Source,  linetype = Source))
-    mgg + geom_density(size = 1.5) +
-        theme(legend.position="top",
-          legend.text = element_text(size = textsize[1]),
-          plot.title = element_text(size = textsize[2]), 
-          axis.text=element_text(size=textsize[3]), 
-          axis.title=element_text(size=textsize[4],face="bold") ) +
+    
+    # this function is used to extract the legend
+    g_legend<-function(a.gplot){
+      tmp <- ggplot_gtable(ggplot_build(a.gplot))
+      leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+      legend <- tmp$grobs[[leg]]
+      return(legend)}
+    
+    A1 <- ggplot(mdata, aes(x=percentage, color = Source,  linetype = Source)) +
+         geom_density(size = 1.5) +
+       theme(legend.position="top",
+            legend.text = element_text(size = textsize[1]),
+            plot.title = element_text(size = textsize[2]), 
+            axis.text=element_text(size=textsize[3]), 
+            axis.title=element_text(size=textsize[4],face="bold") ) +
+      labs(title=figure.num)
+
+   
+    
+    if(legend){    # plot the legend in a separate figure
+      mylegend<-g_legend(A1)
+      p_fig <- grid.arrange(mylegend )
+    }
+    
+    else{
+      p_fig <- ggplot(mdata, aes(x=percentage, color = Source,  linetype = Source)) +
+        geom_density(size = 1.5) +
+        theme(legend.position="none",
+              # legend.text = element_text(size = textsize[1]),
+              plot.title = element_text(size = textsize[2]), 
+              axis.text=element_text(size=textsize[3]), 
+              axis.title=element_text(size=textsize[4],face="bold") ) +
+        guides(guide_legend(show= F) )+ 
         labs(title=figure.num)
-
+      print(p_fig)
+    }
+    
+    return(p_fig)
 }
-
-
 
