@@ -130,11 +130,16 @@ estimate.var.component <- function(dataset, reference = NULL, filter.factor=3)
 }
 
 
-iteration.GLMM <- function(data, niter = 1, filter.factor=3, topgene = 1000){
+iteration.GLMM <- function(data, niter = 1, filter.factor=3, topgene = 1000, save.iter0 = F){
   
   
   cat("Run GLMM without reference genes...  \n" )
   var.obj <- estimate.var.component(data, reference = NULL, filter.factor = filter.factor)
+  if(save.iter0)
+  {
+    save.target <- "iteration.0.rds"
+    saveRDS(var.obj, save.target)
+  }
   
   for ( iter in 1:niter){
     cat("\n Begin Iteration", iter, " \n")

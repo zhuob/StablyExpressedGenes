@@ -16,7 +16,8 @@ source(CodeNeeded2)
 
 
 ######## prepare the data
-var_seedling <- readRDS(paste(ResultPath, "seedling.columbia.use.reference.iter.1.rds", sep=""))
+# var_seedling <- readRDS(paste(ResultPath, "seedling.columbia.use.reference.iter.1.rds", sep=""))
+var_seedling <- readRDS(paste(ResultPath, "seedling.58.iteration.1.rds", sep=""))
 var_leaf <- readRDS(paste(ResultPath,"leaf.columbia.use.reference.iter.1.rds", sep=""))
 var_tissue <- readRDS(paste(ResultPath,"tissue.columbia.use.reference.iter.1.rds", sep=""))
 cze_100 <- read.table(paste(DataPath, "Czechowski100.txt", sep=""), header=T)
@@ -61,7 +62,24 @@ cat("Overlapped genes among the multi-tissue, leaf and seedling data")
 overlap_gene <- compare.3Set(var_seedling, var_leaf, var_tissue, top =1000)
 print( length(overlap_gene) )# 106
 write.csv(overlap_gene, paste(TablePath, "OverlappedGeneFromThreeSetsTop1000.csv", sep=""),row.names = F)
+# how many genes of the 109 are overlapped with czechowski
+ocz <- intersect(overlap_gene, cze_100[, 1])  #11
+ocz
+# calculate the probability
+pbinom(length(ocz), size = 100, length(overlap_gene)/14000, lower.tail=F)
+# pbinom(10, 100, 106/14000, lower.tail =F)
 
+# what is the ranking of AT1G13320
+interest_gene <- "AT1G13320"
+get_rank <- function(data, interest_gene){
+  
+  ranks <- data$var.comp$Rank[data$var.comp$Gene == interest_gene]
+  top_percent <- ranks/nrow(data$var.comp)
+  c(ranks, top_percent)
+}
+get_rank(var_seedling, interest_gene )
+get_rank(var_leaf, interest_gene )
+get_rank(var_tissue, interest_gene )
 
 # Venn diagram
 
@@ -120,9 +138,6 @@ xtext <- c( "number of most stably expressed Genes (Multi-tissue)", "L2", "L3", 
 A7 <- TopGene(var_tissue, var_seedling, var_leaf, cze_100, dek_50, geNorm, xtext)
 ggsave(paste(FigurePath, "rankVSrank_RNA2.eps", sep = ""), A7, width = 10, height = 5)
 
-
-print(A7)
-dev.off()
 
 ## overlap number
 colnames(geNorm)[3] <- "Rank"
@@ -194,19 +209,19 @@ text.size <- c(20, 20, 40, 20)
 
 
 setEPS() 
-postscript(paste(FigurePath, "norm1.eps", sep=""), width = 8, height = 8)
+postscript(paste(FigurePath, "norm_seedling.eps", sep=""), width = 8, height = 8)
 A13 <- plot.pair.normfactor(var_seedling, textsize = text.size)
 print(A13)
 dev.off()
 
 setEPS() 
-postscript(paste(FigurePath, "norm2.eps", sep=""), width = 8, height = 8)
+postscript(paste(FigurePath, "norm_leaf.eps", sep=""), width = 8, height = 8)
 A14 <- plot.pair.normfactor(var_leaf, textsize = text.size)
 print(A14)
 dev.off()
 
 setEPS() 
-postscript(paste(FigurePath, "norm3.eps", sep=""), width = 8, height = 8)
+postscript(paste(FigurePath, "norm_tissue.eps", sep=""), width = 8, height = 8)
 A15 <- plot.pair.normfactor(var_tissue, textsize = text.size)
 print(A15)
 dev.off()
@@ -217,7 +232,7 @@ var_new <- var_seedling
 var_new$count <- GSE66666
 
 setEPS() 
-postscript(paste(FigurePath, "norm4.eps", sep=""), width = 8, height = 8)
+postscript(paste(FigurePath, "norm_GSE66666.eps", sep=""), width = 8, height = 8)
 A16 <- plot.pair.normfactor(var_new, text.size)
 print(A16) 
 dev.off()
