@@ -121,8 +121,17 @@ Our main points include:
 \end{enumerate}
 
 \newpage
-%\maketitle
+% \maketitle
 
+\begin{center}
+{\Large Identification of stably expressed genes from Arabidopsis RNA-Seq data}
+
+\today
+
+\end{center}
+
+
+\newpage
 \section*{Abstract}
 We examined RNA-Seq data on 209 biological samples from 23 different
 experiments carried out by different labs and identified genes that are stably
@@ -133,7 +142,10 @@ components. Identifying stably expressed genes is useful for count
 normalization and differential expression analysis. The variance component analysis is a first step towards understanding the sources and nature of the RNA-Seq count variation.
 
 
-cited from the abstract of the paper: " Real-time PCR (qPCR) is the most accurate method of quantifying gene expression, provided that suitable endogenous controls are used to normalize the data"
+% cited from the abstract of the paper: " Real-time PCR (qPCR) is the most
+% accurate method of quantifying gene expression, provided that suitable
+% endogenous controls are used to normalize the data"
+
 \section{Introduction}\label{section:Introduction}
 
 RNA sequencing (RNA-Seq) has become the technology of choice for transcriptome
@@ -294,8 +306,8 @@ genes.
 %DISCUSSION...)
 
 Our vision is that identifying stably expressed genes is the first step
-towards integrative anlaysis of multiple RNA-Seq experiments. It will help to
-answer the foundamental questions about comparability, reproduciability and
+towards integrative analysis of multiple RNA-Seq experiments. It will help to
+answer fundamental questions related to  comparability, reproducibility and
 replicability of RNA-Seq experiments.
 
 \section{Methods} 
@@ -686,10 +698,11 @@ expressed genes for count normalization.
 \subsection{Stably Expressed Genes}\label{section:stablyExpressedGene}
 Using the total variance, $\hat\sigma^2$, from the GLMM (see
 equation (\ref{eq:GLMM}) in Section \ref{subsection:OurMethod}) as a
-stability measure, we identified stably expressed genes in three groups of
-experiments described in Section \ref{section:DataCollection}: the group of seedling
-experiments, the group of leaf experiments, and the group of experiments on
-different tissue types (see Table \ref{table:TableSet3} for a summary).
+stability measure, we identified stably expressed genes from the three groups
+of experiments described in Section \ref{section:DataCollection}: the group of
+seedling experiments, the group of leaf experiments, and the group of
+experiments on different tissue types (see Table \ref{table:TableSet3} for a
+summary).
 %  (The
 %seedling group consists of 70 samples from 10 experiments on Arabidopsis
 %seedlings; the leaf group consists 60 samples from 5 experiments on
@@ -1250,19 +1263,18 @@ numerical stability measure to a large number of existing RNA-Seq data sets.
 Similar strategy has also been used by others for finding stably expressed
 genes from microarray data. Since DE is measured by relative frequencies, we
 argue that DE is a relative concept and using an explicit reference gene set
-can improve interpretability of DE results, and furthermore, when comparing
-multiple experiments using a common reference gene set can avoid inconsistent
-conclusions (see section REF).
+can improve interpretability of DE results, and furthermore,  using a common
+reference gene set can avoid inconsistent conclusions when comparing multiple
+experiments(see section REF).
 
 We emphasize that numerical stability is not equivalent to biological
-stability (??? Jeff).  (Ask Jeff about  ``biological stability'': do
+stability (??? Jeff, about  ``biological stability'': do
 biologists talk about ``biological stability''?) For example, we demonstrated
 that the expression levels of traditional house-keeping genes are not
 necessarily stable according to a numerical measure. 
 Biological stability is a vague term and not easy to quantify.  Numerical
 stability is generally more tractable.
 % (Some have argued that numerically
-u
 % somewhat circular??? The same numerical measure is used to both identify the
 % stably expressed genes and to verify their stability.) 
 
@@ -1278,9 +1290,9 @@ researchers can choose the specific context. A practical challenge in applying
 such a philosophy is that no two experiments will have identical background,
 and researchers have to decide what experiments can be considered comparable. This
 is a difficult question, however, we believe it has to be asked from now on:
-biologists perform comparative experiments with the intension that the
+biologists perform comparative experiments with the intent that the
 conclusions from a single experiment will be generalizable beyond the context
-of a single lab. If we don't understand comparability between different
+of a single lab. If we do not understand comparability between different
 experiments, such generalization is impossible. Defining and characterizing
 comparability is a challenging topic we would like to investigate more in
 future.
@@ -1354,7 +1366,8 @@ help us understand, for example, which genes are well preserved through the
 Arabidopsis evolutionary history. However, we need to be mindful that a well
 conserved gene is not necessarily stably expressed. 
 
-Reproducibility and replicability
+(How do we use the identified stably expressed genes?) QC, Reproducibility and
+replicability?
 
 
 The R codes for reproducing results in this paper are available at Github:
