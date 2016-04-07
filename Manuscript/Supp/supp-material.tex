@@ -1,0 +1,115 @@
+\documentclass[letterpaper,12pt]{article}
+%\documentclass[useAMS,referee]{biom}
+
+
+% packaged added by Bin Zhuo
+\usepackage{array,arydshln}
+\usepackage{multirow}
+\usepackage{lscape}
+\usepackage{natbib}
+
+
+
+\begin{document}
+	
+	
+	\begin{table}[!ht]
+		\small
+		\centering
+		\caption{My caption}
+		\label{my-label}
+		\begin{tabular}{p{2.5cm}p{2cm}p{4.5cm}p{1cm}p{4cm}} \\ \hline
+			GEO Number & Reference                     & Tissue                                                   & Sample Size & Note                   \\  \hline
+			GSE36626   & \cite{wollmann2012dynamic}           & leaves                                                   & 4           &                        \\
+			GSE39463   & \cite{maekawa2012conservation}       & leaves                                                   & 12          & 48 samples \\
+			GSE51304   & \cite{stroud2014non}                & leaves                                                   & 18          &                        \\
+			GSE54677   & \cite{moissiard2014transcriptional}  & leaves                                                   & 20          &                        \\
+			GSE48235   & \cite{liu2014different}              & leaves                                                   & 6           &                        \\  \hline
+			GSE51119   & \cite{zhiponova2014helix}            & seedling                                                 & 10          &                        \\
+			GSE32202   & NA                            & seedling                                                 & 6           &                        \\
+			GSE37159   & NA                            & seedling                                                 & 8           &                        \\
+			GSE38400   & \cite{zhu2013swi}                    & seedling                                                 & 12          &                        \\
+			GSE41766   & \cite{bai2012triple}                 & seedling                                                 & 6           &                        \\
+			GSE43703   & \cite{liu2013translational}          & seedling                                                 & 4           & 8 samples              \\
+			GSE43865   & \cite{rugnone2013lnk}                & seedling                                                 & 6           & 42 samples             \\
+			GSE51772   & \cite{oh2014cell}                    & seedling                                                 & 8           &                        \\
+			GSE53078   & \cite{fan2014bhlh}                   & seedling                                                 & 4           &                        \\
+			GSE60835   & \cite{dong2014arabidopsis}           & seedling                                                 & 6           &                        \\  \hline
+			GSE35288   & \cite{niederhuth2013transcriptional} & flower                                                   & 6           &                        \\
+			GSE35408   & NA                            & hypocotyl                                                & 10          &                        \\
+			GSE52966   & \cite{chaiwanon2015spatiotemporal}   & primary root                                             & 18          &                        \\
+			GSE56326   & NA                            & carpels  & 8           &                        \\
+			GSE59167   & \cite{pallakies2014cle40}            & root tip tissue                                          & 11          &                        \\
+			GSE59637   & \cite{mizzotti2014seedstick}         & inflorescences and siliques                              & 4           &                        \\
+			GSE62799   & \cite{groth2014snf2}                 & aerial tissue                                            & 6           &                        \\
+			GSE63355   & \cite{liu2015repair}                 & shoot apical meristem                                    & 16          &               \\ \hline        
+		\end{tabular}
+	\end{table}
+	
+	
+	\newpage
+%	
+%	\begin{landscape}
+%		\begin{table}
+%			\footnotesize
+%			\centering
+%			\caption{seedling}
+%			\begin{tabular}{p{2cm}p{3cm}p{1cm}p{2cm}p{1.5cm}p{3cm}p{4cm}} \hline
+%				GEO Number &Tissue cluster & sample Size & Description & Age  &Col Name & Platform\\ \hline
+%				GSE37159 &seedling &8	& & 5 days &GSM912634-GSM912641 & Illumina HiSeq 2000\\  \hline
+%				GSE38879 &seedling &12 &  & 7 days  &GSM951349-GSM951360  &Illumina HiSeq 2000\\ \hline
+%				GSE43865 &seedling & 6  & & 9 days & GSM1072464-GSM1072469 &Illumina Genome Analyzer IIx  \\	\hline
+%				GSE48767 &seedling & 6 & &  &GSM1184353-GSM1184358, GSM1401633-GSM1401638 &Illumina HiSeq 2000 \\ \hline
+%				GSE51119 &seedling  & 10  & &10 days  & GSM1239079-GSM1239088 &Illumina HiSeq 2000 \\ \hline
+%				GSE51772 &seedling  & 8  & &5 days  & GSM1252262-GSM1252269 &Illumina HiSeq 2000 \\ \hline
+%				GSE53078 &seedling &4 &  & 5 days &   GSM1281703-GSM1281706 &Illumina Genome Analyzer \\ \hline
+%				GSE57086 &seedling & 6  &  & 5 days &GSM1390693-GSM1390698 &GPL13222 \\ \hline
+%				GSE58082 &seedling &6  & & 4 days &GSM1400495-GSM1400500 & GPL13222 \\ \hline
+%			\end{tabular} 
+%		\end{table}
+%	\end{landscape}
+%	
+%	\begin{landscape}
+%		\begin{table}
+%			\footnotesize
+%			\centering
+%			\caption{multi-tissue}
+%			\begin{tabular}{p{2cm}p{3cm}p{1cm}p{2cm}p{1.5cm}p{3cm}p{4cm}} \hline
+%				GEO Number &Tissue cluster & sample Size & Description & Age  &Col Name & Platform\\ \hline
+%				GSE35288 &flower &6  &   &  stage 15  &SRR401413-SRR401430 &Illumina HiSeq 2000 \\ \hline
+%				GSE35408 &Hypocotyl & 10 & & 4.5 days  & GSM867674-GSM867678, GSM951964-GSM951968  & Illumina HiSeq 2000 \\ \hline
+%				GSE48235 &rosette leaves & 6  &  & GSM1072464-GSM1072469  &Illumina Genome Analyzer II \\	\hline
+%				GSE53952 &seed   & 9 	& & 7-12 days & GSM1303953-GSM1303979 &Illumina Genome Analyzer IIx etc.. \\  \hline
+%				GSE56326 &carpels (15 developing inflorescences) & 8 & &stage 8-13&  & 	Illumina HiSeq 2000 \\ \hline
+%			\end{tabular} 
+%		\end{table}
+%	\end{landscape}
+%	
+%	
+%	\begin{landscape}
+%		
+%		\begin{table}
+%			\caption{Set 3}
+%			\footnotesize
+%			\centering
+%			\begin{tabular}{p{2cm}p{3cm}p{1cm}p{2cm}p{1.5cm}p{3cm}p{4cm}} \hline
+%				GEO Number &Tissue cluster & sample Size & Source & Age  &Column Name & Platform\\ \hline
+%				GSE36626 &leaves & 4 &   & 4 weeks &GSM897684-GSM897687 & Illumina Genome Analyzer IIx \\ \hline
+%				GSE39463 &leaves  &12		& & & &Illumina HiSeq 2000 \\ \hline
+%				GSE48235 &leaves & 6  &  & 9 days & GSM1072464-GSM1072469  &Illumina Genome Analyzer II \\	\hline
+%				GSE51304 &leaves  & 18 & & 3 weeks & GSM1242374-GSM1242391 &GPL13222 \\ \hline
+%				GSE54677 & leaves   &20  & &adult & GSM1321694-GSM1321713	 &	GPL13222\\ \hline
+%			\end{tabular} 
+%		\end{table}
+%	\end{landscape}
+%	
+%	
+%	
+	
+
+\bibliographystyle{abbrv}
+%\bibliographystyle{apalike}
+\bibliography{supplementary}
+	
+\end{document}
+
