@@ -61,19 +61,22 @@ plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = 
     
     p <- ggplot(data.plot) +
     geom_line(aes(x=Sample,y=CPM,group=Gene, color=Gene, linetype= Gene), size=1)+
-    facet_grid(.~lab,scales="free", space = "free") +
+    facet_grid(.~lab,scales="free", space = "free") +   # divide the experiments
     theme(axis.text.x = element_text(size=15,angle = 90, hjust = 1)) +
     labs(title=figure.num) +
-    scale_y_log10(limits=c(lower, upper)) +
+    scale_y_log10(limits=c(lower, upper)) +    # log scale
     theme(legend.position="top", 
           legend.text = element_text(size = textsize[1]),
           plot.title = element_text(size = textsize[2]), 
           axis.text=element_text(size=textsize[3]), 
           axis.title=element_text(size=textsize[4],face="bold")) +
-     scale_x_discrete(breaks = seq(1, length(x), 2) ) +
-      guides(fill = guide_legend(keywidth = 1, keyheight = 1),
+     scale_x_discrete(breaks = seq(1, length(x), 2) ) + 
+      guides(fill = guide_legend(title = "WTF", keywidth = 1, keyheight = 1),
              linetype=guide_legend(keywidth = 3, keyheight = 1),
-             colour=guide_legend(keywidth = 3, keyheight = 1))
+             colour=guide_legend(keywidth = 3, keyheight = 1)) +
+    #+
+          scale_color_brewer(palette="Set1")
+          # scale_fill_continuous(name = "MYTGE")
     #+ theme(legend.position = c(2, 0.8*upper))
     #  + geom_text( aes(1, 9000, label = "A"))
     p
@@ -229,20 +232,19 @@ plot.pair.normfactor <- function(set, textsize = rep(20,4)){
 ## percent:  whether use percentage of variances
 
 
-plot.stackedBar <- function(gene_ids, set, percent =F, figure.num, textsize = rep(20,4)){
+plot.stackedBar <- function(gene_ids, set, figure.num, textsize = rep(20,4), legend=F){
   
     target_var <- set$var.comp
     library(scales)
 
-    if (percent == F)
-    {
-        colnames(target_var)[2:4] <- c("sample", "treatment", "experiment")
-        mdata <- melt(target_var[target_var$Gene %in% gene_ids, c(1:4)], id=c("Gene"), 
+  
+    colnames(target_var)[2:4] <- c("sample", "treatment", "experiment")
+    mdata <- melt(target_var[target_var$Gene %in% gene_ids, c(1:4)], id=c("Gene"), 
                       variable.name = "Source",  value.name = "value")
-        id <- which(mdata$value > 1e-6)
-        mdata <- mdata[id, ]
+    id <- which(mdata$value > 1e-6)
+    mdata <- mdata[id, ]
       
-    ggplot(mdata,aes(x = Gene, y = value,fill = Source)) +
+   p1 <-  ggplot(mdata,aes(x = Gene, y = value,fill = Source)) +
         geom_bar(stat = "identity") +
         theme( legend.text = element_text(size = textsize[1]),
                legend.position="top",
@@ -250,41 +252,23 @@ plot.stackedBar <- function(gene_ids, set, percent =F, figure.num, textsize = re
                axis.text.x = element_text(size=textsize[3],angle = 45, hjust = 1),
                axis.text.y = element_text(size = textsize[3]),
                axis.title=element_text(size=textsize[4],face="bold")) +
-        labs( y="variance", title=figure.num) +
-        scale_y_continuous() +
-      scale_fill_grey()
-    }
-    
-    else
-    {
-        target_var.percent <- data.frame(matrix(nrow=dim(target_var)[1], ncol=0))
-        target_var.percent$Gene <- target_var$Gene
-        target_var.percent$sample <- target_var$individual/target_var$sum
-        target_var.percent$treatment <- target_var$trt/target_var$sum
-        target_var.percent$experiment <- target_var$lab/target_var$sum
-        colnames(target_var.percent)[2:4] <- c("sample", "treatment", "experiment")
-
-        mdata <- melt(target_var.percent[target_var$Gene %in% gene_ids, c(1:4)], id=c("Gene"), 
-                      variable.name = "Source",  value.name = "value")
-
-        
-        ggplot(mdata,aes(x = Gene, y = value,fill = Source)) +
-            geom_bar(position = "fill",stat = "identity") +
-            theme( legend.text = element_text(size = textsize[1]),
-                   legend.position="top",
-                   plot.title = element_text(size = textsize[2]), 
-                   axis.text.x = element_text(size=textsize[3],angle = 45, hjust = 1),
-                   axis.text.y = element_text(size = textsize[3]),
-                   axis.title=element_text(size=textsize[4],face="bold") ) +
-            labs( y="percentage of total variance", title=figure.num) +
-            scale_y_continuous(labels = percent_format())+
-          scale_fill_grey()
-        
-    }
-
-
+          labs( y="Variance", title=figure.num) +
+          scale_y_continuous() +
+          scale_fill_grey() + 
+          guides(linetype = guide_legend(keywidth = 3, keyheight = 1), 
+                 colour = guide_legend(keywidth = 3, keyheight = 1))
+   
+  p1
 }
 
+
+
+# this function is used to extract the legend
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
 
 
 
@@ -298,31 +282,31 @@ plot.density <- function(set, figure.num, textsize = rep(30, 4), legend = F)
     var.s.percent$experiment <- var.s$lab/var.s$sum
 
     mdata <- melt(var.s.percent[, c(1:4)], id=c("Gene"))
-
+    mdata$Source <- paste("between-", mdata$Source, sep= "")
 
     colnames(mdata) <- c("Gene", "Source", "percentage")
     
-    # this function is used to extract the legend
-    g_legend<-function(a.gplot){
-      tmp <- ggplot_gtable(ggplot_build(a.gplot))
-      leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-      legend <- tmp$grobs[[leg]]
-      return(legend)}
+
     
     A1 <- ggplot(mdata, aes(x=percentage, color = Source,  linetype = Source)) +
-         geom_density(size = 1.5) +
+         geom_density(size = 1.5, show.legend=FALSE) +
+      stat_density(aes(x=percentage, colour=Source),
+                   geom="line",position="identity") +
        theme(legend.position="top",
             legend.text = element_text(size = textsize[1]),
             plot.title = element_text(size = textsize[2]), 
             axis.text=element_text(size=textsize[3]), 
             axis.title=element_text(size=textsize[4],face="bold") ) +
-      labs(title=figure.num)
+      labs(title=figure.num) + 
+      guides(fill = guide_legend(keywidth = 1, keyheight = 1), 
+             linetype = guide_legend(keywidth = 2, keyheight = 1), 
+             colour = guide_legend(keywidth = 3, keyheight = 1))
 
    
     
     if(legend){    # plot the legend in a separate figure
       mylegend<-g_legend(A1)
-      p_fig <- grid.arrange(mylegend )
+      p_fig <- grid.arrange(mylegend)
     }
     
     else{

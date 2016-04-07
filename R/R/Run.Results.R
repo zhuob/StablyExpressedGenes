@@ -16,8 +16,8 @@ source(CodeNeeded2)
 
 
 ######## prepare the data
-# var_seedling <- readRDS(paste(ResultPath, "seedling.columbia.use.reference.iter.1.rds", sep=""))
-var_seedling <- readRDS(paste(ResultPath, "seedling.58.iteration.1.rds", sep=""))
+var_seedling <- readRDS(paste(ResultPath, "seedling.columbia.use.reference.iter.1.rds", sep=""))
+#var_seedling <- readRDS(paste(ResultPath, "seedling.58.iteration.1.rds", sep=""))
 var_leaf <- readRDS(paste(ResultPath,"leaf.columbia.use.reference.iter.1.rds", sep=""))
 var_tissue <- readRDS(paste(ResultPath,"tissue.columbia.use.reference.iter.1.rds", sep=""))
 cze_100 <- read.table(paste(DataPath, "Czechowski100.txt", sep=""), header=T)
@@ -38,12 +38,14 @@ cat("producing results in section 1...\n")
 
 
 # Figure 1: histogram of CPM for top 1000 stably-expressed genes
-A1 <- plot.cpm(var_seedling,  1e3, "Seedling", textsize =c(10, 30, 20, 20))
-ggsave(paste(FigurePath, "cpm_seedling.eps", sep =""), A1, width= 8, height= 5)
-A2 <- plot.cpm(var_leaf,  1e3, "Leaf", textsize =c(10, 30, 20, 20))
-ggsave(paste(FigurePath, "cpm_leaves.eps", sep =""), A2, width= 8, height= 5)
-A3 <- plot.cpm(var_tissue,  1e3, "Multi-tissue", textsize =c(10, 30, 20, 20))
-ggsave(paste(FigurePath, "cpm_tissue.eps", sep =""), A3, width= 8, height= 5)
+ts <- c(10, 40, 30, 30)
+wd <- 6; ht <- 5
+A1 <- plot.cpm(var_seedling,  1e3, "Seedling", textsize =ts)
+ggsave(paste(FigurePath, "cpm_seedling.eps", sep =""), A1, width= wd, height= ht)
+A2 <- plot.cpm(var_leaf,  1e3, "Leaf", textsize =ts)
+ggsave(paste(FigurePath, "cpm_leaves.eps", sep =""), A2, width= wd, height= ht)
+A3 <- plot.cpm(var_tissue,  1e3, "Multi-tissue", textsize =ts)
+ggsave(paste(FigurePath, "cpm_tissue.eps", sep =""), A3, width= wd, height= ht)
 
 ## produce 1000 stably-expressed genes for the three groups
 VarCompData <- c("tissue", "leaf", "seedling")
@@ -104,22 +106,24 @@ cat("producing results in section 2...\n")
 
 
 # Figure 2: plot expression profile for the 15 genes
-textsize <- c(15, 1, 12, 15)  # legened, title, axis, axis.title
+textsize <- c(20, 1, 25, 25)  # legened, title, axis, axis.title
+wd <- 13; ht <- 5
 # five traditional house-keeping genes
 figA <- c("AT3G18780", "AT5G12250","AT5G60390","AT4G05320","AT1G13440")  # HKG
 A4 <- plot.gene(figA, var_tissue, 1, 1e4,figure.num = NULL,textsize = textsize)
-ggsave(paste(FigurePath, "A1.eps", sep =""), A4, width= 13, height= 5)
+A4 + guides(fill = guide_legend(title = "ABCD", title.position = "right"))
+ggsave(paste(FigurePath, "A1.eps", sep =""), A4, width= wd, height= ht)
 
 # FIVE GENES FROM CZECHOWSKI
 figB <- c("AT4G34270","AT1G13320","AT1G59830","AT4G33380","AT2G28390")   # NOVEL
 A5 <- plot.gene(figB, var_tissue, 1, 1e4, figure.num = NULL, textsize)
-ggsave(paste(FigurePath, "A2.eps", sep =""), A5, width= 13, height= 5)
+ggsave(paste(FigurePath, "A2.eps", sep =""), A5, width= wd, height= ht)
 
 set.seed(102)  ## 102 or 107
 random.gene <- sample(1:100, 5)
 genelist <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% random.gene]
 A6 <- plot.gene(genelist,var_tissue, 1, 1e4, figure.num = NULL, textsize)
-ggsave(paste(FigurePath, "A3.eps", sep=""), A6, width = 13, height=5)
+ggsave(paste(FigurePath, "A3.eps", sep=""), A6, width = wd, height=ht)
 
 
 ## table of variance components for the 15 genes
@@ -134,7 +138,7 @@ write.csv(gene_q, tableVarComp, row.names = F)
 
 cat("producing results in section 3...\n")
 # PLOT The figure
-xtext <- c( "number of most stably expressed Genes (Multi-tissue)", "L2", "L3", "recall percentage", "L1", "L4", "L5")
+xtext <- c( "Number of most stably expressed Genes (Multi-tissue)", "L2", "L3", "Recall percentage", "L1", "L4", "L5")
 A7 <- TopGene(var_tissue, var_seedling, var_leaf, cze_100, dek_50, geNorm, xtext)
 ggsave(paste(FigurePath, "rankVSrank_RNA2.eps", sep = ""), A7, width = 10, height = 5)
 
@@ -168,23 +172,27 @@ gene_ids1 <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% sample(1:100
 set.seed(110)
 gene_ids2 <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% sample(1:20000, 20) ] 
 
-A8 <- plot.stackedBar(gene_ids1, var_tissue, percent=F, figure.num = NULL, textsize=c(20, 20, 15, 20))
+A8 <- plot.stackedBar(gene_ids1, var_tissue, figure.num = NULL, textsize=c(20, 20, 15, 20))
 ggsave(paste(FigurePath, "top1000.eps", sep = ""), A8, width = 10, height = 5)
 
-A9 <- plot.stackedBar(gene_ids2, var_tissue, percent=F, figure.num = NULL, textsize=c(20, 20, 15, 20))
+A9 <- plot.stackedBar(gene_ids2, var_tissue, figure.num = NULL, textsize=c(20, 20, 15, 20))
 ggsave(paste(FigurePath, "all.eps", sep = ""), A9, width = 10, height = 5)
+
+#legend <-  plot.stackedBar(gene_ids2, var_tissue, figure.num = NULL, textsize=c(20, 20, 15, 20), legend = T)
+#ggsave(paste(FigurePath, "stackbar_legend.eps", sep = ""), legend, width = 10, height = 1)
 
 
  ############# density plot
+wd <- 7; ht <- 5
+ts <- c(30, 30, 30, 40)
+A10 <- plot.density(var_seedling, "Seedling", textsize = ts, legend=F)
+ggsave(paste(FigurePath, "var_dens1.eps", sep = ""), A10, width = wd, height = ht)
 
-A10 <- plot.density(var_seedling, "Seedling", legend=F)
-ggsave(paste(FigurePath, "var_dens1.eps", sep = ""), A10, width = 8, height = 5)
+A11 <- plot.density(var_leaf, "Leaf", textsize = ts)
+ggsave(paste(FigurePath, "var_dens2.eps", sep = ""), A11, width = wd, height = ht)
 
-A11 <- plot.density(var_leaf, "Leaf")
-ggsave(paste(FigurePath, "var_dens2.eps", sep = ""), A11, width = 8, height = 5)
-
-A12 <- plot.density(var_tissue, "Multi-tissue")
-ggsave(paste(FigurePath, "var_dens3.eps", sep = ""), A12, width = 8, height = 5)
+A12 <- plot.density(var_tissue, "Multi-tissue", textsize = ts)
+ggsave(paste(FigurePath, "var_dens3.eps", sep = ""), A12, width = wd, height = ht)
 
 legend <- plot.density(var_tissue, "legend", legend=T)
 ggsave(paste(FigurePath, "var_dens_legend.eps", sep = ""), legend, width = 10, height = 1)
@@ -205,7 +213,7 @@ cat("producing results in section 5...\n")
 #######  Scatter plot for normalization factors 
 # legened, title, axis, axis.title
 
-text.size <- c(20, 20, 40, 20)
+text.size <- c(20, 20, 80, 20)
 
 
 setEPS() 
