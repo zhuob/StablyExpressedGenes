@@ -124,7 +124,7 @@ Our main points include:
 % \maketitle
 
 \begin{center}
-{\Large Identification of stably expressed genes from Arabidopsis RNA-Seq data}
+{\Large Identification of stably expressed genes from Arabidopsis RNA-Seq data}\\
 
 \today
 
@@ -135,12 +135,15 @@ Our main points include:
 \section*{Abstract}
 We examined RNA-Seq data on 209 biological samples from 23 different
 experiments carried out by different labs and identified genes that are stably
-expressed across biological samples, experiment conditions, and labs. We fit a
-random-effect model to the read counts for each gene and decompose the total
+expressed across biological samples, treatment conditions, and experiments. We 
+fit a Poisson log-linear mixed-effect model to the read counts for each gene and decompose the total
 variance into between-sample, between-treatment and between-experiment variance
 components. Identifying stably expressed genes is useful for count
-normalization and differential expression analysis. The variance component analysis is a first step towards understanding the sources and nature of the RNA-Seq count variation.
-
+normalization and differential expression analysis. The variance component analysis is
+ a first step towards understanding the sources and nature of the RNA-Seq count variation.
+We note that gene expression stability are dependent on the specific measure, the biological context
+and the technology used. we advocate making the reference set explicit during a DE analysis and using a common reference
+set when analyzing multiple datasets.  
 
 % cited from the abstract of the paper: " Real-time PCR (qPCR) is the most
 % accurate method of quantifying gene expression, provided that suitable
@@ -344,7 +347,7 @@ the three groups.
 % lowly-expressed genes provide little information about expression level, and 
 \begin{table}[h]
     \centering
-    \caption{Summary statistics for three groups.}
+    \caption{Summary statistics for the three groups of Arabidopsis samples.}
     \begin{tabular}{lp{3cm}p{3cm}p{2cm}p{2cm}} \hline
 	Group & \#  experiments & \# treatments  & \# samples & \# genes \\ \hline
 	Seedling &10 & 31 &70  &24379  \\
@@ -732,8 +735,13 @@ in each sample and the mean is computed over all samples.
     \includegraphics[width=4.5cm,height=4cm]{Figures/cpm_seedling.eps}
     \includegraphics[width=4.5cm,height=4cm]{Figures/cpm_leaves.eps}
     \includegraphics[width=4.5cm,height=4cm]{Figures/cpm_tissue.eps}
-    \caption{{\small{\label{cpm} mean CPM (see equation (\ref{eq:cpm})) for the top 1000 most stably expressed genes identified by the total variance $\hat{\sigma}^2$} from the seedling (left), leaf (middle) and multi-tissue
-    (right) groups }. The mean CPM is computed over all samples for each gene.} \end{center} 
+    \caption{{\small{\label{cpm} 
+    Histograms of the mean CPM (see equation (\ref{eq:cpm})) for the top 1000
+    most stably expressed genes identified from the seedling (left), leaf (middle) and multi-tissue
+    (right) groups
+    using  the total variance measure $\hat{\sigma}^2$}}. 
+    The mean CPM is computed over all samples within each respective group.
+    } \end{center} 
 \end{figure} 
 
 % The mean CPM  of top 1000 genes, each averaged across all samples, vary from
@@ -809,7 +817,17 @@ and sensitivity.
 % \usepackage{multirow}
 \begin{table}[]
 	\centering
-	\caption{Variance components estimated from the multi-tissue group for 15 genes. Column 1 is the source: five stably expressed genes identified by the total variance $\hat{\sigma}^2$ (GLMM), five stably expressed identified by Czechowski according to the CV measure from a developmental series of microarray experiments (Czechowski), and  five traditional house-keeping genes (HKG). Columns 3--5 are the estimated variance components. Column 6 specifies the ranking according to the total variance $\hat{\sigma}^2$ in the multi-tissue group.}
+	\caption{Variance components estimated from the multi-tissue group for
+	15 genes: 
+	five stably expressed genes (randomly selected out of the top 100)
+	identified by the total variance measure $\hat{\sigma}^2$ (GLMM), five stably
+	expressed identified by \citet{czechowski2005genome} according to the CV measure from a
+	developmental series of microarray experiments, and five
+	traditional house-keeping genes (HKG) discussed in
+	\citet{czechowski2005genome}. 
+	Columns 3--5 are the estimated
+	variance components. Column 6 specifies the ranking according to the
+	total variance $\hat{\sigma}^2$ in the multi-tissue group.}
 	\label{table:15genes}
 	{\footnotesize\begin{tabular}{llrrrr}\\ \hline
 		Source                        & Gene      & betweeen-sample & between-treatment & between-experiment & Rank  \\  \hline
@@ -929,7 +947,16 @@ We have the following observations:
 \begin{figure}[h!]
     \begin{center}
 	\includegraphics[scale=0.55]{Figures/rankVSrank_RNA2.eps}
-	\caption{Recall percentage for list $L_1$ --- $L_5$ (see Section \ref{list:L5}). We choose top 100 stably expresed genes for $L_1$--$L_4$, and top 50 stably expressed genes for $L_5$. $x$-axis is the number of most stably expressed genes in multi-tissue group according to the total variance measure, and $y$-axis shows the recall percentage (see equation (\ref{eq:recall}))  for each of the five lists.}
+	\caption{Comparison of top stably expressed genes identified under different scenarios.
+	We choose top 100 stably expressed genes as described in $L_1$--$L_4$,
+	and top 50 stably expressed genes in $L_5$ (see section \ref{list:L5}). 
+	and plot the recall percentages between these lists and the top most
+	stably expressed genes identified from the  multi-tissue group
+	according to the total variance measure.
+	The $x$-axis is the number of most stably expressed genes in multi-tissue
+	group according to the total variance measure, and $y$-axis shows the
+	recall percentage (see equation (\ref{eq:recall}))  for each of the
+	five lists.}
 	\label{fig:rankVSrank_RNA}
     \end{center}
 \end{figure}
@@ -1010,10 +1037,14 @@ after each iteration. The procedure can thus give surprising results and the
 adaption of it in practice should not be automatic.
 
  
-\begin{table}[ht] \centering \caption{A toy example showing the effect of iterative elimination. Columns 2 and 3 are expression levels for two samples, Column 4 is the ranking of genes by $M$-value without iterative elimination, and Column 5 is the ranking after two geNorm iterations.} 
+\begin{table}[ht] \centering \caption{A toy example showing the effect of
+    iterative elimination. Columns 2 and 3 represent expression levels for
+    seven genes in two samples, column 4 is the ranking of genes by $M$-value
+    without iterative elimination, and column 5 is the ranking after two
+    geNorm iterations.} 
 	\begin{tabular}{rrp{2cm}rp{2cm}rp{2cm}rp{2cm}}
     \hline & \multicolumn{2}{c}{Raw Counts} & \multicolumn{2}{c}{Rank}\\
-     Gene & sample 1 & sample 2 & rank1 & rank2 \\ \hline 
+     Gene & sample 1 & sample 2 & rank 1 & rank 2 \\ \hline 
     Gene1 & 1 & 1 & 3 & 1 \\ 
     Gene2 & 1 & 1 & 3 & 1 \\ 
     Gene3 & 1 & 1 & 3 & 1 \\
@@ -1022,8 +1053,9 @@ adaption of it in practice should not be automatic.
      Gene6 & 1 & 3 & 6 &  \\ 
     Gene7 & 1 & 4 & 7 &  \\ \hline 
     Library Size & 7 & 14 & & 	\\ \hline 
+
     Note: &\multicolumn{4}{l}{ rank1 = initial ranking by $M$-value, } \\
-    & \multicolumn{4}{l}{ rank2= ranking after Gene 6 and 7 removed.}
+    & \multicolumn{4}{l}{ rank2= ranking after genes 6 and 7 removed.}
 \end{tabular} \label{table:toyexample} \end{table}
 
 
@@ -1066,8 +1098,17 @@ this group of experiments.
 to be more homogeneous and thus the treatment effect is easier to detect
 between leaf samples. ) 
  
- \begin{center} \begin{table}[h!] \centering \caption{proportion of estimated
-     variance components for the seedling, the leaf and the multi-tissue groups. Every entry represents the average proportion of a certain variance component, computed by averaging the ratios --- the variance component being considered to the total variance $\hat{\sigma}^2$ --- over all the genes.} \label{table:percentageofvariation}
+ \begin{center} 
+     \begin{table}[h!] 
+	 \centering 
+	 \caption{Percentages---averaged over all genes---of the total
+	 variance attributable to each of the three variance components
+	 (between-sample, between-treatment, between-experiment) for the three
+	 groups of RNA-Seq samples (the seedling, the leaf and the
+	 multi-tissue groups). %The variance components were estimated by fitting the GLMM model to the samples in the respective group.
+	 } 
+	 \label{table:percentageofvariation}
+
      \begin{tabular}{lp{3cm}p{2.5cm}p{3cm}}\hline
      Source & Seedling & Leaf & Multi-tissue \\  \hline
 	 between-sample     & 12.3\%   & 16.0\% & 8.4\%           \\
@@ -1089,8 +1130,9 @@ between leaf samples. )
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=1\linewidth]{Figures/top1000.eps}
-	\includegraphics[width=1\linewidth]{Figures/all.eps}
+	%\includegraphics[width=15cm, height= 1.5cm]{Figures/stackbar_legend.eps}
+	\includegraphics[width=14cm, height= 7cm]{Figures/top1000.eps}
+	\includegraphics[width=14cm, height= 7cm]{Figures/all.eps}
 	\caption{stacked bar plot of the three variance components for the multi-tissue group. Top: 20 genes randomly selected from top 1000 stably expressed genes; Bottom: 20 genes randomly selected from all the genes.}
 	\label{fig:all}
 \end{figure}
@@ -1177,7 +1219,7 @@ relative to the reference gene set.
 
 Interpreting the DE results as relative to an explicit reference set is
 especially beneficial when one wants to compare results from two or more
-experiments. 
+experiments (Jeff: one wants to compare results from an experiment to ones that are publicly available). 
 Furthermore, when the interest is in comparing different experiments, we recommend using a common reference set. 
 % In the Introduction, we also argued that using an explicit set of genes as
 % reference for normalization can improve interpretability of DE results, in the
@@ -1249,11 +1291,11 @@ a reasonable heuristic rule.
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[scale=0.34]{Figures/norm1.eps}
-		\includegraphics[scale=0.34]{Figures/norm2.eps}
-		\includegraphics[scale=0.34]{Figures/norm3.eps}
-		\includegraphics[scale=0.34]{Figures/norm4.eps}
-		\caption{\label{fig:normfactor} Matrix plot of normalization factors. Top 10, 100, 1000, and 10,000 stably expressed genes are chosen as reference to calculate the normalization factors for each of the three groups: the seedling (upper left), the leaf (upper right), and the multi-tissue (lower left) groups. The lower right plot shows the estimated normalization factors for a new seedling experiment (GSE66666, with sample size 6) when top 10---10,000 stably expressed genes from the seedling group are used as reference. The normalization factors are estimated by Anders and Huber's method.}
+		\includegraphics[scale=0.34]{Figures/norm_seedling.eps}
+		\includegraphics[scale=0.34]{Figures/norm_leaf.eps}
+		\includegraphics[scale=0.34]{Figures/norm_tissue.eps}
+		\includegraphics[scale=0.34]{Figures/norm_GSE66666.eps}
+		\caption{\label{fig:normfactor} Matrix plot of normalization factors. Top 10, 100, 1000, and 10,000 stably expressed genes are chosen as reference to calculate the normalization factors for each of the three groups: the seedling (upper left), the leaf (upper right), and the multi-tissue (lower left) groups. The lower right plot shows the estimated normalization factors for a new seedling experiment (GSE66666, with sample size 6) when top 10---10,000 stably expressed genes from the seedling group are used as reference. The normalization factors are estimated as described in Section \ref{section:countNormalization}.}
 	\end{center}
 \end{figure}
 
@@ -1419,61 +1461,6 @@ The R codes for reproducing results in this paper are available at Github:
 %\section{Appendix}
 %
 
-\section{Supplementary Material}
-
-The details of experimental data is summarized as below
-%
-%\subsection{Set 1}
-%\begin{landscape}
-%\begin{table}
-%\footnotesize
-%\centering
-%\begin{tabular}{p{2cm}p{2cm}p{1cm}p{4cm}p{2.4cm}p{3cm}p{4cm}} \hline
-%GEO Number &Tissue cluster & sample Size & Description & Age  &Col Name & Platform\\ \hline
-%GSE37159 &seedling &8	& Col-0, bzr1-1D, pifq and pifq;bzr1-1D  grown on BRZ-containing medium in the dark & 5 days &GSM912634-GSM912641 & Illumina HiSeq 2000\\  \hdashline
-%GSE38879 &seedling &12 & Transgenic line rve8-1 RVE8::RVE8:GR and rve8-1 treated with DEX or mock with three biological replicates each, 12 samples in total & 7 days  &GSM951349-GSM951360  &Illumina HiSeq 2000\\ \hdashline
-%GSE43865 &seedling & 6  & wild-type and link1link2 mutant plants were grown for two weeks under continuous white light conditions at 22 degrees centigrades & 9 days & GSM1072464-GSM1072469 &Illumina Genome Analyzer IIx  \\	\hdashline
-%GSE48767 &seedling & 6 &The wild-type seedlings and the phyA-1 mutant were grown, within each 3 biological replicates available & 4 days   &GSM1184353-GSM1184358, GSM1401633-GSM1401638 &Illumina HiSeq 2000 \\ \hdashline
-%GSE51119 &seedling  & 10  & homozygous ibh1(SALK 049177), ibl1(SALK 119457), 35Spro:IBH1-GFP and 35Spro:IBL1-GFP were compared to wild type (Col) &10 days  & GSM1239079-GSM1239088 &Illumina HiSeq 2000 \\ \hdashline
-%GSE51772 &seedling  & 8  & Col-0 and iaa3 were grown on medium for 5 days and treated with mock or 100 nMBL for 4 hr &5 days  & GSM1252262-GSM1252269 &Illumina HiSeq 2000 \\ \hdashline
-%GSE53078 &seedling &4 & Compare the transcriptome of HBI1-Ox and wild type & 5 days &   GSM1281703-GSM1281706 &Illumina Genome Analyzer \\ \hdashline
-%GSE57086 &seedling & 6  & cR-grown WT and hid1, three biological replicates for each group & 5 days &GSM1390693-GSM1390698 &GPL13222 \\ \hdashline
-%GSE58082 &seedling &6  &GFP-FHY1 fhy1-1 transgenic,  fhy1-1 mutant  were grown under the same light conditions used (D4d+FR3h)& 4 days &GSM1400495-GSM1400500 & GPL13222 \\ \hdashline
-%\end{tabular} 
-%\end{table}
-%\end{landscape}
-%
-%
-%\begin{landscape}
-%\subsection{Set 2}
-%\begin{table}
-%\footnotesize
-%\centering
-%\begin{tabular}{p{2cm}p{3cm}p{1cm}p{4cm}p{2.4cm}p{3cm}p{4cm}} \hline
-%GEO Number &Tissue cluster & sample Size & Description & Age  &Col Name & Platform\\ \hline
-% GSE35288 &flower &6  & 3 biological replicates of Col-0 wild type and 3 biological replicates of the hae-3 hsl2-3 double mutant &  stage 15  &SRR401413-SRR401430 &Illumina HiSeq 2000 \\ \hdashline
-%GSE35408 &Hypocotyl & 10 &bzr1-1D and WT were grown in media containing 1uM PAC and 0 or 2uM PPZ for 4.5 days in dark, then treated with 10uM GA3 or mock solution for 12 hr & 4.5 days  & GSM867674-GSM867678, GSM951964-GSM951968  & Illumina HiSeq 2000 \\ \hdashline
-%GSE48235 &rosette leaves & 6  & For each condition (water, S1, and S3) the transcriptome was sequenced for two replicates & 9 days & GSM1072464-GSM1072469  &Illumina Genome Analyzer II \\	\hdashline
-%GSE53952 &seed   & 9 	& Three lines of Arabidopsis, fae1/CL37/PDAT were generated & 7-12 days & GSM1303953-GSM1303979 &Illumina Genome Analyzer IIx etc.. \\  \hdashline
-%GSE56326 &carpels (15 developing inflorescences) & 8 &Expression profile comparation of wild type, nga mutant and NGA overex- pression &stage 8-13&  & 	Illumina HiSeq 2000 \\ \hdashline
-%\end{tabular} 
-%\end{table}
-%\end{landscape}
-%\begin{landscape}
-%\subsection{Set 3}
-%\begin{table}
-%\footnotesize
-%\centering
-%\begin{tabular}{p{2cm}p{3cm}p{1cm}p{4cm}p{2.4cm}p{3cm}p{4cm}} \hline
-%GEO Number &Tissue cluster & sample Size & Description & Age  &Col Name & Platform\\ \hline
-%GSE36626 &leaves & 4 &Analysis of 2 different histone H3 variants and transcriptome in 2 conditions.  & 4 weeks &GSM897684-GSM897687 & Illumina Genome Analyzer IIx \\ \hdashline
-%GSE39463 &leaves  &12		&Columbia-0 pen2-1 pad4-1 sag101-2 mutant, and samples were collected at 24 hours post inoculation (hpi) of Bgh & & &Illumina HiSeq 2000 \\ \hdashline
-%GSE48235 &leaves & 6  & For each condition (water, S1, and S3) the transcriptome was sequenced for two replicates & 9 days & GSM1072464-GSM1072469  &Illumina Genome Analyzer II \\	\hdashline
-%GSE51304 &leaves  & 18 &Bisulfite-seq data for cmt2-7 single mutants, cmt3 single mutants, drm1/2 double mutants, drm1/2 cmt3 triple mutants are collected  & 3 weeks & GSM1242374-GSM1242391 &GPL13222 \\ \hdashline
-%GSE54677 & leaves   &20  &Col morc1 morc2 morc6 and their double mutants. For each sample, two biological replicates were performed &adult & GSM1321694-GSM1321713	 &	GPL13222\\ \hdashline
-%\end{tabular} 
-%\end{table}
-%\end{landscape}
 
 %
 % \begin{figure}[H]
