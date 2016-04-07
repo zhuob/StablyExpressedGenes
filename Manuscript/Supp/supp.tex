@@ -1,0 +1,105 @@
+%% This file is to be used as a template for your submission. 
+%% Rename this file and replace the text with the text of 
+%% your manuscript.
+%%
+%% The standard LaTeX document class "article" is recommended. 
+%% Use options letterpaper and 12pt.
+\documentclass[letterpaper,12pt]{article}
+
+%% This is the recommended preamble for your document.
+
+%% Load De Gruyter specific settings 
+\usepackage{dgjournal}          
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+
+%% Use the graphics package to include figures
+\usepackage{graphics}
+
+%% Use natbib with these recommended options
+\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib} 
+
+
+
+% packaged added by Bin Zhuo
+\usepackage{array,arydshln}
+\usepackage{multirow}
+\usepackage{lscape}
+
+%% Start your document body here
+\begin{document}
+
+%% Do NOT include any fronmatter information; including the title, author names,
+%% institutes, acknowledgments and title footnotes (author information, funding
+%% sources, etc.). Start the document with the first section or paragraph of
+%% the article.
+\section{Supplementary Material}
+
+The details of experimental data is summarized as below
+
+
+\begin{landscape}
+\begin{table}
+\footnotesize
+\centering
+\caption{seedling}
+\begin{tabular}{p{2cm}p{3cm}p{1cm}p{2cm}p{1.5cm}p{3cm}p{4cm}} \hline
+GEO Number &Tissue cluster & sample Size & Description & Age  &Col Name & Platform\\ \hline
+GSE37159 &seedling &8	& & 5 days &GSM912634-GSM912641 & Illumina HiSeq 2000\\  \hline
+GSE38879 &seedling &12 &  & 7 days  &GSM951349-GSM951360  &Illumina HiSeq 2000\\ \hline
+GSE43865 &seedling & 6  & & 9 days & GSM1072464-GSM1072469 &Illumina Genome Analyzer IIx  \\	\hline
+GSE48767 &seedling & 6 & &  &GSM1184353-GSM1184358, GSM1401633-GSM1401638 &Illumina HiSeq 2000 \\ \hline
+GSE51119 &seedling  & 10  & &10 days  & GSM1239079-GSM1239088 &Illumina HiSeq 2000 \\ \hline
+GSE51772 &seedling  & 8  & &5 days  & GSM1252262-GSM1252269 &Illumina HiSeq 2000 \\ \hline
+GSE53078 &seedling &4 &  & 5 days &   GSM1281703-GSM1281706 &Illumina Genome Analyzer \\ \hline
+GSE57086 &seedling & 6  &  & 5 days &GSM1390693-GSM1390698 &GPL13222 \\ \hline
+GSE58082 &seedling &6  & & 4 days &GSM1400495-GSM1400500 & GPL13222 \\ \hline
+\end{tabular} 
+\end{table}
+\end{landscape}
+
+\begin{landscape}
+\begin{table}
+\footnotesize
+\centering
+\caption{multi-tissue}
+\begin{tabular}{p{2cm}p{3cm}p{1cm}p{2cm}p{1.5cm}p{3cm}p{4cm}} \hline
+GEO Number &Tissue cluster & sample Size & Description & Age  &Col Name & Platform\\ \hline
+ GSE35288 &flower &6  &   &  stage 15  &SRR401413-SRR401430 &Illumina HiSeq 2000 \\ \hline
+GSE35408 &Hypocotyl & 10 & & 4.5 days  & GSM867674-GSM867678, GSM951964-GSM951968  & Illumina HiSeq 2000 \\ \hline
+GSE48235 &rosette leaves & 6  &  & GSM1072464-GSM1072469  &Illumina Genome Analyzer II \\	\hline
+GSE53952 &seed   & 9 	& & 7-12 days & GSM1303953-GSM1303979 &Illumina Genome Analyzer IIx etc.. \\  \hline
+GSE56326 &carpels (15 developing inflorescences) & 8 & &stage 8-13&  & 	Illumina HiSeq 2000 \\ \hline
+\end{tabular} 
+\end{table}
+\end{landscape}
+
+
+\begin{landscape}
+
+\begin{table}
+	\caption{Set 3}
+	\footnotesize
+	\centering
+	\begin{tabular}{p{2cm}p{3cm}p{1cm}p{2cm}p{1.5cm}p{3cm}p{4cm}} \hline
+		GEO Number &Tissue cluster & sample Size & Source & Age  &Column Name & Platform\\ \hline
+		GSE36626 &leaves & 4 &   & 4 weeks &GSM897684-GSM897687 & Illumina Genome Analyzer IIx \\ \hline
+		GSE39463 &leaves  &12		& & & &Illumina HiSeq 2000 \\ \hline
+		GSE48235 &leaves & 6  &  & 9 days & GSM1072464-GSM1072469  &Illumina Genome Analyzer II \\	\hline
+		GSE51304 &leaves  & 18 & & 3 weeks & GSM1242374-GSM1242391 &GPL13222 \\ \hline
+		GSE54677 & leaves   &20  & &adult & GSM1321694-GSM1321713	 &	GPL13222\\ \hline
+	\end{tabular} 
+\end{table}
+\end{landscape}
+
+
+
+
+\bibliographystyle{DeGruyter}
+\bibliography{sample}
+
+\end{document}
