@@ -18,10 +18,10 @@
 		\centering
 		\caption{My caption}
 		\label{my-label}
-		\begin{tabular}{p{2.5cm}p{2cm}p{4.5cm}p{1cm}p{4cm}} \\ \hline
+		\begin{tabular}{p{2.5cm}p{2cm}p{4.5cm}p{1cm}p{5cm}} \\ \hline
 			GEO Number & Reference                     & Tissue                                                   & Sample Size & Note                   \\  \hline
 			GSE36626   & \cite{wollmann2012dynamic}           & leaves                                                   & 4           &                        \\
-			GSE39463   & \cite{maekawa2012conservation}       & leaves                                                   & 12          & 48 samples \\
+			GSE39463   & \cite{maekawa2012conservation}       & leaves                                                   & 12          & 48 samples (repeated measure) \\
 			GSE51304   & \cite{stroud2014non}                & leaves                                                   & 18          &                        \\
 			GSE54677   & \cite{moissiard2014transcriptional}  & leaves                                                   & 20          &                        \\
 			GSE48235   & \cite{liu2014different}              & leaves                                                   & 6           &                        \\  \hline
@@ -30,13 +30,13 @@
 			GSE37159   & NA                            & seedling                                                 & 8           &                        \\
 			GSE38400   & \cite{zhu2013swi}                    & seedling                                                 & 12          &                        \\
 			GSE41766   & \cite{bai2012triple}                 & seedling                                                 & 6           &                        \\
-			GSE43703   & \cite{liu2013translational}          & seedling                                                 & 4           & 8 samples              \\
-			GSE43865   & \cite{rugnone2013lnk}                & seedling                                                 & 6           & 42 samples             \\
+			GSE43703   & \cite{liu2013translational}          & seedling                                                 & 4           & 8 samples (the removed 4 have low mapping quality $<50\%$)              \\
+			GSE43865   & \cite{rugnone2013lnk}                & seedling                                                 & 6           & 42 samples (repeated measure)             \\
 			GSE51772   & \cite{oh2014cell}                    & seedling                                                 & 8           &                        \\
 			GSE53078   & \cite{fan2014bhlh}                   & seedling                                                 & 4           &                        \\
-			GSE60835   & \cite{dong2014arabidopsis}           & seedling                                                 & 6           &                        \\  \hline
+			GSE60835   & \cite{dong2014arabidopsis}           & seedling                                                 & 6           &12 samples(not sure about the ecotype of the other 6)                 \\  \hline
 			GSE35288   & \cite{niederhuth2013transcriptional} & flower                                                   & 6           &                        \\
-			GSE35408   & NA                            & hypocotyl                                                & 10          &                        \\
+			GSE35408   & \cite{bai2012brassinosteroid}        & hypocotyl                                                & 10          &                        \\
 			GSE52966   & \cite{chaiwanon2015spatiotemporal}   & primary root                                             & 18          &                        \\
 			GSE56326   & NA                            & carpels  & 8           &                        \\
 			GSE59167   & \cite{pallakies2014cle40}            & root tip tissue                                          & 11          &                        \\
@@ -47,6 +47,42 @@
 	\end{table}
 	
 	
+	
+	\begin{landscape}
+	
+\begin{table}[]
+	\centering
+	\caption{My caption}
+	\label{my-label2} 	
+	\begin{tabular}{llllp{5cm}l}
+		GEO Number & Reference                              & Tissue                      &N & Note                                                  & Map quality($\geq$) \\ \hline
+		GSE36626   & \cite{wollmann2012dynamic}           & leaves                      & 4           &                                                       & 85.50\%                    \\
+		GSE39463   & \cite{maekawa2012conservation}       & leaves                      & 12          & it contains 48 samples (Used One time point)          & 74.50\%                    \\
+		GSE51304   & \cite{stroud2014non}                 & leaves                      & 18          & 18 RNA-Seq                                            & 88.40\%                    \\
+		GSE54677   & \cite{moissiard2014transcriptional}  & leaves                      & 20          & 20 RNA-Seq                                            & 85.20\%                    \\
+		GSE48235   & \cite{liu2014different}              & leaves                      & 6           &                                                       & 90.40\%                    \\ \hline
+		GSE51119   & \cite{zhiponova2014helix}            & seedling                    & 10          &                                                       & 70.50\%                    \\
+		GSE32202   & NA                                     & seedling                    & 6           &                                                       & 84.30\%                    \\
+		GSE37159   & NA                                     & seedling                    & 8           &                                                       & 82.50\%                    \\
+		GSE38400   & \cite{zhu2013swi}                    & seedling                    & 12          & PCA                                                   & 45.90\%--59.6\%                    \\
+		GSE41766   & \cite{bai2012triple}                 & seedling                    & 6           &                                                       & 85.20\%                    \\
+		GSE43703   & \cite{liu2013translational}          & seedling                    & 4           & 8 samples (mapping quality 23-46\% removed)           & 55.50\%--68.4\%                    \\
+		GSE43865   & \cite{rugnone2013lnk}                & seedling                    & 6           & 42 samples (one time point)                           & 92.50\%                    \\
+		GSE51772   & \cite{oh2014cell}                    & seedling                    & 8           &                                                       & 90.60\%                    \\
+		GSE53078   & \cite{fan2014bhlh}                   & seedling                    & 4           &                                                       & 86.10\%                    \\
+		GSE60835   & \cite{dong2014arabidopsis}           & seedling                    & 6           & 12 samples(not sure about the ecotype of the other 6) & 65.60\%--85.6\%                    \\  \hline
+		GSE35288   & \cite{niederhuth2013transcriptional} & flower                      & 6           & removed duplicated column                             & 76.50\%                    \\
+		GSE35408   & \cite{bai2012brassinosteroid}        & hypocotyl                   & 10          &                                                       & 77.00\%                       \\
+		GSE52966   & \cite{chaiwanon2015spatiotemporal}   & primary root                & 18          &                                                       & 87.20\%                    \\
+		GSE56326   & NA                                     & carpels                     & 8           &                                                       & 92.40\%                    \\
+		GSE59167   & \cite{pallakies2014cle40}            & root tip tissue             & 11          &                                                       & 87.10\%                    \\
+		GSE59637   & \cite{mizzotti2014seedstick}         & inflorescences and siliques & 4           &                                                       & 71.70\%                    \\
+		GSE62799   & \cite{groth2014snf2}                 & aerial tissue               & 6           &                                                       & 89.30\%                    \\
+		GSE63355   & \cite{liu2015repair}                 & shoot apical meristem       & 16          &                                                       & 87.90\%                    \\ \hline
+	\end{tabular}
+\end{table}
+	\end{landscape}
+
 	\newpage
 %	
 %	\begin{landscape}

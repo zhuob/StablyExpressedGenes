@@ -260,7 +260,7 @@ reference therein).  For example, in the microarray analysis of Arabidopsis, \ci
 showed that traditional house-keeping
 genes such as ACT2, TUB6, EF-1$\alpha$ are not stably
 expressed, and thus not good reference genes for normalization.  Spike-in
-genes have also been considered as reference genes for normalization, but
+genes  have also been considered as reference genes for normalization, but %\citep{jiang2011synthetic}, but
 \cite{risso2014nat} showed that spike-in genes are not necessarily stably
 expressed according numerical measures either.  
 % HKGs or spike-in genes thus cannot be taken as granted as stably expressed
@@ -422,7 +422,7 @@ Our pipeline, implemented using the software R \citep{Rpackage}, is summarized a
  \end{quote}
      is
      downloaded from Ensembl plat FTP server. The multi-mapping or
-     multi-overlapping (???) reads were not counted.  
+     multi-overlapping  reads were not counted.  
 
 \end{enumerate}
 Subread aligner is a recently developed sequence mapping tool that adopts a
@@ -727,7 +727,7 @@ stably expressed genes for different biological contexts.
 % experiments on Arabidopsis seedlings; theleaf group consists 60 samples from 5
 % experiments on Arabidopsis leaves; andmulti-tissue-type group consists 79
 % samples from different 8 experiments ondifferent tissues types.  
-In Tables 1-3 (REF) in the online supplementary materials, we summarize the
+In Tables 1-3 in the online supplementary materials, we summarize the
 top 1000 most stably expressed genes in each group.  In Figure \ref{cpm}, we
 summarize the histograms of the mean Count Per Million (CPM) for the 1000
 most stably expressed genes identified in each group. For each gene, the CPM
@@ -759,7 +759,7 @@ genes are stably expressed under a wide range of experimental conditions and
 in different tissue types, and thus may be worth further study. This list of
 $106$ genes has significant overlap with the top $100$ stably expressed genes
 identified by \cite{czechowski2005genome} from a developmental series of
-microarray samples: $10$ out of these $106$ genes (see Table REF in the
+microarray samples: $10$ out of these $106$ genes (see Table 4 in the
 supplement material for details),
 \begin{center}
 \begin{quote}
@@ -774,11 +774,11 @@ overlap of size $10$ or more with a pre-selected list of $100$ genes). In
 particular, one gene, AT1G13320, is in all ten but one list of top 500 stably
 expressed genes identified by \cite{czechowski2005genome} for different
 experimental and experimental conditions (the only exception is the set of
-diurnal series, ??? Jeff), and is also identified by
+diurnal series), and is also identified by
 \cite{hong2010identification} as a stably expressed gene under all six but one
 experimental conditions he examined.  This gene is ranked 446 (top 1.8\%), 112
 (top 0.5\%), 687 (top 2.9\%) according to our stability measure in the three
-groups we examined.  (??? Is there anything special about this gene? Jeff)
+groups we examined.
 This gene is a subunite of protein phosphatase type 2A complex and involves in
 regulation of phosphorylation and regulation of protein phosphatase type 2A
 activity. It has been used as a reference gene for normalization in many
@@ -960,7 +960,7 @@ We have the following observations:
 	\includegraphics[scale=0.55]{Figures/rankVSrank_RNA2.eps}
 	\caption{Comparison of top stably expressed genes identified under different scenarios.
 	We choose top 100 stably expressed genes as described in $L_1$--$L_4$,
-	and top 50 stably expressed genes in $L_5$ (see section \ref{list:L5}). 
+	and top 50 stably expressed genes in $L_5$ (see Section \ref{list:L5}). 
 	and plot the recall percentages between these lists and the top most
 	stably expressed genes identified from the  multi-tissue group
 	according to the total variance measure.
@@ -1065,8 +1065,8 @@ adaption of it in practice should not be automatic.
     Gene7 & 1 & 4 & 7 &  \\ \hline 
     Library Size & 7 & 14 & & 	\\ \hline 
 
-    Note: &\multicolumn{4}{l}{ rank1 = initial ranking by $M$-value, } \\
-    & \multicolumn{4}{l}{ rank2= ranking after genes 6 and 7 removed.}
+  %  Note: &\multicolumn{4}{l}{ rank1 = initial ranking by $M$-value, } \\
+%    & \multicolumn{4}{l}{ rank2= ranking after genes 6 and 7 removed.}
 \end{tabular} \label{table:toyexample} \end{table}
 
 
@@ -1102,12 +1102,17 @@ the largest proportion of the total variation. In the group of leaf
 experiments, the between-treatment variation is markedly greater than the
 between-sample variation, suggesting the existence of a higher proportion of DE genes.
 %The between-experiment variation, on average, is largest in the multi-tissue group
-
-([Ask Jeff], one implication is that DE is easier to detect in
+One implication is that DE is easier to detect in
 this group of experiments.  
- Our intuition is that leaf samples tend
+Our intuition is that leaf samples tend
 to be more homogeneous and thus the treatment effect is easier to detect
-between leaf samples. ) 
+between leaf samples.
+
+%([Ask Jeff], one implication is that DE is easier to detect in
+%this group of experiments.  
+% Our intuition is that leaf samples tend
+%to be more homogeneous and thus the treatment effect is easier to detect
+%between leaf samples. ) 
  
  \begin{center} 
      \begin{table}[!ht] 
@@ -1241,8 +1246,7 @@ relative to the reference gene set.
 %	\end{center}
 
 Interpreting the DE results as relative to an explicit reference set is
-especially beneficial when one wants to compare results from two or more
-experiments (Jeff: one wants to compare results from an experiment to ones that are publicly available). 
+especially beneficial when one wants to compare results from an experiment to ones that are publicly available. 
 Furthermore, when the interest is in comparing different experiments, we recommend using a common reference set. 
 % In the Introduction, we also argued that using an explicit set of genes as
 % reference for normalization can improve interpretability of DE results, in the
@@ -1343,13 +1347,14 @@ can improve interpretability of DE results, and furthermore,  using a common
 reference gene set can avoid inconsistent conclusions when comparing multiple
 experiments(see section REF).
 
-We emphasize that numerical stability is not equivalent to biological
-stability (??? Jeff, about  ``biological stability'': do
-biologists talk about ``biological stability''?) For example, we demonstrated
-that the expression levels of traditional house-keeping genes are not
-necessarily stable according to a numerical measure. 
-Biological stability is a vague term and not easy to quantify.  Numerical
-stability is generally more tractable.
+%We emphasize that numerical stability is not equivalent to biological
+%stability (??? Jeff, about  ``biological stability'': do
+%biologists talk about ``biological stability''?) For example, we demonstrated
+%that the expression levels of traditional house-keeping genes are not
+%necessarily stable according to a numerical measure. 
+%Biological stability is a vague term and not easy to quantify.  Numerical
+%stability is generally more tractable.
+
 % (Some have argued that numerically
 % somewhat circular??? The same numerical measure is used to both identify the
 % stably expressed genes and to verify their stability.) 
@@ -1434,20 +1439,28 @@ future.
 To identify a set of stably expressed genes, our method still need to estimate
 an initial set of normalization factors where we need to make assumptions
 about relative fold changes between samples. This kind of circular dependence
-seems unavoidable \citep{vandesompele2002accurate}. In this paper, we used a one-step
-iteration strategy to reduce the dependence on the initially estimated
-normalization factors. In future, we intend to look at the genes through
-evolutionary genetics methods (REFs, 1001 genomes? Jeff?): evolutionary genetics methods can
-help us understand, for example, which genes are well preserved through the
+seems unavoidable \citep{vandesompele2002accurate}. In this paper, we used a one-step iteration strategy to reduce the dependence on the initially estimated
+normalization factors.  In the future, we will attempt to identify orthologous genes that are stably expressed. 
+
+In future, we intend to look at the genes through
+evolutionary genetics methods (REFs, 1001 genomes? Jeff?): evolutionary genetics methods can help us understand, 
+for example, which genes are well preserved through the
 Arabidopsis evolutionary history. However, we need to be mindful that a well
 conserved gene is not necessarily stably expressed. 
 
-(How do we use the identified stably expressed genes?) QC, Reproducibility and
-replicability?
+%(How do we use the identified stably expressed genes?) QC, Reproducibility and
+%replicability?
 
 
 The R codes for reproducing results in this paper are available at Github:
 \url{https://github.com/zhuob/StablyExpressedGenes}
+
+
+
+\textbf{Acknowledgment}: Research reported in this publication was partially supported by the National Institute of General Medical Sciences of the National Institutes of Health under Award Number R01GM104977 (to YD, SCE, and JHC). We thank Duo Jiang and Wanli Zhang for helpful discussions. This article is part of doctor dissertation written by BZ under the supervision of YD. 
+
+\textbf{Supplemental Material}: The online version of this article offers supplementary material,
+available to authorized users.
 
 %Our stretagy is to use an
 %iterative procedure: we rank all the genes based on our stability measure, and
