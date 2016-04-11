@@ -282,9 +282,9 @@ plot.density <- function(set, figure.num, textsize = rep(30, 4), legend = F)
     var.s.percent$experiment <- var.s$lab/var.s$sum
 
     mdata <- melt(var.s.percent[, c(1:4)], id=c("Gene"))
+    colnames(mdata) <- c("Gene", "Source", "percentage")
     mdata$Source <- paste("between-", mdata$Source, sep= "")
 
-    colnames(mdata) <- c("Gene", "Source", "percentage")
     
 
     

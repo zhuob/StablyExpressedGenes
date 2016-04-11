@@ -3,7 +3,7 @@
 ## need the following directory
 #   CodePath: where the code is located
 # ResultPath: where the results from iteration.GLMM()  and rankVvalue() are stored
-#  TablePath: where should the table be stored
+#  SuppPath: where should the table be stored
 # FigurePath: where should the figures be stored
 
 ## textsize: 4 elements, for legend, plot.title, axis, and axis title respectively.
@@ -38,7 +38,7 @@ cat("producing results in section 1...\n")
 
 
 # Figure 1: histogram of CPM for top 1000 stably-expressed genes
-ts <- c(10, 40, 30, 30)
+ts <- c(10, 30, 30, 30) # legened, title, axis, axis.title
 wd <- 6; ht <- 5
 A1 <- plot.cpm(var_seedling,  1e3, "Seedling", textsize =ts)
 ggsave(paste(FigurePath, "cpm_seedling.eps", sep =""), A1, width= wd, height= ht)
@@ -55,15 +55,15 @@ for ( i in 1:length(VarCompData)){
   writedata <- Varcomp$var.comp[, c(1, 7)]
   writedata2 <- writedata[writedata$Rank <= 1000, ]
   writedata2 <- writedata2[order(writedata2$Rank), ]
-  write.csv(writedata2, paste(TablePath, VarCompData[i], "Top1000.csv", sep=""),row.names = F)
+  write.csv(writedata2, paste(SuppPath, VarCompData[i], "Top1000.csv", sep=""),row.names = F)
 }
-paste(TablePath, VarCompData[i])
+paste(SuppPath, VarCompData[i])
 
 ## how does stably expressed genes across different tissue types
 cat("Overlapped genes among the multi-tissue, leaf and seedling data")
 overlap_gene <- compare.3Set(var_seedling, var_leaf, var_tissue, top =1000)
 print( length(overlap_gene) )# 106
-write.csv(overlap_gene, paste(TablePath, "OverlappedGeneFromThreeSetsTop1000.csv", sep=""),row.names = F)
+write.csv(overlap_gene, paste(SuppPath, "OverlappedGeneFromThreeSetsTop1000.csv", sep=""),row.names = F)
 # how many genes of the 109 are overlapped with czechowski
 ocz <- intersect(overlap_gene, cze_100[, 1])  #11
 ocz
@@ -99,7 +99,8 @@ venn3 <- length(intersect(top1000leaf, top1000tissue))
 ls <- list(Leaf = top1000leaf, Seedling = top1000seedling, Multi_tissue = top1000tissue)
 
 venn.plot <- venn.diagram(ls,height = 300, width = 300, resolution = 100,
-                          fill = c('yellow', 'purple', 'green'), "venn.png", imagetype = "png")
+                          fill = c('yellow', 'purple', 'green'), 
+                          paste(FigurePath, "/venn.png", sep =""), imagetype = "png")
 #########  SECTION 2 ---------------------------------------
 
 cat("producing results in section 2...\n")
@@ -111,25 +112,24 @@ wd <- 13; ht <- 5
 # five traditional house-keeping genes
 figA <- c("AT3G18780", "AT5G12250","AT5G60390","AT4G05320","AT1G13440")  # HKG
 A4 <- plot.gene(figA, var_tissue, 1, 1e4,figure.num = NULL,textsize = textsize)
-A4 + guides(fill = guide_legend(title = "ABCD", title.position = "right"))
-ggsave(paste(FigurePath, "A1.eps", sep =""), A4, width= wd, height= ht)
+ggsave(paste(FigurePath, "hkg.eps", sep =""), A4, width= wd, height= ht)
 
 # FIVE GENES FROM CZECHOWSKI
 figB <- c("AT4G34270","AT1G13320","AT1G59830","AT4G33380","AT2G28390")   # NOVEL
 A5 <- plot.gene(figB, var_tissue, 1, 1e4, figure.num = NULL, textsize)
-ggsave(paste(FigurePath, "A2.eps", sep =""), A5, width= wd, height= ht)
+ggsave(paste(FigurePath, "czechowski.eps", sep =""), A5, width= wd, height= ht)
 
 set.seed(102)  ## 102 or 107
 random.gene <- sample(1:100, 5)
 genelist <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% random.gene]
 A6 <- plot.gene(genelist,var_tissue, 1, 1e4, figure.num = NULL, textsize)
-ggsave(paste(FigurePath, "A3.eps", sep=""), A6, width = wd, height=ht)
+ggsave(paste(FigurePath, "glmm.eps", sep=""), A6, width = wd, height=ht)
 
 
 ## table of variance components for the 15 genes
 gene_q <- show_plot_gene(figA, figB, genelist, var_tissue)
 colnames(gene_q)[2:4] <- c("between-sample", "between-treatment", "between-experiment")
-tableVarComp <- paste(TablePath, "VarComp15Genes.csv", sep="")
+tableVarComp <- paste(SuppPath, "VarComp15Genes.csv", sep="")
 write.csv(gene_q, tableVarComp, row.names = F)
 
 
@@ -184,7 +184,7 @@ ggsave(paste(FigurePath, "all.eps", sep = ""), A9, width = 10, height = 5)
 
  ############# density plot
 wd <- 7; ht <- 5
-ts <- c(30, 30, 30, 40)
+ts <- c(20, 30, 30, 40)
 A10 <- plot.density(var_seedling, "Seedling", textsize = ts, legend=F)
 ggsave(paste(FigurePath, "var_dens1.eps", sep = ""), A10, width = wd, height = ht)
 
@@ -194,7 +194,7 @@ ggsave(paste(FigurePath, "var_dens2.eps", sep = ""), A11, width = wd, height = h
 A12 <- plot.density(var_tissue, "Multi-tissue", textsize = ts)
 ggsave(paste(FigurePath, "var_dens3.eps", sep = ""), A12, width = wd, height = ht)
 
-legend <- plot.density(var_tissue, "legend", legend=T)
+legend <- plot.density(var_tissue, "legend", legend=T, textsize = ts)
 ggsave(paste(FigurePath, "var_dens_legend.eps", sep = ""), legend, width = 10, height = 1)
 
 ############# variance percentage

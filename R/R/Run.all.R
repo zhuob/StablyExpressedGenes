@@ -1,11 +1,15 @@
 ### Run all the results
-
-FigurePath <- "/Users/Bin/Dropbox/Zhuo/Research/Project2014/StablyExpressedGenes/Manuscript/Figures/"
-TablePath <- "/Users/Bin/Dropbox/Zhuo/Research/Project2014/StablyExpressedGenes/Manuscript/Tables/"
-CodePath <- "/Users/Bin/Dropbox/Zhuo/Research/Project2014/StablyExpressedGenes/R/R/"
-DataPath <- "/Users/Bin/Dropbox/Zhuo/Research/Project2014/StablyExpressedGenes/R/data/"
-ResultPath <- "/Users/Bin/Dropbox/Zhuo/Research/Project2014/StablyExpressedGenes/Results/"
-
+# where are the pre-processed RNA-Seq data
+project_folder <- getwd()
+DataPath <- paste(project_folder, "/R/data/", sep ="")
+# where are the results from running GLMM
+ResultPath <-  paste(project_folder, "/Results/", sep ="")
+# where are the code for producing the results
+CodePath <-  paste(project_folder, "/R/R/", sep ="")
+# where the figures will be stored
+FigurePath <-  paste(project_folder, "/Manuscript/Figures/", sep ="")  
+# where the supplementary files will be stored
+SuppPath <-  paste(project_folder, "/Supplementary/", sep ="")
 
 
 source(paste(CodePath, "Run.GLMM.R", sep = "")) 
