@@ -24,6 +24,28 @@
 \usepackage{tabularx,ragged2e}
 \DeclareMathOperator{\median}{median}
 
+
+\newcommand{\howmanySamples}{211~}
+\newcommand{\howmanylab}{24~}
+\newcommand{\howmanyseedlingsample}{60~}
+\newcommand{\howmanyleafsample}{60~}
+\newcommand{\howmanytissuesample}{91~}
+\newcommand{\howmanyseedlingexperiment}{9~}
+\newcommand{\howmanyleafexperiment}{5~}
+\newcommand{\howmanytissueexperiment}{10~}
+\newcommand{\overlapGene}{104~}
+\newcommand{\overlapGeneCze}{9~}
+\newcommand{\overlapProb}{$4.8\times 10^{-9}$~}
+\newcommand{\rankInSeedling}{159~}
+\newcommand{\rankInLeaf}{112~}
+\newcommand{\rankInTissue}{513~}
+\newcommand{\rankTopPctSeedling}{0.7\%}
+\newcommand{\rankTopPctLeaf}{0.5\%}
+\newcommand{\rankTopPctTissue}{2.2\%}
+\newcommand{\SelectFiveGene}{AT1G63110, AT1G79280, AT3G27530, AT4G02560, AT5G53540}
+\newcommand{\recalltophundred}{29~}
+\newcommand{\recalltopthousand}{98~}
+\newcommand{\rankcorrelation}{0.97~}
 %\usepackage{array,arydshln}  % CREATE DASH LINE
 \title{Identification of stably expressed genes from Arabidopsis RNA-Seq data}
 \date{} % Today's date or a custom date
@@ -133,7 +155,7 @@ Our main points include:
 
 \newpage
 \section*{Abstract}
-We examined RNA-Seq data on 209 biological samples from 23 different
+We examined RNA-Seq data on \howmanySamples biological samples from \howmanylab different
 experiments carried out by different labs and identified genes that are stably
 expressed across biological samples, treatment conditions, and experiments. We
 fit a Poisson log-linear mixed-effect model to the read counts for each gene
@@ -172,7 +194,7 @@ for each gene and decompose the total variance to into between-sample,
 between-treatment and between-experiment variance components. The variance component
 analysis is a first step towards understanding the sources and nature of the
 RNA-Seq count variation.  To illustrate our methods, we examined RNA-Seq data
-on 209 Arabidopsis  samples from 23 different experiments carried out by
+on \howmanySamples Arabidopsis  samples from \howmanylab different experiments carried out by
 different labs and identified genes that are stably expressed across
 biological samples, experimental or environmental conditions, and experiments
 (labs).  
@@ -341,14 +363,14 @@ for gene expression stability.
 \subsubsection*{Overview of the RNA-Seq data sets}
 We examined RNA-Seq data from 49 Arabidopsis experiments stored on the NCBI
 GEO repository (see more details below). After screening, we retained data
-from 209 biological samples in 23 experiments.  For illustrating our methods
+from \howmanySamples biological samples in \howmanylab experiments.  For illustrating our methods
 for finding stably expressed genes, we divided the experiments into three
-groups: \textit{the seedling group} contains  70 Arabidopsis seedling samples
-from 10 experiments; \textit{ the leaf group} contains 60 Arabidopsis leaf
-samples from 5 experiments;  the \textit{multi-tissue group} contains 79
-samples from 8 experiments on multiple tissue types (shoot apical, root tip,
+groups: \textit{the seedling group} contains \howmanyseedlingsample Arabidopsis seedling samples
+from \howmanyseedlingexperiment experiments; \textit{ the leaf group} contains \howmanyleafsample Arabidopsis leaf
+samples from \howmanyleafexperiment experiments;  the \textit{multi-tissue group} contains \howmanytissuesample
+samples from \howmanytissueexperiment experiments on multiple tissue types (shoot apical, root tip,
 primary root, inflorescences and siliques, hypocotyl, flower, carpels, aerial
-tissue).  Table \ref{table:TableSet3} summarizes the basic information about
+tissue, epidermis, seed).  Table \ref{table:TableSet3} summarizes the basic information about
 the three groups.
 % lowly-expressed genes provide little information about expression level, and 
 \begin{table}[!ht]
@@ -356,9 +378,9 @@ the three groups.
     \caption{Summary statistics for the three groups of Arabidopsis samples.}
     \begin{tabular}{lp{2.4cm}p{2.3cm}p{2cm}p{1.5cm}} \hline
 	Group & \#  experiments & \# treatments  & \# samples & \# genes \\ \hline
-	Seedling &10 & 31 &70  &24379  \\
-	Leaf &5 & 28 & 60 &20967  \\
-	Multi-tissue &8 &35  &79  & 23666\\ \hline
+	seedling &   9 &  27 &  60 & 22207 \\ 
+	leaf &   5 &  28 &  60 & 20967 \\ 
+	multi-tissue &  10 &  39 &  91 & 23611 \\ \hline
 	\label{table:TableSet3}
     \end{tabular}
 \end{table}
@@ -381,10 +403,10 @@ Center for Biotechnology Information} (NCBI,
 number of RNA-Seq experiments.  For this study, we restrict our attention to
 Arabidopsis experiments satisfying the following conditions: 1.  Ecotype =
 ``Columbia" (we kept only the Columbia samples from experiments that compare
-Columbia samples to other ecotypes); 2. Library strategy= ``RNA-Seq"; 3.
-Library source = ``transcriptomic"; 4.  Library selection= ``cDNA"; 5.  Library
-layout = ``Single End"; 6. There are at least 2 biological replicates for each
-treatment. We screened all the Arabidopsis experiments available from the NCBI
+Columbia samples to other ecotypes); 2. There are at least two treatments and 2 biological replicates for each
+treatment; 3. Library strategy= ``RNA-Seq"; 4.
+Library source = ``transcriptomic"; 5.  Library selection= ``cDNA"; 6.  Library
+layout = ``Single End";  We screened all the Arabidopsis experiments available from the NCBI
 GEO repository up to May 31, 2015 and downloaded raw RNA-Seq data (Sequence Read Archive files)
 from 49 experiments. % Each data set is named by its unique accession number. 
 
@@ -446,13 +468,13 @@ that it is completely implemented in R.
 %(\textbf{Three groups of experiments}) \cite{czechowski2005genome}, \cite{hruz2011refgenes}, and
 %\cite{dekkers2012identification} show that gene expression vary across
 %different tissue types and development stages. For this reason, 
-
 We divided the experiments into three groups as summarized in Table 1.  As an
-additional data quality control measure, within each group, we computed an
+additional data quality control measure,  we keep an experiment only when it has mapping quality (number of successfully mapped reads divided by total number of reads) $\geq 50\%$ for all samples.
+Then within each group, we computed an
 initial set of normalization factors from all samples combined using method
 described in Section \ref{section:countNormalization}.  An experiment is
 retained only when the normalization factors of all samples in the experiment
-are between 0.70 and 1.30.  If the initial estimated normalization factor is
+are between 0.50 and 1.50.  If the initial estimated normalization factor is
 too different from 1 for a sample, it often indicates that the read counts
 distribution in the corresponding sample is markedly different from the
 distributions of the rest of the samples. Such samples demand additional
@@ -754,30 +776,32 @@ in each sample and the mean is computed over all samples.
 % 2.0 to 499.0 for seedling, from 0.2 to 693.4 for leaves, and 0.4 to 278.8,
 % constituting a broad range of expression values.
 
-The lists of top 1000 genes in the three groups share 106 genes in common (see supplement material for detail).  These
+The lists of top 1000 genes in the three groups share \overlapGene genes in common (see supplement material for detail).  These
 genes are stably expressed under a wide range of experimental conditions and
 in different tissue types, and thus may be worth further study. This list of
-$106$ genes has significant overlap with the top $100$ stably expressed genes
+\overlapGene genes has significant overlap with the top $100$ stably expressed genes
 identified by \cite{czechowski2005genome} from a developmental series of
-microarray samples: $10$ out of these $106$ genes (see Table 4 in the
+microarray samples: \overlapGeneCze out of these \overlapGene genes (see Table 4 in the
 supplement material for details),
 \begin{center}
 \begin{quote}
-	AT5G46630, AT4G24550, AT1G13320, AT5G26760, AT1G10430, \\
-	AT4G27120, AT3G01150, AT3G10330, AT4G32560, AT2G20790,
+%	AT5G46630, AT4G24550, AT1G13320, AT5G26760, AT1G10430, \\
+%	AT4G27120, AT3G01150, AT3G10330, AT4G32560, AT2G20790, \\
+	AT1G10430, AT1G13320, AT1G54080, AT2G20790, \\
+	AT2G32170, AT3G10330, AT4G24550, AT4G27120 \\
 \end{quote}
 \end{center}
 appeared in the list of top $100$ stably expressed genes
-out of $14000$ genes he examined (the probability is $3.68\times10^{-10}$ for
-a list of $106$ genes random selected from a set of $14000$ genes to have an
-overlap of size $10$ or more with a pre-selected list of $100$ genes). In
+out of $14000$ genes he examined (the probability is \overlapProb for
+a list of \overlapGene genes random selected from a set of $14000$ genes to have an
+overlap of size \overlapGeneCze or more with a pre-selected list of $100$ genes). In
 particular, one gene, AT1G13320, is in all ten but one list of top 500 stably
 expressed genes identified by \cite{czechowski2005genome} for different
 experimental and experimental conditions (the only exception is the set of
 diurnal series), and is also identified by
 \cite{hong2010identification} as a stably expressed gene under all six but one
-experimental conditions he examined.  This gene is ranked 446 (top 1.8\%), 112
-(top 0.5\%), 687 (top 2.9\%) according to our stability measure in the three
+experimental conditions he examined.  This gene is ranked \rankInSeedling (top \rankTopPctSeedling), \rankInLeaf
+(top \rankTopPctLeaf), \rankInTissue (top \rankTopPctTissue) according to our stability measure in the three
 groups we examined.
 This gene is a subunite of protein phosphatase type 2A complex and involves in
 regulation of phosphorylation and regulation of protein phosphatase type 2A
@@ -800,7 +824,7 @@ expressed according to the CV measure from a developmental series of
 microarray experiments (see Figure 1 of that paper).  
 In Figure \ref{expressionlevel1}, we compare the expression profiles 
 of these 10 genes from \cite{czechowski2005genome} to the expression profiles
-of five genes (AT1G26170, AT2G23140, AT2G26000, AT2G47760, AT5G58100) that we
+of five genes (\SelectFiveGene) that we
 randomly selected from the top 100 most stably expressed genes identified from
 the multi-tissue group RNA-Seq data according the total variance $\hat\sigma^2$.
 For each of the 15 genes, Figure \ref{expressionlevel1} shows the expression levels measured
@@ -813,7 +837,7 @@ GLMM in \ref{subsection:OurMethod}.
 	\includegraphics[width=14cm,height=6cm]{Figures/glmm.eps}
 	\includegraphics[width=14cm,height=6cm]{Figures/czechowski.eps}
 	\includegraphics[width=14cm,height=6cm]{Figures/hkg.eps}
-	\caption{Expression profiles of 15 genes---as measured by CPM---across 79
+	\caption{Expression profiles of 15 genes---as measured by CPM---across \howmanytissuesample
 	samples in the multi-tissue group. The 15 genes include 
 	five stably expressed genes (randomly selected out of the top 100)
 	identified by the total variance measure $\hat{\sigma}^2$ (GLMM), five stably
@@ -837,24 +861,26 @@ GLMM in \ref{subsection:OurMethod}.
 	variance components. Column 6 specifies the ranking according to the
 	total variance $\hat{\sigma}^2$ in the multi-tissue group.}
 	\label{table:15genes}
-	{\footnotesize\begin{tabular}{llrrrr}\\ \hline
+	\begin{tabular}{rp{2cm}p{2cm}p{2cm}p{2cm}p{1cm}}\\ \hline
 		Source                        & Gene      & betweeen-sample & between-treatment & between-experiment & Rank  \\  \hline
-		\multirow{5}{*}{GLMM}    & AT5G58100 & 0.0018          & 0.0008            & 0.0042             & 9     \\
-		& AT2G23140 & 0.0049          & 0.0058            & 0.0000             & 49    \\
-		& AT2G26000 & 0.0028          & 0.0002            & 0.0079             & 53    \\
-		& AT2G47760 & 0.0037          & 0.0031            & 0.0042             & 58    \\
-		& AT1G26170 & 0.0025          & 0.0025            & 0.0069             & 77    \\  \hline
-		\multirow{5}{*}{Czechowski} & AT2G28390 & 0.0032          & 0.0000            & 0.0042             & 13    \\
-		& AT1G13320 & 0.0029          & 0.0008            & 0.0230             & 687   \\
-		& AT1G59830 & 0.0043          & 0.0039            & 0.0199             & 782   \\
-		& AT4G34270 & 0.0062          & 0.0000            & 0.0328             & 1466  \\
-		& AT4G33380 & 0.0072          & 0.0033            & 0.0534             & 3136  \\   \hline
-	 \multirow{5}{*}{HKG}              & AT5G12250 & 0.0163          & 0.0192            & 0.1337             & 7832  \\   
-		& AT1G13440 & 0.0189          & 0.0089            & 0.1624             & 8420  \\
-		& AT5G60390 & 0.0082          & 0.0169            & 0.2150             & 9573  \\
-		& AT4G05320 & 0.0092          & 0.0089            & 0.2299             & 9749  \\
-		& AT3G18780 & 0.0360          & 0.0107            & 0.4168             & 12623  \\   \hline
-	\end{tabular}}
+		\multirow{5}{*}{GLMM}   & AT3G27530 & 0.0045 & 0.0000 & 0.0053 & 12 \\ 
+			 & AT1G63110 & 0.0025 & 0.0015 & 0.0102 & 58 \\ 
+			 & AT4G02560 & 0.0038 & 0.0018 & 0.0101 & 82 \\ 
+			 & AT5G53540 & 0.0025 & 0.0071 & 0.0066 & 93 \\ 
+			 & AT1G79280 & 0.0124 & 0.0000 & 0.0038 & 94 \\ \hline
+	
+	\multirow{5}{*}{Czechowski}  & AT2G28390 & 0.0034 & 0.0000 & 0.0111 & 62 \\ 
+			   & AT1G13320 & 0.0036 & 0.0003 & 0.0258 & 513 \\ 
+				& AT4G34270 & 0.0063 & 0.0000 & 0.0365 & 1074 \\ 
+				 & AT1G59830 & 0.0044 & 0.0039 & 0.0370 & 1211 \\ 
+				 & AT4G33380 & 0.0103 & 0.0016 & 0.0747 & 3404 \\ \hline
+				 
+	 \multirow{5}{*}{HKG}    & AT1G13440 & 0.0234 & 0.0058 & 0.1375 & 6562 \\ 
+		 & AT5G60390 & 0.0267 & 0.0068 & 0.2270 & 8867 \\ 
+		 & AT4G05320 & 0.0123 & 0.0094 & 0.2690 & 9409 \\ 
+		 & AT5G12250 & 0.0313 & 0.0128 & 0.3262 & 10589 \\ 
+		 & AT3G18780 & 0.0375 & 0.0211 & 1.0313 & 14951 \\ \hline 
+	\end{tabular}
 \end{table}
 
 % also, Czechowski's reference genes are
@@ -1096,7 +1122,7 @@ shows the histograms of the percentages.
 Figure \ref{fig:all} shows the stacked bar plot of variance components 
 estimated from the multi-tissue group for 20
 genes randomly selected from the top 1000 stably expressed genes 
-and 20 genes randomly selected from 23666 genes. 
+and 20 genes randomly selected from 23611 genes. 
 As expected, the between-experiment variance component, on average, explains
 the largest proportion of the total variation. In the group of leaf
 experiments, the between-treatment variation is markedly greater than the
@@ -1127,9 +1153,9 @@ between leaf samples.
 
      \begin{tabular}{lp{3cm}p{2.5cm}p{3cm}}\hline
      Source & Seedling & Leaf & Multi-tissue \\  \hline
-	 between-sample     & 12.3\%   & 16.0\% & 8.4\%           \\
-	 between-treatment  & 13.4\%   & 28.0\% & 6.6\%           \\
-	 between-experiment & 74.3\%   & 56.0\% & 85.0\%         \\ \hline
+		between-sample & 7.2\% & 16.0\% & 7.6\% \\ 
+		between-treatment & 20.1\% & 28.0\% & 5.1\% \\ 
+		between-experiment & 72.6\% & 56.0\% & 87.3\% \\ \hline
      \end{tabular} \end{table} \end{center}
 
  \begin{figure}[!ht]
@@ -1305,7 +1331,7 @@ The plots and correlation coefficients suggest using between 100 and 1000
 genes tend to give similar normalization factor estimates. We also used the
 top 10, 100, 1000, and 10000 stably expressed genes identified from the
 seedling group as reference set for estimating normalization factors for a set
-of six seedling samples from a new experiment (GSE66666, \cite{capella2015arabidopsis}). The largest Pearson correlation
+of six seedling samples from a new experiment (GSE50597, \cite{juntawong2014translational}). The largest Pearson correlation
 $0.995$ is between the normalization factors estimated using the top $1000$
 and top $10000$ stably expressed genes as reference. Based on the above
 observations, using 1000 most stably expressed genes as reference seems to be
@@ -1321,7 +1347,7 @@ a reasonable heuristic rule.
 		\includegraphics[scale=0.34]{Figures/norm_seedling.eps}
 		\includegraphics[scale=0.34]{Figures/norm_leaf.eps}
 		\includegraphics[scale=0.34]{Figures/norm_tissue.eps}
-		\includegraphics[scale=0.34]{Figures/norm_GSE66666.eps}
+		\includegraphics[scale=0.34]{Figures/norm_GSE50597.eps}
 		\caption{Matrices of scatter plots of normalization factors
 		estimated using different reference gene sets. 
 		The upper-left, upper-right and lower-left plots show
@@ -1331,7 +1357,7 @@ a reasonable heuristic rule.
 		expressed genes are used as reference to
 		calculate the normalization factors.
 		The lower right plot shows the normalization factors estimated for a new seedling
-		experiment (GSE66666, with sample size 6) using the top 10--10,000
+		experiment (GSE50597, with sample size 8) using the top 10--10,000
 		stably expressed genes identified from the seedling group as
 		reference. The normalization factors are estimated using the
 		method described in Section \ref{section:countNormalization}.}
@@ -1457,7 +1483,7 @@ The R codes for reproducing results in this paper are available at Github:
 
 
 
-\textbf{Acknowledgment}: Research reported in this publication was partially supported by the National Institute of General Medical Sciences of the National Institutes of Health under Award Number R01GM104977 (to YD, SCE, and JHC). We thank Duo Jiang and Wanli Zhang for helpful discussions. This article is part of doctor dissertation written by BZ under the supervision of YD. 
+\textbf{Acknowledgment}: Research reported in this publication was supported by the National Institute of General Medical Sciences of the National Institutes of Health under Award Number R01GM104977 (to YD, SCE, and JHC). We thank Duo Jiang and Wanli Zhang for helpful discussions. This article is part of doctor dissertation written by BZ under the supervision of YD. 
 
 \textbf{Supplemental Material}: The online version of this article offers supplementary material,
 available to authorized users.
