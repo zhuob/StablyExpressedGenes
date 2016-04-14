@@ -47,21 +47,26 @@ mean_cpm <- function(set, top = 1000){
 
 
 
-compare.3Set <- function(seedling, leaf, tissue, top = 1000){
+compare.3Set <- function(var_seedling, var_leaf, var_tissue, top = 1000){
 # compare the stably expressed genes from Seedling, Leaf, and Tissue
 ## seedling leaf tissue are object returned from the estimate.var.comp() function
   
-            var_comp1 <- seedling$var.comp
-            var_comp2 <- leaf$var.comp
-            var_comp3 <- tissue$var.comp
+            var_comp1 <- var_seedling$var.comp
+            var_comp2 <- var_leaf$var.comp
+            var_comp3 <- var_tissue$var.comp
 
             seedling_list <- var_comp1$Gene[var_comp1$Rank <= top]
             leaf_list <- var_comp2$Gene[var_comp2$Rank <= top]
             tissue_list <- var_comp3$Gene[var_comp3$Rank <= top]
 
             common_gene <- intersect(seedling_list, intersect(leaf_list, tissue_list))
-   
-            return(common_gene)
+            
+            d1 <- var_comp1[var_comp1[, 1] %in% common_gene, c(1, 7)];
+            d2 <- var_comp2[var_comp2[, 1] %in% common_gene, c(1, 7)]
+            d3 <- var_comp3[var_comp3[, 1] %in% common_gene, c(1, 7)]
+            dat <- merge(merge(d1, d2, by = "Gene"), d3, by = "Gene")
+            colnames(dat) <- c("Gene", "Rank_in_seedling", "Rank_in_leaf", "Rank_in_tissue")
+            return(dat)
             
     }
 

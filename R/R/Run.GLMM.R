@@ -4,9 +4,9 @@
 CodeNeeded <- paste(CodePath, "estimate.var.component.R", sep="")
 source(CodeNeeded)
 
-dataname <- c("tissue", "leaf", "seedling")
+# dataname <- c("tissue", "leaf", "seedling")
 
-# dataname <- "seedling_Mar302016"
+dataname <- "seedling"
 for ( i in 1:length(dataname)){
   
   dataobj <- paste(DataPath, dataname[i], ".rds", sep="")

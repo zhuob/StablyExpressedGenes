@@ -297,7 +297,7 @@ plot.density <- function(set, figure.num, textsize = rep(30, 4), legend = F)
             plot.title = element_text(size = textsize[2]), 
             axis.text=element_text(size=textsize[3]), 
             axis.title=element_text(size=textsize[4],face="bold") ) +
-      labs(title=figure.num) + 
+      labs(title=figure.num, x = "Percentage", y = "Density") + 
       guides(fill = guide_legend(keywidth = 1, keyheight = 1), 
              linetype = guide_legend(keywidth = 2, keyheight = 1), 
              colour = guide_legend(keywidth = 3, keyheight = 1))
@@ -318,7 +318,7 @@ plot.density <- function(set, figure.num, textsize = rep(30, 4), legend = F)
               axis.text=element_text(size=textsize[3]), 
               axis.title=element_text(size=textsize[4],face="bold") ) +
         guides(guide_legend(show= F) )+ 
-        labs(title=figure.num)
+        labs(title=figure.num, x = "Percentage", y = "Density")
       print(p_fig)
     }
     
