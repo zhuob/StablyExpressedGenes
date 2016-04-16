@@ -260,12 +260,12 @@ print(A15)
 dev.off()
 
 ## plot norm.factors of a new data set GSE66666
-newdata <- readRDS(paste(DataPath, "GSE50597.rds", sep=""))
-var_new <- var_seedling
+newdata <- readRDS(paste(DataPath, "GSE64410.rds", sep=""))
+var_new <- var_tissue
 var_new$count <- newdata
 
 setEPS() 
-postscript(paste(FigurePath, "norm_GSE50597.eps", sep=""), width = 8, height = 8)
+postscript(paste(FigurePath, "norm_GSE64410.eps", sep=""), width = 8, height = 8)
 A16 <- plot.pair.normfactor(var_new, text.size)
 print(A16) 
 dev.off()

@@ -45,11 +45,10 @@
 \newcommand{\SelectFiveGene}{AT1G63110, AT1G79280, AT3G27530, AT4G02560, AT5G53540}
 \newcommand{\recalltophundred}{29~}
 \newcommand{\recalltopthousand}{98~}
-\newcommand{\rankcorrelation}{0.97~}
+\newcommand{\recallrankcorrelation}{0.97~}
 %\usepackage{array,arydshln}  % CREATE DASH LINE
-\title{Identification of stably expressed genes from Arabidopsis RNA-Seq data}
+\title{Identifying stably expressed genes from multiple RNA-Seq data sets}
 \date{} % Today's date or a custom date
-
 
 
 %\hypersetup{
@@ -146,7 +145,9 @@ Our main points include:
 % \maketitle
 
 \begin{center}
-{\Large Identification of stably expressed genes from Arabidopsis RNA-Seq data}\\
+% {\Large Identification of stably expressed genes from Arabidopsis RNA-Seq data}\\
+
+{\Large Identifying stably expressed genes from multiple RNA-Seq data sets}
 
 \today
 
@@ -380,7 +381,7 @@ the three groups.
 	Group & \#  experiments & \# treatments  & \# samples & \# genes \\ \hline
 	seedling &   9 &  27 &  60 & 22207 \\ 
 	leaf &   5 &  28 &  60 & 20967 \\ 
-	multi-tissue &  10 &  39 &  91 & 23611 \\ \hline
+	multi-tissue &  10 &  39 &  91 & 11 \\ \hline
 	\label{table:TableSet3}
     \end{tabular}
 \end{table}
@@ -406,7 +407,9 @@ Arabidopsis experiments satisfying the following conditions: 1.  Ecotype =
 Columbia samples to other ecotypes); 2. There are at least two treatments and 2 biological replicates for each
 treatment; 3. Library strategy= ``RNA-Seq"; 4.
 Library source = ``transcriptomic"; 5.  Library selection= ``cDNA"; 6.  Library
-layout = ``Single End";  We screened all the Arabidopsis experiments available from the NCBI
+layout = ``Single End"; 7. If there are repeated measurements over time, we choose samples from one time point. 
+
+ We screened all the Arabidopsis experiments available from the NCBI
 GEO repository up to May 31, 2015 and downloaded raw RNA-Seq data (Sequence Read Archive files)
 from 49 experiments. % Each data set is named by its unique accession number. 
 
@@ -418,18 +421,16 @@ mapped read counts are unavailable for some experiments and the available ones
 are from different processing pipelines.  
 Our pipeline, implemented using the software R \citep{Rpackage}, is summarized as follows: 
 \begin{enumerate}
-    \item Convert the Sequence Read Archive (SRA) files to FASTQ files using the NCBI SRA Toolkit (\cite{leinonen2010sequence}, version 2.3.5-2). %\url{http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?cmd=show&f=software&m=software&s=software}). 
-    \item
-	Align short reads in FASTQ files,  using the \verb|align()| function from 
-	Subread aligner (RSubread, version 1.16.2, \citealt{liao2013subread}) in the software R
-	\citep{ Rpackage}, to the Arabidopsis reference genome
-	   \begin{quote}
-	   	\verb|Arabidopsis_thaliana.TAIR10.22.dna.toplevel.fa |
-	   \end{quote} 
-	downloaded from the \textit{ Ensembl plants FTP server} (\url{http://plants.ensembl.org/info/data/ftp/index. html}). 
-	 
-
-
+    \item Convert the Sequence Read Archive (SRA) files to FASTQ files using the NCBI SRA Toolkit (\cite{leinonen2010sequence}, version 2.3.5-2).
+     %\url{http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?cmd=show&f=software&m=software&s=software}). 
+    \item Download the reference genome 
+         \begin{quote}
+    	\verb|Arabidopsis_thaliana.TAIR10.22.dna.toplevel.fa |
+    \end{quote} 
+    from the \textit{ Ensembl plants FTP server} (\url{http://plants.ensembl.org/info/data/ftp/index. html}) and build index using \verb|build()| function from 
+    Subread aligner (RSubread, version 1.16.2, \citealt{liao2013subread}) in the software R
+    \citep{ Rpackage}. The index allows fast retrieval of the sets of positions in the reference genome where the short reads are more likely to align. 
+    \item Align short reads in FASTQ files to the Arabidopsis reference genome using the \verb|align()| function from Rsubread. 
  %As suggested by\cite{anders2013count}, "FASTA(DNA)" link was chosen because
  %samples were aligned to the genome. .  
  \item
@@ -787,8 +788,10 @@ supplement material for details),
 \begin{quote}
 %	AT5G46630, AT4G24550, AT1G13320, AT5G26760, AT1G10430, \\
 %	AT4G27120, AT3G01150, AT3G10330, AT4G32560, AT2G20790, \\
-	AT1G10430, AT1G13320, AT1G54080, AT2G20790, \\
-	AT2G32170, AT3G10330, AT4G24550, AT4G27120 \\
+%	AT1G10430, AT1G13320, AT1G54080, AT2G20790, \\
+%	AT2G32170, AT3G10330, AT4G24550, AT4G27120 \\
+AT1G13320, AT1G54080, AT2G20790, AT2G32170, AT3G10330,
+AT4G24550, AT5G26760, AT5G46210, AT5G46630 
 \end{quote}
 \end{center}
 appeared in the list of top $100$ stably expressed genes
@@ -828,7 +831,7 @@ of five genes (\SelectFiveGene) that we
 randomly selected from the top 100 most stably expressed genes identified from
 the multi-tissue group RNA-Seq data according the total variance $\hat\sigma^2$.
 For each of the 15 genes, Figure \ref{expressionlevel1} shows the expression levels measured
-in CPM over 79 samples in the eight experiments in the multi-tissue group,
+in CPM over \howmanytissuesample samples in the eight experiments in the multi-tissue group,
 and Table \ref{table:15genes} summarizes the variance components estimated from the
 GLMM in \ref{subsection:OurMethod}. 
 
@@ -861,14 +864,15 @@ GLMM in \ref{subsection:OurMethod}.
 	variance components. Column 6 specifies the ranking according to the
 	total variance $\hat{\sigma}^2$ in the multi-tissue group.}
 	\label{table:15genes}
-	\begin{tabular}{rp{2cm}p{2cm}p{2cm}p{2cm}p{1cm}}\\ \hline
+	\begin{tabular}{rp{2cm}p{2cm}p{2cm}p{2cm}rp{1cm}}\\ \hline
 		Source                        & Gene      & betweeen-sample & between-treatment & between-experiment & Rank  \\  \hline
-		\multirow{5}{*}{GLMM}   & AT3G27530 & 0.0045 & 0.0000 & 0.0053 & 12 \\ 
-			 & AT1G63110 & 0.0025 & 0.0015 & 0.0102 & 58 \\ 
-			 & AT4G02560 & 0.0038 & 0.0018 & 0.0101 & 82 \\ 
-			 & AT5G53540 & 0.0025 & 0.0071 & 0.0066 & 93 \\ 
-			 & AT1G79280 & 0.0124 & 0.0000 & 0.0038 & 94 \\ \hline
-	
+		\multirow{5}{*}{GLMM}   
+		 & AT1G75420 & 0.0012 & 0.0014 & 0.0050 & 5 \\ 
+		  & AT5G48340 & 0.0042 & 0.0019 & 0.0074 & 46 \\ 
+		  & AT2G32910 & 0.0007 & 0.0019 & 0.0113 & 53 \\ 
+		  & AT1G64840 & 0.0051 & 0.0008 & 0.0095 & 72 \\ 
+		  & AT3G51310 & 0.0028 & 0.0025 & 0.0100 & 73 \\ \hline
+	 
 	\multirow{5}{*}{Czechowski}  & AT2G28390 & 0.0034 & 0.0000 & 0.0111 & 62 \\ 
 			   & AT1G13320 & 0.0036 & 0.0003 & 0.0258 & 513 \\ 
 				& AT4G34270 & 0.0063 & 0.0000 & 0.0365 & 1074 \\ 
@@ -954,7 +958,7 @@ We have the following observations:
 	reference sets, but using a different stability measure ($M$-value in
 	geNorm). This list has significant overlap with the top
 	stably-expressed genes identified using the total variance measure:
-	$35$ and $99$ out of the $100$ genes from the list $L_1$ are among the
+	\recalltophundred and \recalltopthousand out of the $100$ genes from the list $L_1$ are among the
 	top $100$ and $1000$ most stably-expressed genes, respectively, from the
 	multi-tissue group identified using the total variance measure. 
     \item
@@ -1000,7 +1004,7 @@ We have the following observations:
 
 When applied to the same set of samples, the $M$-value and total variance
 measure $\hat\sigma^2$ give similar expression stability ranking: the rank
-correlation is $0.97$ (see also, observation 1 above).
+correlation is \recallrankcorrelation (see also, observation 1 above).
 % there is significant overlap between the sets of most stably-expressed genes identified
 % according to the $M$-value measure and according to the total variance
 % measure $\hat\sigma^2$$
@@ -1064,7 +1068,7 @@ expression patterns of genes 1--3 and genes 6 and 7 are considered relatively
 more extreme; once genes 6 and 7 are removed, however, the ``middle of the
 pack'' is shifted towards the expression patterns of genes 1--3, and thus
 genes 1--3 become the most stably expressed.  With this understanding, one
-could and should make a concious decision on whether such a behavior as
+could and should make a conscious decision on whether such a behavior as
 described above is desirable or not.  
 
 The point we want to emphasize is that the gene stability is a relative concept
@@ -1117,30 +1121,47 @@ The estimated variance components tell us how much each component contributes
 to the overall count variation. Table \ref{table:percentageofvariation}
 summarizes the percentages---averaged over all genes---of the total variance
 attributable to each of the three components for three groups of RNA-Seq
-samples (seedling, leaf and multi-tissue groups in Section \ref{section:DataCollection}). Figure \ref{fig:densityplot}
-shows the histograms of the percentages. 
-Figure \ref{fig:all} shows the stacked bar plot of variance components 
-estimated from the multi-tissue group for 20
-genes randomly selected from the top 1000 stably expressed genes 
-and 20 genes randomly selected from 23611 genes. 
-As expected, the between-experiment variance component, on average, explains
-the largest proportion of the total variation. In the group of leaf
-experiments, the between-treatment variation is markedly greater than the
-between-sample variation, suggesting the existence of a higher proportion of DE genes.
-%The between-experiment variation, on average, is largest in the multi-tissue group
-One implication is that DE is easier to detect in
-this group of experiments.  
-Our intuition is that leaf samples tend
-to be more homogeneous and thus the treatment effect is easier to detect
-between leaf samples.
+samples (seedling, leaf and multi-tissue groups in Section
+\ref{section:DataCollection}). Figure \ref{fig:densityplot} shows the
+histograms of the percentages.  Figure \ref{fig:all} shows the stacked bar
+plot of variance components estimated from the multi-tissue group for 20 genes
+randomly selected from the top 1000 stably expressed genes and 20 genes
+randomly selected from 23611 genes.  As expected, the between-experiment
+variance component, on average, explains the largest proportion of the total
+variation. The between-experiment variation is relatively smaller among the
+leaf samples, indicating that the leaf samples are more homogeneous.  There is
+more variation in the relative percentages of total variance explained by the
+between-sample and between-treatment variance components. In principle, the
+between-treatment variation will be greater when there is a higher proportion
+of DE genes or when the samples are more homogeneous. In practice, the
+between-sample variance depends greatly on what samples are used as biological
+replicates. 
 
+%The between-experiment variation, on average, is largest in the multi-tissue group
+% One implication is that DE is easier to detect in
+%this group of experiments.  
+%Our intuition is that leaf samples tend
+%to be more homogeneous and thus the treatment effect is easier to detect
+%between leaf samples.
+%
+%
+%In the group of leaf
+%experiments, the between-treatment variation is markedly greater than the
+%between-sample variation, suggesting the existence of a higher proportion of DE genes.
+%%The between-experiment variation, on average, is largest in the multi-tissue group
+%One implication is that DE is easier to detect in
+%this group of experiments.  
+%Our intuition is that leaf samples tend
+%to be more homogeneous and thus the treatment effect is easier to detect
+%between leaf samples.
+%
 %([Ask Jeff], one implication is that DE is easier to detect in
 %this group of experiments.  
 % Our intuition is that leaf samples tend
 %to be more homogeneous and thus the treatment effect is easier to detect
 %between leaf samples. ) 
  
- \begin{center} 
+\begin{center} 
      \begin{table}[!ht] 
 	 \centering 
 	 \caption{Percentages---averaged over all genes---of the total
@@ -1330,10 +1351,10 @@ normalization factors estimated from the two settings are highly consistent.
 The plots and correlation coefficients suggest using between 100 and 1000
 genes tend to give similar normalization factor estimates. We also used the
 top 10, 100, 1000, and 10000 stably expressed genes identified from the
-seedling group as reference set for estimating normalization factors for a set
-of six seedling samples from a new experiment (GSE50597, \cite{juntawong2014translational}). The largest Pearson correlation
-$0.995$ is between the normalization factors estimated using the top $1000$
-and top $10000$ stably expressed genes as reference. Based on the above
+multi-tissue group as reference set for estimating normalization factors for a set
+of 48 root samples from a new experiment (GSE64410, \cite{vragovic2015translatome}). The largest Pearson correlation
+$0.993$ is between the normalization factors estimated using the top $100$
+and top $1000$ stably expressed genes as reference. Based on the above
 observations, using 1000 most stably expressed genes as reference seems to be
 a reasonable heuristic rule.
 
@@ -1347,7 +1368,7 @@ a reasonable heuristic rule.
 		\includegraphics[scale=0.34]{Figures/norm_seedling.eps}
 		\includegraphics[scale=0.34]{Figures/norm_leaf.eps}
 		\includegraphics[scale=0.34]{Figures/norm_tissue.eps}
-		\includegraphics[scale=0.34]{Figures/norm_GSE50597.eps}
+		\includegraphics[scale=0.34]{Figures/norm_GSE64410.eps}
 		\caption{Matrices of scatter plots of normalization factors
 		estimated using different reference gene sets. 
 		The upper-left, upper-right and lower-left plots show
@@ -1356,9 +1377,9 @@ a reasonable heuristic rule.
 		In each case, the top 10, 100, 1000, and 10,000 stably
 		expressed genes are used as reference to
 		calculate the normalization factors.
-		The lower right plot shows the normalization factors estimated for a new seedling
-		experiment (GSE50597, with sample size 8) using the top 10--10,000
-		stably expressed genes identified from the seedling group as
+		The lower right plot shows the normalization factors estimated for a new root
+		experiment (GSE64410, with sample size 48) using the top 10--10,000
+		stably expressed genes identified from the multi-tissue group as
 		reference. The normalization factors are estimated using the
 		method described in Section \ref{section:countNormalization}.}
 		\label{fig:normfactor} \end{center} \end{figure}
@@ -1432,7 +1453,6 @@ future.
 %   from treatment effect (16.2\% - 25.0\%) and biological sample variation is
 %   the smallest. 
 
-
 %(To Discussion ???) {\bf Further discussion} Previous studies showed that
 %normalization are needed to account for nuisance effects, including
 %\textit{between-sample} effects, e.g., sequencing depths, flow-cell/library
@@ -1465,17 +1485,29 @@ future.
 To identify a set of stably expressed genes, our method still need to estimate
 an initial set of normalization factors where we need to make assumptions
 about relative fold changes between samples. This kind of circular dependence
-seems unavoidable \citep{vandesompele2002accurate}. In this paper, we used a one-step iteration strategy to reduce the dependence on the initially estimated
-normalization factors.  In the future, we will attempt to identify orthologous genes that are stably expressed. 
+seems unavoidable \citep{vandesompele2002accurate}. In this paper, we used a
+one-step iteration strategy to reduce the dependence on the initially
+estimated normalization factors.  In the future, we will attempt to identify
+orthologous genes that are stably expressed.  In future, we intend to look at
+the genes through evolutionary genetics methods (REFs, 1001 genomes? Jeff?):
+evolutionary genetics methods can help us understand, for example, which genes
+are well preserved through the Arabidopsis evolutionary history. However, we
+need to be mindful that a well conserved gene is not necessarily stably
+expressed. 
 
-In future, we intend to look at the genes through
-evolutionary genetics methods (REFs, 1001 genomes? Jeff?): evolutionary genetics methods can help us understand, 
-for example, which genes are well preserved through the
-Arabidopsis evolutionary history. However, we need to be mindful that a well
-conserved gene is not necessarily stably expressed. 
 
-%(How do we use the identified stably expressed genes?) QC, Reproducibility and
-%replicability?
+(How do we use the identified stably expressed genes?) QC, Reproducibility and
+replicability?)
+In the GLMM model, the random effect terms such as the sample and treatment
+effects are modelled as normal random variables (REF). For the purpose of the
+identifying stably expressed genes, this should be adequate, since we are
+mainly interested in the variance of these random effects (i.e., the variance
+components). In future, it may also be of interest to model these random
+effects more accurately, for example, in order to build a prior for analyzing
+a new data set.  A more careful examination of the individual data sets
+suggests that the between-sample variance varies greatly between experiments.
+Our observation suggests different labs often have different understanding of
+what is deemed as ``biological replicates''.
 
 
 The R codes for reproducing results in this paper are available at Github:
