@@ -1,27 +1,19 @@
 \documentclass[letterpaper,12pt]{article}
 \usepackage{dgjournal}   % copied from the journal
 \usepackage{mathptmx}	% copied from the journal
-\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib} % copied from the journal
-\usepackage{url}
+\usepackage[authoryear,comma,sectionbib]{natbib} % copied from the journal
 
+
+% packages used in this article
+\usepackage{url}
 \usepackage{caption}
 \captionsetup[figure]{labelfont=bf}
 \captionsetup[table]{labelfont=bf}
-
 \usepackage{graphicx}
 \usepackage{amsmath, bm}
-\usepackage{natbib}
-\usepackage[utf8]{inputenc}    
-\usepackage{natbib}
-\usepackage[usenames,dvipsnames]{xcolor}
-%\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % commented 
-%\usepackage{hyperref}
-\usepackage[outdir=./]{epstopdf}
-\usepackage{lscape}
-\usepackage{float}  % PUT FIGURE HERE
 \usepackage{multirow}
-\usepackage{booktabs} % Create TABS
-\usepackage{tabularx,ragged2e}
+
+
 \DeclareMathOperator{\median}{median}
 
 
@@ -46,18 +38,11 @@
 \newcommand{\recalltophundred}{29~}
 \newcommand{\recalltopthousand}{98~}
 \newcommand{\recallrankcorrelation}{0.97~}
-%\usepackage{array,arydshln}  % CREATE DASH LINE
 \title{Identifying stably expressed genes from multiple RNA-Seq data sets}
 \date{} % Today's date or a custom date
 
 
-%\hypersetup{
-%    colorlinks,
-%    citecolor=blue,
-%    filecolor=blue,
-%    linkcolor=blue,
-%    urlcolor=blue
-%}
+
 
 \begin{document}
 	
@@ -381,7 +366,7 @@ the three groups.
 	Group & \#  experiments & \# treatments  & \# samples & \# genes \\ \hline
 	seedling &   9 &  27 &  60 & 22207 \\ 
 	leaf &   5 &  28 &  60 & 20967 \\ 
-	multi-tissue &  10 &  39 &  91 & 11 \\ \hline
+	multi-tissue &  10 &  39 &  91 & 23611 \\ \hline
 	\label{table:TableSet3}
     \end{tabular}
 \end{table}
@@ -569,7 +554,7 @@ factors:
 In practice, this one-step method seems to be adequate and further iterations
 will only slightly change the set of 1000 stably expressed genes.  For
 example, for multi-tissue group of experiments, if we were to run one more
-iteration of steps 2 and 3, there would be $956$ overlapping genes between
+iteration of steps 2 and 3, there would be $946$ overlapping genes between
 the top 1000 genes from the first iteration and those from the second
 iteration.
 
@@ -790,8 +775,8 @@ supplement material for details),
 %	AT4G27120, AT3G01150, AT3G10330, AT4G32560, AT2G20790, \\
 %	AT1G10430, AT1G13320, AT1G54080, AT2G20790, \\
 %	AT2G32170, AT3G10330, AT4G24550, AT4G27120 \\
-AT1G13320, AT1G54080, AT2G20790, AT2G32170, AT3G10330,
-AT4G24550, AT5G26760, AT5G46210, AT5G46630 
+AT1G13320, AT1G54080, AT2G20790, AT2G32170, AT3G10330,\\
+ AT4G24550, AT5G26760, AT5G46210, AT5G46630 \\
 \end{quote}
 \end{center}
 appeared in the list of top $100$ stably expressed genes
