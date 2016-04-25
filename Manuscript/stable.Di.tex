@@ -250,14 +250,15 @@ datasets.
 % We will further discuss these points in the discussion Section \ref{section:discussion}.
 
 
-We want to clarify that there is a distinction between
-numerical stability and biological stability---often times, we may not
+We want to clarify that having stably gene expression is not
+equivalent to maintaining a stable biological function.
+% a distinction between numerical stability and biological stability---
+Often times, we may not
 understand the biological functions of genes with numerically stable
-expression measures.  From an operational point of view, however, numerical
+expression measures. From an operational point of view, however, numerical
 stability is more tractable. In pre-genomic era, the so-called ``\textit{house-keeping
 genes}" are often considered as candidates of reference genes for
-normalization \citep{bustin2002quantification, andersen2004normalization},
-(REF Fernandes et al.  2008). House-keeping
+normalization \citep{bustin2002quantification, andersen2004normalization}. House-keeping
 genes are typically constitutive genes that
 maintain basic cellular function, and therefore are expected to express at
 relatively constant levels in non-pathological situations.  However, many
@@ -1377,7 +1378,7 @@ genes from microarray data. Since DE is measured by relative frequencies, we
 argue that DE is a relative concept and using an explicit reference gene set
 can improve interpretability of DE results, and furthermore,  using a common
 reference gene set can avoid inconsistent conclusions when comparing multiple
-experiments(see section REF).
+experiments (see Section \ref{Section:commonReference}).
 
 %We emphasize that numerical stability is not equivalent to biological
 %stability (??? Jeff, about  ``biological stability'': do
@@ -1484,7 +1485,7 @@ expressed.
 (How do we use the identified stably expressed genes?) QC, Reproducibility and
 replicability?)
 In the GLMM model, the random effect terms such as the sample and treatment
-effects are modelled as normal random variables (REF). For the purpose of the
+effects are modeled as normal random variables (Section \ref{subsection:OurMethod}). For the purpose of the
 identifying stably expressed genes, this should be adequate, since we are
 mainly interested in the variance of these random effects (i.e., the variance
 components). In future, it may also be of interest to model these random
