@@ -1398,7 +1398,7 @@ the reference sample sets used, the technology used for measuring gene
 expression, and the specific numerical stability measure used.  In this study,
 to illustrate our proposed methods, we identified three sets of stably expressed
 genes from three sets of Arabidopsis experiments. The major point is that
-stably genes identified from different settings will provide different
+stably expressed genes identified from different settings will provide different
 biological contexts for evaluating differential expression. In practice,
 researchers can choose the specific context. A practical challenge in applying
 such a philosophy is that no two experiments will have identical settings,
@@ -1483,21 +1483,21 @@ and help us identify genes that are well conserved through the evolutionary
 history. We need to be mindful that a well conserved gene is not necessarily
 stably expressed, just like the house-keeping genes. However, it would be
 interesting to ask whether there is correlation between measures of expression
-stability and measures of conservativeness, and so son.
+stability and measures of conservativeness, and so on.
 
 % (How do we use the identified stably expressed genes?) QC, Reproducibility and
 % replicability?)
 
 In the GLMM model we fit, the random effect terms such as the sample and treatment
 effects were modeled as normal random variables (Section
-\ref{subsection:OurMethod}). For the purpose of the identifying stably
+\ref{subsection:OurMethod}). For the purpose of identifying stably
 expressed genes, this should be adequate, since we are mainly interested in
-the variance of these random effects (i.e., the variance components). In
+the variances of these random effects (i.e., the variance components). In the
 future, it may also be of interest to model these random effects more
 accurately, for example, in order to build a prior distribution of the random
 effect terms for analyzing a new data set. A more careful examination of the
 individual data sets suggests that the between-sample variance varies greatly
-between experiments. Our observation suggests different labs often have
+between experiments. Our observation suggests that different labs often have
 different understanding of what is deemed as ``biological replicates''.
 
 The R codes for reproducing results in this paper are available at Github:

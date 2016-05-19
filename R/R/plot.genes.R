@@ -71,7 +71,7 @@ plot.gene <- function(genelist, set, lower=1, upper=1e4, figure.num, textsize = 
           axis.text=element_text(size=textsize[3]), 
           axis.title=element_text(size=textsize[4],face="bold")) +
      scale_x_discrete(breaks = seq(1, length(x), 2) ) + 
-      guides(fill = guide_legend(title = "WTF", keywidth = 1, keyheight = 1),
+      guides(fill = guide_legend(title = "", keywidth = 1, keyheight = 1),
              linetype=guide_legend(keywidth = 3, keyheight = 1),
              colour=guide_legend(keywidth = 3, keyheight = 1)) +
     #+
