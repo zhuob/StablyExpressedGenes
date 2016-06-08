@@ -13,10 +13,10 @@
 \usepackage{amsmath, bm}
 \usepackage{multirow}
 
+\usepackage{subcaption}
+
 
 \DeclareMathOperator{\median}{median}
-
-
 \newcommand{\howmanySamples}{211~}
 \newcommand{\howmanylab}{24~}
 \newcommand{\howmanyseedlingsample}{60~}
@@ -251,7 +251,7 @@ datasets.
 % We will further discuss these points in the discussion Section \ref{section:discussion}.
 
 
-We want to clarify that having stably gene expression is not
+We want to clarify that having stable gene expression is not
 equivalent to maintaining a stable biological function.
 % a distinction between numerical stability and biological stability---
 Often times, we may not
@@ -285,7 +285,7 @@ expressed according numerical measures either.
 In this paper, we identify stably expressed genes from RNA-Seq data sets based
 on a numerical measure---the sum of three variance components estimated from a
 mixed-effect model. 
-For microarray data, there are many efforts to numerically find stably
+For microarray data, there have been many efforts to numerically find stably
 expressed genes by quantifying the variation of measured expression levels
 across a large number of microarray data sets.  For example,
 \cite{andersen2004normalization} used a linear mixed model to estimate the
@@ -376,7 +376,7 @@ the three groups.
 To find stably expressed genes in each group, we processed the raw
 sequencing data and summarized the results as count matrices of mapped RNA-Seq
 short reads (see details below).  We removed genes with low mean numbers (less
-than 3) of mapped read counts.  Such genes tend to be more prone to sequencing
+than 3) of mapped read counts for all experiments.  Such genes tend to be more prone to sequencing
 noise, less interesting to biologists, and also cause convergence issues when
 fitting statistical models. Many other researchers (such as \citealt{anders2013count})
 recommend removing such genes before analyzing RNA-Seq data.  The number of
@@ -643,7 +643,8 @@ The parameters $(\xi, \sigma_{\text{experiment}}^2,
 version 1.1.7), which uses a Gaussian-Hermite quadrature to approximate the
 likelihood function. 
 %For each gene, we estimate variance components $\hat\sigma_{\text{sample}}^2,  \hat\sigma_{\text{treatment}}^2,  \hat\sigma_{\text{experiment}}^2$  from (\ref{eq:GLMM}) and calculate the total variance $\hat\sigma^2$.
-We rank all the genes according to their values of $\hat{sigma}^2$ in increasing order (smallest first), and consider highly
+We rank all the genes according to their values of $\hat{\sigma}^2$ in increasing order (smallest 
+first), and consider highly
 ranked (e.g., top 1000) genes to be stably expressed. 
 
 Normal models (equation (\ref{eq:normalassumption})) are commonly assumed for
@@ -664,15 +665,19 @@ deviation devided by mean}, to find stably expressed genes from microarray data.
 
 The \textit{$M$-value} in geNorm \citep{vandesompele2002accurate} is a
 well-cited measure. For a set of $m_0$ genes, the $M$-value measure works as
-follows: first, the relative variation of gene $i_1$ to gene $i_2$ is calculated as the standard deviation
-of their log fold changes
-across all the $n$ samples; 
- 	\[V_{i_1, i_2} =\textit{st.dev} \left\{\log\left(\dfrac{y_{1,i_1}}{y_{1, i_2}}\right),\ldots, \log\left(\dfrac{y_{n, i_1}}{y_{n, i_2}}\right) \right\}\]
- next, the $M$-value for gene 
- $i_1$ is obtained by taking the average of $m_0-1$ relative variations, one
-for each pair of gene $i_1$ and the remaining $m_0-1$ genes;
-\[M_{i_1} = \frac{\sum_{k\neq i_1}V_{i_1, k}}{m_0-1},\] 
-In this way,  each of the $m_0$ genes is assigned an $M$ value to represent its corresponding expression stability. 
+follows: First, the {\em pairwise variation} between gene $i_1$ and gene $i_2$ is
+calculated as the standard deviation of the log fold changes between their
+expression levels across all the $n$ samples: 
+ 	\[V_{i_1, i_2} =\textit{st.dev}
+	\left\{\log\left(\dfrac{y_{1,i_1}}{y_{1, i_2}}\right),\ldots,
+	\log\left(\dfrac{y_{n, i_1}}{y_{n, i_2}}\right) \right\}.\]
+Next, the $M$-value for gene $i$ is defined as the average pairwise
+variation between gene $i$ and all other genes:
+\[M_{i} = \frac{\sum_{k\neq i}V_{i, k}}{m_0-1},\] 
+% is obtained by taking the average of $m_0-1$ relative variations, one
+% for each pair of gene $i_1$ and the remaining $m_0-1$ genes;
+% \[M_{i_1} = \frac{\sum_{k\neq i_1}V_{i_1, k}}{m_0-1},\] 
+% In this way,  each of the $m_0$ genes is assigned an $M$ value to represent its corresponding expression stability. 
 			
 
 In the Results section, we compare the $M$-value to the total variance measure
@@ -712,7 +717,7 @@ intuitive, but they are not often emphasized in practice.  In Section
 \ref{Section:commonReference}, we discuss how to use the identified stably
 expressed genes for count normalization.
 
-\subsection{Stably Expressed Genes}\label{section:stablyExpressedGene}
+\subsection{Stably expressed genes}\label{section:stablyExpressedGene}
 Using the total variance, $\hat\sigma^2$, from the GLMM (see
 equation (\ref{eq:GLMM}) in Section \ref{subsection:OurMethod}) as a
 stability measure, we identified stably expressed genes from the three groups
@@ -735,7 +740,7 @@ stably expressed genes for different biological contexts.
 % experiments on Arabidopsis seedlings; theleaf group consists 60 samples from 5
 % experiments on Arabidopsis leaves; andmulti-tissue-type group consists 79
 % samples from different 8 experiments ondifferent tissues types.  
-In Tables 1-3 in the online supplementary materials, we summarize the
+In Tables 1--3 in the online supplementary materials, we summarize the
 top 1000 most stably expressed genes in each group.  In Figure \ref{cpm}, we
 provide the histograms of the mean Count Per Million (CPM) for the 1000
 most stably expressed genes identified in each group. For each gene, the CPM
@@ -746,8 +751,8 @@ is computed as
 in each sample and the mean is computed over all samples.
  
 \begin{figure}[tbp] \begin{center}
-    \includegraphics[width=4.5cm,height=4cm]{Figures/cpm_seedling.eps}
-    \includegraphics[width=4.5cm,height=4cm]{Figures/cpm_leaves.eps}
+	\includegraphics[width=4.5cm,height=4cm]{Figures/cpm_seedling.eps}
+	\includegraphics[width=4.5cm,height=4cm]{Figures/cpm_leaves.eps}
     \includegraphics[width=4.5cm,height=4cm]{Figures/cpm_tissue.eps}
     \caption{{\small{\label{cpm} 
     Histograms of the mean CPM (see equation (\ref{eq:cpm})) for the top 1000
@@ -776,7 +781,7 @@ supplementary material for details),
 %	AT1G10430, AT1G13320, AT1G54080, AT2G20790, \\
 %	AT2G32170, AT3G10330, AT4G24550, AT4G27120 \\
 AT1G13320, AT1G54080, AT2G20790, AT2G32170, AT3G10330,\\
- AT4G24550, AT5G26760, AT5G46210, AT5G46630 \\
+ AT4G24550, AT5G26760, AT5G46210, AT5G46630, \\
 \end{quote}
 \end{center}
 appeared in the list of the top $100$ stably expressed genes
@@ -789,8 +794,8 @@ experimental and experimental conditions (the only exception is the set of
 diurnal series), and is also identified by
 \cite{hong2010identification} as a stably expressed gene under all but one of the six
 experimental conditions they examined.  This gene is ranked \rankInSeedling (top \rankTopPctSeedling), \rankInLeaf
-(top \rankTopPctLeaf), \rankInTissue (top \rankTopPctTissue) according to our stability measure in the three
-groups we examined.
+(top \rankTopPctLeaf), \rankInTissue (top \rankTopPctTissue) in the three
+groups we examined, respectively, according to our stability measure.
 This gene is a subunit of protein phosphatase type 2A complex and is involved in
 regulation of phosphorylation and regulation of protein phosphatase type 2A
 activity. It has been used as a reference gene for normalization in many
@@ -822,15 +827,21 @@ GLMM in \ref{subsection:OurMethod}.
 
 \begin{figure}[htbp]
     \begin{center}
-	\includegraphics[width=14cm,height=6cm]{Figures/glmm.eps}
-	\includegraphics[width=14cm,height=6cm]{Figures/czechowski.eps}
-	\includegraphics[width=14cm,height=6cm]{Figures/hkg.eps}
-	\caption{Expression profiles of 15 genes---as measured by CPM---across \howmanytissuesample
-	samples in the multi-tissue group. The 15 genes include 
-	five stably expressed genes (randomly selected out of the top 100)
-	identified by the total variance measure $\hat{\sigma}^2$ (GLMM), five stably
+	\begin{tabular}{c}
+	    (a)\\
+	    \includegraphics[width=14cm,height=6cm]{Figures/glmm.eps} \\
+	    (b) \\
+	    \includegraphics[width=14cm,height=6cm]{Figures/czechowski.eps} \\
+	    (c) \\
+	    \includegraphics[width=14cm,height=6cm]{Figures/hkg.eps}
+	\end{tabular}
+
+	\caption{Expression profiles of 15 genes---as measured by RNA-Seq CPM---across \howmanytissuesample
+	samples in the multi-tissue group. The 15 genes include (from top to
+	bottom) a) five stably expressed genes (randomly selected out of the top 100)
+	identified from the multi-tissue group RNA-Seq data using the total variance measure $\hat{\sigma}^2$, b) five stably
 	expressed identified by \citet{czechowski2005genome} according to the CV measure from a
-	developmental series of microarray experiments, and five
+	developmental series of microarray experiments, and c) five
 	traditional house-keeping genes (HKG) discussed in
 	\citet{czechowski2005genome}. 
 	}
@@ -843,22 +854,23 @@ GLMM in \ref{subsection:OurMethod}.
 % \usepackage{multirow}
 \begin{table}[]
 	\centering
-	\caption{Variance components estimated from the multi-tissue group for
-	the 15 genes in Figure~\ref{expressionlevel1}.
+	\caption{Variance components estimated from the multi-tissue group
+	RNA-Seq data for the 15 genes in Figure~\ref{expressionlevel1}
+	(identified from different sources).
 	Columns 3--5 are the estimated
-	variance components. Column 6 specifies the ranking according to the
+	variance components. Column 6 lists the stability ranking according to the
 	total variance $\hat{\sigma}^2$ in the multi-tissue group.}
 	\label{table:15genes}
 	\begin{tabular}{rp{2cm}p{2cm}p{2cm}p{2cm}rp{1cm}}\\ \hline
 		Source                        & Gene      & betweeen-sample & between-treatment & between-experiment & Rank  \\  \hline
-		\multirow{5}{*}{GLMM}   
+		\multirow{5}{*}{RNA-Seq}   
 		 & AT1G75420 & 0.0012 & 0.0014 & 0.0050 & 5 \\ 
 		  & AT5G48340 & 0.0042 & 0.0019 & 0.0074 & 46 \\ 
 		  & AT2G32910 & 0.0007 & 0.0019 & 0.0113 & 53 \\ 
 		  & AT1G64840 & 0.0051 & 0.0008 & 0.0095 & 72 \\ 
 		  & AT3G51310 & 0.0028 & 0.0025 & 0.0100 & 73 \\ \hline
 	 
-	\multirow{5}{*}{Czechowski}  & AT2G28390 & 0.0034 & 0.0000 & 0.0111 & 62 \\ 
+	\multirow{5}{*}{Microarray}  & AT2G28390 & 0.0034 & 0.0000 & 0.0111 & 62 \\ 
 			   & AT1G13320 & 0.0036 & 0.0003 & 0.0258 & 513 \\ 
 				& AT4G34270 & 0.0063 & 0.0000 & 0.0365 & 1074 \\ 
 				 & AT1G59830 & 0.0044 & 0.0039 & 0.0370 & 1211 \\ 
@@ -1023,7 +1035,7 @@ This implies for any two stably-expressed genes $i_1$ and $i_2$
 The first equation in (\ref{eq:DESeq2}) is equivalent to equation
 (\ref{eq:typical}). (In practical application of both methods, the stability
 of any single gene is evaluated by comparing its expression to a set of
-reference genes. See the Method section \ref{section:Methods} for more details.)
+reference genes. See the Method section \ref{section:countNormalization} for more details.)
 
 In practice, the geNorm program \citep{vandesompele2002accurate} is frequently
 used to rank a set of reference genes identified from other methods.  An
@@ -1278,8 +1290,10 @@ relative to the reference gene set.
 %	\end{center}
 
 Interpreting the DE results as relative to an explicit reference set is
-especially beneficial when one wants to compare results from an experiment to ones that are publicly available. 
-Furthermore, when the interest is in comparing different experiments, we recommend using a common reference set. 
+especially beneficial when one wants to compare DE results from an experiment
+to previously published results.
+% ones that are publicly available. 
+When the interest is in comparing different experiments, we recommend using a common reference set. 
 % In the Introduction, we also argued that using an explicit set of genes as
 % reference for normalization can improve interpretability of DE results, in the
 % sense that DE can always be interpreted as relative to the explicit reference
@@ -1323,10 +1337,10 @@ less than 10) or too many (e.g., using all genes) reference genes:
 intuitively, using too few, the estimates will be unstable; using too many,
 the results may be subject to influence from highly unstable genes.
 Our simple simulations suggest that using between 100 to 10000 genes seems to
-give stable results. In the first set of three examples, we use Anders and
+give stable results. In the first set of three examples, we used Anders and
 Huber's method (see equation (\ref{eq:normfactors})) to estimate normalization
 factors for samples in each of the seedling, leaf and multi-tissue groups of
-experiments (see Section \ref{section:DataCollection}).  We use the top 10,
+experiments (see Section \ref{section:DataCollection}).  We used the top 10,
 100, 1000, and 10000 stably expressed genes identified earlier (see Section
 \ref{section:stablyExpressedGene} for details) as reference gene sets. Figure
 \ref{fig:normfactor} shows the pairwise scatter plots and correlation
@@ -1394,22 +1408,23 @@ experiments (see Section \ref{Section:commonReference}).
 
 It should be clear but worth emphasizing that when using a numerical measure
 to identify stably expressed genes, the outcome depends on multiple factors:
-the reference sample sets used, the technology used for measuring gene
-expression, and the specific numerical stability measure used.  In this study,
-to illustrate our proposed methods, we identified three sets of stably expressed
-genes from three sets of Arabidopsis experiments. The major point is that
-stably expressed genes identified from different settings will provide different
-biological contexts for evaluating differential expression. In practice,
-researchers can choose the specific context. A practical challenge in applying
-such a philosophy is that no two experiments will have identical settings,
-and researchers have to decide what experiments can be considered comparable. This
-is a difficult question; however, we believe it has to be asked from now on:
-biologists perform comparative experiments with the intent that the
-conclusions from a single experiment will be generalizable beyond the context
-of a single lab. If we do not understand comparability between different
-experiments, such generalization is impossible. Defining and characterizing
-comparability is a challenging topic we would like to investigate more in the
-future.
+the background sample set and the reference gene set used for count
+normalization, the technology used
+for measuring gene expression, and the specific numerical stability measure
+used.  In this study, to illustrate our proposed methods, we identified three
+sets of stably expressed genes from three sets of Arabidopsis experiments. The
+major point is that stably expressed genes identified from different
+backgrounds will provide different biological contexts for evaluating
+differential expression. In practice, researchers can choose the specific
+context. A practical challenge in applying such a philosophy is that no two
+experiments will have identical settings, and researchers have to decide what
+experiments can be considered comparable. This is a difficult question;
+however, we believe it has to be asked from now on: biologists perform
+comparative experiments with the intent that the conclusions from a single
+experiment will be generalizable beyond the context of a single lab. If we do
+not understand comparability between different experiments, such
+generalization is impossible. Defining and characterizing comparability is a
+challenging topic that we would like to investigate more in the future.
 
 %It should be obvious
 %but worth emphasizing that 1) different stability measures will give rise

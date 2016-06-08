@@ -123,18 +123,18 @@ textsize <- c(20, 1, 20, 20)  # legened, title, axis, axis.title
 wd <- 13; ht <- 5
 # five traditional house-keeping genes
 figA <- c("AT3G18780", "AT5G12250","AT5G60390","AT4G05320","AT1G13440")  # HKG
-A4 <- plot.gene(figA, var_tissue, 1, 1e4,figure.num = NULL,textsize = textsize)
+A4 <- plot.gene(figA, var_tissue, 1, 1e4,figure.num = "HKG",textsize = textsize)
 ggsave(paste(FigurePath, "hkg.eps", sep =""), A4, width= wd, height= ht)
 
 # FIVE GENES FROM CZECHOWSKI
 figB <- c("AT4G34270","AT1G13320","AT1G59830","AT4G33380","AT2G28390")   # NOVEL
-A5 <- plot.gene(figB, var_tissue, 1, 1e4, figure.num = NULL, textsize)
+A5 <- plot.gene(figB, var_tissue, 1, 1e4, figure.num = "Czechowski", textsize)
 ggsave(paste(FigurePath, "czechowski.eps", sep =""), A5, width= wd, height= ht)
 
 set.seed(117)  ## set.seed
 random.gene <- sample(1:100, 5)
 genelist <- var_tissue$var.comp$Gene[var_tissue$var.comp$Rank %in% random.gene]
-A6 <- plot.gene(genelist,var_tissue, 1, 1e4, figure.num = NULL, textsize)
+A6 <- plot.gene(genelist,var_tissue, 1, 1e4, figure.num = "GLMM", textsize)
 print(A6)
 ggsave(paste(FigurePath, "glmm.eps", sep=""), A6, width = wd, height=ht)
 cat(as.character(genelist), "\n")
