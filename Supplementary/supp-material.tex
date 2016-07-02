@@ -13,9 +13,16 @@
 %\usepackage{scrextend}
 \usepackage{tablefootnote}
 
-\begin{document}
 
-\centering\section*{Supplementary Material }
+\setcounter{table}{0}   % rename the tables
+\renewcommand{\thetable}{S\arabic{table}}
+
+
+\begin{document}
+	
+	
+
+\centering\section*{Supplementary Table S1}
 \begin{table}[!ht]
 	\centering
 	\caption{Summary of data sets used in the three groups: the seedling, the leaf and the multi-tissue groups.} 
@@ -28,17 +35,26 @@
 	%	GSE38400\tablefootnote{This data set is excluded in the analysis due to low mapping quality.} & \cite{zhu2013swi}                    & seedling                    & 12 & 45.90\%  \\
 		GSE41766 & \cite{bai2012triple}                 & seedling                    & 6  & 85.20\% \\
 	%	GSE43703\tablefootnote{This data set is excluded in the analysis due to low mapping quality.}  & \cite{liu2013translational}          & seedling                    & 8 & 22.50\% \\
-		GSE43865\tablefootnote{We chose all the 6 samples at the onset of treatment out of the 42 samples.}   & \cite{rugnone2013lnk}                & seedling                    & 6 & 92.50\% \\
+		\tablefootnote{We chose all the 6 samples at the onset of treatment out of the 42 
+		samples.}GSE43865   & \cite{rugnone2013lnk}                & seedling                    & 
+		6 & 92.50\% \\
 		GSE51119 & \cite{zhiponova2014helix}            & seedling                    & 10 & 70.50\% \\
 		GSE51772 & \cite{oh2014cell}                    & seedling                    & 8  & 90.60\% \\
 		GSE53078 & \cite{fan2014bhlh}                   & seedling                    & 4  & 86.10\% \\
-		GSE60835\tablefootnote{We chose the samples of ecotype Columbia from the 12 samples.} & \cite{dong2014arabidopsis}           & seedling                    & 6  & 65.60\% \\ 
+		\tablefootnote{We chose the samples of ecotype Columbia from the 12 samples.}GSE60835 & 
+		\cite{dong2014arabidopsis}           & seedling                    & 6  & 65.60\% \\ 
 		GSE66666 & \cite{capella2015arabidopsis}		&seedling 					&6  & 91.20\% \\ \hline
 			GSE36626 & \cite{wollmann2012dynamic}           & leaves                      & 4  & 85.50\% \\
-			GSE39463\tablefootnote{We chose all samples at 6 hours post inoculation out of the 48 samples.}  & \cite{maekawa2012conservation}       & leaves                      & 12 & 74.50\% \\
+			\tablefootnote{We chose all samples at 6 hours post inoculation out of the 48 
+			samples.}GSE39463  & \cite{maekawa2012conservation}       & leaves                      
+			& 12 & 74.50\% \\
 			GSE48235 & \cite{liu2014different}              & leaves                      & 6  & 90.40\% \\
-			GSE51304\tablefootnote{Out of the 48 samples,  the total number of RNA-Seq samples is 18.} & \cite{stroud2014non}                 & leaves                      & 18 & 88.40\% \\
-			GSE54677\tablefootnote{Out of the 24 samples,  the total number of RNA-Seq samples is 20.} & \cite{moissiard2014transcriptional}  & leaves                      & 20 & 85.20\% \\ \hline
+			\tablefootnote{Out of the 48 samples,  the total number of RNA-Seq samples is 
+			18.}GSE51304 & \cite{stroud2014non}                 & leaves                      & 18 
+			& 88.40\% \\
+			\tablefootnote{Out of the 24 samples,  the total number of RNA-Seq samples is 
+			20.}GSE54677 & \cite{moissiard2014transcriptional}  & leaves                      & 20 
+			& 85.20\% \\ \hline
 		GSE35288 & \cite{niederhuth2013transcriptional} & flower                      & 6  & 76.50\% \\
 		GSE35408 & \cite{bai2012brassinosteroid}        & hypocotyl                   & 10 & 77.00\%    \\
 		GSE52966 & \cite{chaiwanon2015spatiotemporal}   & primary root                & 18 & 87.20\% \\
