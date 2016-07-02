@@ -13,6 +13,11 @@
 \usepackage{amsmath, bm}
 \usepackage{multirow}
 
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{authblk}  % title page
+
 %\usepackage{subcaption}
 
 
@@ -38,10 +43,10 @@
 \newcommand{\recalltophundred}{29~}
 \newcommand{\recalltopthousand}{98~}
 \newcommand{\recallrankcorrelation}{0.97~}
-\newcommand{\supptableone}{5~}
-\newcommand{\supptabletwo}{6--8~}
-\newcommand{\supptablethree}{9~}
-\newcommand{\supptablefour}{10~}
+\newcommand{\supptableone}{6~}
+\newcommand{\supptabletwo}{7--9~}
+\newcommand{\supptablethree}{10~}
+\newcommand{\supptablefour}{11~}
 \title{Identifying stably expressed genes from multiple RNA-Seq data sets}
 \date{} % Today's date or a custom date
 
@@ -138,12 +143,22 @@
 
 {\Large Identifying stably expressed genes from multiple RNA-Seq data sets}
 
-\today
+%\today
 
 \end{center}
 
+\author[1,*]{Bin Zhuo}
+\author[2]{Yanming Di}
+\author[1,2,+]{Sarah Emerson}
+\author[2,+]{Jeff Chang}
+\affil[1]{Department of Statistics, Oregon State University, Corvallis OR, 97330, USA}
+\affil[2]{Affiliation, department, city, postcode, country}
 
-\newpage
+\affil[*]{corresponding.author@email.example}
+
+\affil[+]{these authors contributed equally to this work}
+
+
 \begin{abstract}
 	We examined RNA-Seq data on \howmanySamples biological samples from \howmanylab different
 	experiments carried out by different labs and identified genes that are stably
@@ -153,18 +168,20 @@
 	between-experiment variance components. Identifying stably expressed genes is
 	useful for count normalization and differential expression analysis. The
 	variance component analysis that we explore here is a first step towards understanding the 
-	sources
-	and nature of the RNA-Seq count variation.
-	When using a numerical measure to identify stably expressed genes, the outcome
-	depends on multiple factors: the background sample set and the reference gene set used for 
-	count normalization, the technology
-	used for measuring gene expression, and the specific numerical stability
-	measure used.  Since DE is measured by relative frequencies, we argue that DE
-	is a relative concept. We advocate using an explicit reference gene set for
-	count normalization to improve interpretability of DE results, and recommend
-	using a common reference gene set when analyzing multiple RNA-Seq experiments
-	to avoid potential inconsistent conclusions.
+	sources and nature of the RNA-Seq count variation. When using a numerical measure to identify 
+	stably expressed genes, the outcome	depends on multiple factors: the background sample set 
+	and the reference gene set used for count normalization, the technology	used for measuring 
+	gene expression, and the specific numerical stability measure used. Since differential 
+	expression (DE) is measured by relative frequencies, we argue that DE is a relative concept. We 
+	advocate using an explicit reference gene set for count normalization to improve 
+	interpretability of DE results, and recommend using a common reference gene set when analyzing 
+	multiple RNA-Seq experiments to avoid potential inconsistent conclusions.
 \end{abstract}
+
+
+%\keywords{Keyword1, Keyword2, Keyword3}
+
+\newpage
 
 
 
@@ -230,7 +247,8 @@ however, a caveat to this idea: as pointed out by \citet{fernandes2008selection}
 % stably expressed genes identified under a wide range conditions may show more
 % variability under a more specific biological context than those genes
 % identified under that particular context.
-universally stably expressed genes may not exist. \citet{hruz2011refgenes} showed that a subset of 
+universally stably expressed genes may not exist. \citeauthor{hruz2011refgenes} showed that a 
+subset of 
 stably
 expressed genes from a specific biological context may have more variability
 than other genes if examined across a broader range of samples and conditions.
@@ -278,7 +296,7 @@ studies have shown that house-keeping
 genes are not necessarily stably expressed according to
 numerical measures (a review can be found in \citet{huggett2005real} and
 reference therein).  For example, in the microarray analysis of Arabidopsis, 
-\citet{czechowski2005genome}
+\citeauthor{czechowski2005genome}
 showed that traditional house-keeping
 genes such as ACT2, TUB6, EF-1$\alpha$ are not stably
 expressed, and thus not good reference genes for normalization.  Spike-in
@@ -308,15 +326,15 @@ the two variance components using a Bayesian formulation.
 % For a future experiment, the stability value for a given gene is
 % defined as the absolute value of posterior mean plus one standard prediction
 % deviation of that gene.  
-\citet{czechowski2005genome} measured the expression stability of each gene
+\citeauthor{czechowski2005genome} measured the expression stability of each gene
 using the coefficient of variation (CV). Genes with lower CVs are considered
 more stably expressed.  By investigating 721 arrays under 323 conditions
-throughout development, \citet{czechowski2005genome} suggested stably expressed
+throughout development, \citeauthor{czechowski2005genome} suggested stably expressed
 (reference) genes under different experimental conditions for Arabidopsis.
 % find stably expressed genes based on 526. 
 %and  validated a subset of most stably expressed genes they identified.
 %Similar studies were carried out for Arabidopsis seed
-\citet{stamova2009identification},  \citet{dekkers2012identification}, 
+\citet{stamova2009identification},  \citeauthor{dekkers2012identification}, 
 \citet{gur2009identification}, and
 \citet{frericks2008toolbox} screened a large number of microarray data sets
 to identify stably expressed genes in human blood, Arabidopsis seed, breast tumor tissues,
@@ -701,7 +719,7 @@ The assessment of gene expression stability depends on the specific stability
 measure used. 
 % (It should be obvious, but often not emphasized in practice,
 % that different stability measures. We already said this a few times.)
-\citet{czechowski2005genome} and \citet{dekkers2012identification} used  the
+\citeauthor{czechowski2005genome} and \citeauthor{dekkers2012identification} used  the
 coefficient of variation (CV) measure, computed as \textit{standard
 	deviation devided by mean}, to find stably expressed genes from microarray data.
 
@@ -831,7 +849,7 @@ in each sample and the mean is computed over all samples.
 	genes are stably expressed under a wide range of experimental conditions and
 	in different tissue types, and thus may be worth further study. This list of
 	\overlapGene genes has significant overlap with the top $100$ stably expressed genes
-	identified by \cite{czechowski2005genome} from a developmental series of
+	identified by \citeauthor{czechowski2005genome} from a developmental series of
 	microarray samples: \overlapGeneCze out of these \overlapGene genes (see Table \supptablefour 
 	in the
 	supplementary material for details),
@@ -850,7 +868,7 @@ in each sample and the mean is computed over all samples.
 	a list of \overlapGene genes random selected from a set of $14000$ genes to have an
 	overlap of size \overlapGeneCze or more with a pre-selected list of $100$ genes). In
 	particular, one gene, AT1G13320, is in all but one of the ten lists of top 500 stably
-	expressed genes identified by \citet{czechowski2005genome} for different
+	expressed genes identified by \citeauthor{czechowski2005genome} for different
 	experimental and experimental conditions (the only exception is the set of
 	diurnal series), and is also identified by
 	\cite{hong2010identification} as a stably expressed gene under all but one of the six
@@ -862,7 +880,7 @@ in each sample and the mean is computed over all samples.
 	regulation of phosphorylation and regulation of protein phosphatase type 2A
 	activity. It has been used as a reference gene for normalization in many
 	papers (e.g., \citet{baron2012transcriptional,bournier2013arabidopsis};
-	these two papers cited \citet{czechowski2005genome} as reference). 
+	these two papers cited \citeauthor{czechowski2005genome} as reference). 
 	
 	% (Similar genes are AT1G10430, AT3G01150, [AT5G46630, encoded proteins involved in adaptor 
 	%complex subunits of claturin which mainly involved the protein transport and cell division 
@@ -871,7 +889,7 @@ in each sample and the mean is computed over all samples.
 	
 	\subsection{Comparison to house-keeping genes and stably expressed genes
 		identified from microarray data}\label{section:CompareStablyExpressedGene}
-	\citet{czechowski2005genome} discussed the expression stability of
+	\citeauthor{czechowski2005genome} discussed the expression stability of
 	house-keeping genes and showed that the house-keeping genes are not stably
 	expressed according to their numerical measure. In particular, they compared
 	the expression profiles of five traditional house-keeping genes (AT1G13440,
@@ -880,7 +898,7 @@ in each sample and the mean is computed over all samples.
 	expressed according to the CV measure from a developmental series of
 	microarray experiments (see Figure 1 of that paper).  
 	In Figure \ref{expressionlevel1}, we compare the expression profiles 
-	of these 10 genes from \citet{czechowski2005genome} to the expression profiles
+	of these 10 genes from \citeauthor{czechowski2005genome} to the expression profiles
 	of five genes (\SelectFiveGene) that we
 	randomly selected from the top 100 most stably expressed genes identified from
 	the multi-tissue group RNA-Seq data according the total variance $\hat\sigma^2$.
@@ -907,11 +925,12 @@ in each sample and the mean is computed over all samples.
 				bottom) a) five stably expressed genes (randomly selected out of the top 100)
 				identified from the multi-tissue group RNA-Seq data using the total variance 
 				measure $\hat{\sigma}^2$, b) five stably
-				expressed identified by \citet{czechowski2005genome} according to the CV measure 
+				expressed identified by \citeauthor{czechowski2005genome} according to the CV 
+				measure 
 				from a
 				developmental series of microarray experiments, and c) five
 				traditional house-keeping genes (HKG) discussed in
-				\citet{czechowski2005genome}. 
+				\citeauthor{czechowski2005genome}. 
 			}
 			\label{expressionlevel1}
 			%	\caption{{\small{\label{expressionlevel1} CPM of 15 genes for each sample in the 
@@ -1004,7 +1023,7 @@ in each sample and the mean is computed over all samples.
 		\item[$L_1$:]
 		100 top stably expressed genes from the multi-tissue group according
 		to the $M$-value in geNorm (applied to $(\text{count}+1)$) of 
-		\citet{vandesompele2002accurate} ; 
+		\citeauthor{vandesompele2002accurate} ; 
 		\item[$L_2$:]	
 		100 top stably expressed genes from the seedling group according to the total variance 
 		$\hat\sigma^2$ from the GLMM;
@@ -1013,9 +1032,10 @@ in each sample and the mean is computed over all samples.
 		$\hat\sigma^2$ from the GLMM; 
 		\item[$L_4$:]
 		100 stably expressed genes identified from a developmental series of microarray
-		experiments by \citet{czechowski2005genome} using the CV measure (see Section 
+		experiments by \citeauthor{czechowski2005genome} using the CV measure (see Section 
 		\ref{subsection:OtherStabilityMeasure}); 
-		\item[$L_5$:] 50 stably expressed genes identified by \citet{dekkers2012identification} 
+		\item[$L_5$:] 50 stably expressed genes identified by 
+		\citeauthor{dekkers2012identification} 
 		from 
 		microarray
 		seed experiments using the CV measure.  
@@ -1736,8 +1756,8 @@ in each sample and the mean is computed over all samples.
 
 
 %\bibliographystyle{apalike}
-\bibliographystyle{DeGruyter-hsk}
-%\bibliographystyle{DeGruyter}
+%\bibliographystyle{DeGruyter-hsk}
+\bibliographystyle{DeGruyter}
 \bibliography{mybib}
 
 \end{document}
