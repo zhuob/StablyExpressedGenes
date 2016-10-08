@@ -44,9 +44,10 @@
 
 \usepackage{url}
 \usepackage{caption}
+%\captionsetup[figure]{labelfont={bf},name={Fig.},labelsep=period}  % Figure format
 \captionsetup[figure]{labelfont=bf}
 \captionsetup[table]{labelfont=bf}
-\usepackage{graphicx}
+\usepackage{subcaption, graphicx}
 \usepackage{amsmath, bm}
 \usepackage{multirow}
 
@@ -733,7 +734,7 @@ stably expressed genes for different biological contexts.
 % experiments on Arabidopsis leaves; andmulti-tissue-type group consists 79
 % samples from different 8 experiments ondifferent tissues types.  
 In Supplemental Tables \supptabletwo, we summarize the
-top 1000 most stably expressed genes in each group.  In Figure \ref{cpm}, we
+top 1000 most stably expressed genes in each group.  In Fig \ref{cpm}, we
 provide the histograms of the mean Count Per Million (CPM) for the 1000
 most stably expressed genes identified in each group. For each gene, the CPM
 is computed as
@@ -743,14 +744,26 @@ is computed as
 in each sample and the mean is computed over all samples.
 
 \begin{figure}[tbp] \begin{center}
-		\includegraphics[width=4.5cm,height=4cm]{Figures/cpm_seedling.eps}
-		\includegraphics[width=4.5cm,height=4cm]{Figures/cpm_leaves.eps}
-		\includegraphics[width=4.5cm,height=4cm]{Figures/cpm_tissue.eps}
+		\begin{subfigure}{0.32\textwidth}
+			\centering
+		 \includegraphics[width=\linewidth]{FigPeerJ/fig1a.eps}
+		 \caption{}
+		 \end{subfigure}
+		\begin{subfigure}{0.32\textwidth}
+			\centering
+		 \includegraphics[width=\linewidth]{FigPeerJ/fig1b.eps}
+		 \caption{}
+		\end{subfigure}
+		\begin{subfigure}{0.32\textwidth}
+			\centering
+			 \includegraphics[width = \linewidth]{FigPeerJ/fig1c.eps}
+			 \caption{}	
+		\end{subfigure}
 		\caption[Histograms of the mean RNA-Seq CPM]{{\small{\label{cpm} 
 					Histograms of the mean CPM (see equation (\ref{eq:cpm})) for the top 1000
-					most stably expressed genes identified from the seedling (left), leaf (middle) 
+					most stably expressed genes identified from the seedling (a), leaf (b) 
 					and multi-tissue
-					(right) groups
+					(c) groups
 					using  the total variance measure $\hat{\sigma}^2$}}. 
 			The mean CPM is computed over all samples within each respective group. Note that the 
 			$x$ and $y$ axis scales differ between the three plots.
@@ -812,39 +825,45 @@ in each sample and the mean is computed over all samples.
 	AT3G18780, AT4G05320, AT5G12250, AT5G60390) and five genes (AT1G13320,
 	AT5G59830, AT2G28390, AT4G33380 and AT4G34270) that they identified  as stably
 	expressed according to the CV measure from a developmental series of
-	microarray experiments (see Figure 1 of that paper).  
-	In Figure \ref{expressionlevel1}, we compare the expression profiles 
+	microarray experiments (see Fig.1 of that paper).  
+	In Fig.\ref{expressionlevel1}, we compare the expression profiles 
 	of these 10 genes from \citeauthor{czechowski2005genome} to the expression profiles
 	of five genes (\SelectFiveGene) that we
 	randomly selected from the top 100 most stably expressed genes identified from
 	the multi-tissue group RNA-Seq data according the total variance $\hat\sigma^2$.
-	For each of the 15 genes, Figure \ref{expressionlevel1} shows the expression levels measured
+	For each of the 15 genes, Fig.\ref{expressionlevel1} shows the expression levels measured
 	in CPM over \howmanytissuesample samples in the eight experiments in the multi-tissue group,
 	and Table \ref{table:15genes} summarizes the variance components estimated from the
 	GLMM in Section \ref{subsection:OurMethod}. 
 	
 	\begin{figure}[htbp]
 		\begin{center}
-			\begin{tabular}{c}
-				(a)\\
-				\includegraphics[width=14cm,height=6cm]{Figures/glmm.eps} \\
-				(b) \\
-				\includegraphics[width=14cm,height=6cm]{Figures/czechowski.eps} \\
-				(c) \\
-				\includegraphics[width=14cm,height=6cm]{Figures/hkg.eps}
-			\end{tabular}
-			
+		\begin{subfigure}{1.0\textwidth}
+			\centering
+				\includegraphics[width=14cm,height=6cm]{FigPeerJ/fig2a.eps}
+			\caption{}
+		\end{subfigure}	
+			\begin{subfigure}{1.0\textwidth}
+				\centering
+					\includegraphics[width=14cm,height=6cm]{FigPeerJ/fig2b.eps} 
+				\caption{}
+			\end{subfigure}	
+				\begin{subfigure}{1.0\textwidth}
+					\centering
+				\includegraphics[width=14cm,height=6cm]{FigPeerJ/fig2c.eps}
+					\caption{}
+				\end{subfigure}						
 			\caption[Expression profiles of 15 genes as measured by RNA-Seq CPM]{Expression 
 				profiles of 15 genes---as measured by RNA-Seq CPM---across 
 				\howmanytissuesample
 				samples in the multi-tissue group. The 15 genes include (from top to
-				bottom) a) five stably expressed genes (randomly selected out of the top 100)
+				bottom) (a) five stably expressed genes (randomly selected out of the top 100)
 				identified from the multi-tissue group RNA-Seq data using the total variance 
-				measure $\hat{\sigma}^2$, b) five stably
+				measure $\hat{\sigma}^2$, (b) five stably
 				expressed identified by \citeauthor{czechowski2005genome} according to the CV 
 				measure 
 				from a
-				developmental series of microarray experiments, and c) five
+				developmental series of microarray experiments, and (c) five
 				traditional house-keeping genes (HKG) discussed in
 				\citeauthor{czechowski2005genome}. 
 			}
@@ -863,9 +882,9 @@ in each sample and the mean is computed over all samples.
 	\begin{table}[]
 		\centering
 		\caption[Variance components estimated from the multi-tissue group
-		RNA-Seq data for the 15 genes in Figure~\ref{expressionlevel1}]{Variance components 
+		RNA-Seq data for the 15 genes in Fig.\ref{expressionlevel1}]{Variance components 
 			estimated from the multi-tissue group
-			RNA-Seq data for the 15 genes in Figure~\ref{expressionlevel1}
+			RNA-Seq data for the 15 genes in Fig.\ref{expressionlevel1}
 			(identified from different sources).
 			Columns 3--5 are the estimated
 			variance components. Column 6 lists the stability ranking according to the
@@ -963,7 +982,7 @@ in each sample and the mean is computed over all samples.
 	\frac{ \# \{L_i \cap \text{reference set} \}}{\# \{L_i\}}\times 100,
 	\end{equation}
 	where $\#\{ \}$ denotes the number of elements in the list. 
-	In Figure \ref{fig:rankVSrank_RNA}, we plot the recall percentage versus
+	In Fig.\ref{fig:rankVSrank_RNA}, we plot the recall percentage versus
 	the number of top stably-expressed genes we selected as reference from the
 	multi-tissue group. 
 	
@@ -1018,7 +1037,7 @@ in each sample and the mean is computed over all samples.
 	
 	\begin{figure}[h!]
 		\begin{center}
-			\includegraphics[scale=0.55]{Figures/rankVSrank_RNA2.eps}
+			\includegraphics[scale=0.55]{FigPeerJ/fig3.eps}
 			\caption[Comparison of top stably expressed genes identified under different 
 			scenarios]{Comparison of top stably expressed genes identified under different 
 				scenarios.
@@ -1147,7 +1166,7 @@ in each sample and the mean is computed over all samples.
 	
 	%\begin{figure}
 	%\centering
-	%\includegraphics[width=0.7\linewidth]{Figures/wenn.eps}
+	%\includegraphics[width=0.7\linewidth]{FigPeerJ/wenn.eps}
 	%\caption{Overlap diagram: each circle represents top 1000 stably expressed genes from geNorm, 
 	%NormFinder and our method}
 	%\label{fig:wenn}
@@ -1226,15 +1245,27 @@ in each sample and the mean is computed over all samples.
 			
 			\begin{figure}[!ht]
 				\begin{center}
-					\includegraphics[width=14cm,height=1.5cm]{Figures/var_dens_legend.eps}
-					\includegraphics[width=4.5cm,height=4cm]{Figures/var_dens1.eps}
-					\includegraphics[width=4.5cm,height=4cm]{Figures/var_dens2.eps}
-					\includegraphics[width=4.5cm,height=4cm]{Figures/var_dens3.eps}
+					\includegraphics[width=14cm,height=1.5cm]{FigPeerJ/fig4legend.eps}
+					\begin{subfigure}{0.32\textwidth}
+						\centering
+							\includegraphics[width=4.5cm,height=4cm]{FigPeerJ/fig4a.eps}			
+						\caption{}
+					\end{subfigure}		
+						\begin{subfigure}{0.32\textwidth}
+							\centering
+					\includegraphics[width=4.5cm,height=4cm]{FigPeerJ/fig4b.eps}
+							\caption{}
+						\end{subfigure}	
+							\begin{subfigure}{0.32\textwidth}
+								\centering
+							\includegraphics[width=4.5cm,height=4cm]{FigPeerJ/fig4c.eps}
+								\caption{}
+							\end{subfigure}	
 					\caption[Distributions (over all genes) of the percentages of the total
 					variance]{Distributions (over all genes) of the percentages of the total
 						variance attributable to the between-sample, and between-treatment, or the
-						between-experiment variance component, in the seedling, the leaf, and the
-						multi-tissue groups.}
+						between-experiment variance component, in the seedling (a), the leaf (b), 
+						and the multi-tissue groups (c).}
 					\label{fig:densityplot}
 				\end{center}
 			\end{figure} 
@@ -1242,12 +1273,20 @@ in each sample and the mean is computed over all samples.
 			
 			\begin{figure}[!ht]
 				\centering
-				%\includegraphics[width=15cm, height= 1.5cm]{Figures/stackbar_legend.eps}
-				\includegraphics[width=14cm, height= 7cm]{Figures/top1000.eps}
-				\includegraphics[width=14cm, height= 7cm]{Figures/all.eps}
+				%\includegraphics[width=15cm, height= 1.5cm]{FigPeerJ/stackbar_legend.eps}
+				\begin{subfigure}{\textwidth}
+					\centering
+				\includegraphics[width=14cm, height= 7cm]{FigPeerJ/fig5a.eps}
+					\caption{}
+				\end{subfigure}	
+					\begin{subfigure}{\textwidth}
+						\centering
+						\includegraphics[width=14cm, height= 7cm]{FigPeerJ/fig5b.eps}
+						\caption{}
+					\end{subfigure}	
 				\caption{Stacked bar plots of the three variance components for
-					selected genes in the multi-tissue group. Top: 20 genes randomly selected from 
-					top 1000 stably expressed genes; Bottom: 20 genes randomly selected from all 
+					selected genes in the multi-tissue group. (a): 20 genes randomly selected from 
+					top 1000 stably expressed genes; (b): 20 genes randomly selected from all 
 					the genes.}
 				\label{fig:all}
 			\end{figure}
@@ -1420,23 +1459,38 @@ in each sample and the mean is computed over all samples.
 			
 			\begin{figure}[!ht]
 				\begin{center}
-					\includegraphics[scale=0.34]{Figures/norm_seedling.eps}
-					\includegraphics[scale=0.34]{Figures/norm_leaf.eps}
-					\includegraphics[scale=0.34]{Figures/norm_tissue.eps}
-					\includegraphics[scale=0.34]{Figures/norm_GSE64410.eps}
+						\begin{subfigure}{0.48\textwidth}
+							\centering
+							\includegraphics[scale=0.34]{FigPeerJ/fig6a.eps}
+								\caption{}
+						\end{subfigure}	
+						\begin{subfigure}{0.48\textwidth}
+							\centering
+						\includegraphics[scale=0.34]{FigPeerJ/fig6b.eps}
+							\caption{}
+						\end{subfigure}	
+						\begin{subfigure}{0.48\textwidth}
+							\centering
+						\includegraphics[scale=0.34]{FigPeerJ/fig6c.eps}
+							\caption{}
+						\end{subfigure}	
+						\begin{subfigure}{0.48\textwidth}
+							\centering
+						\includegraphics[scale=0.34]{FigPeerJ/fig6d.eps}
+							\caption{}
+						\end{subfigure}		
 					\caption[Matrices of scatter plots of normalization factors
 					estimated using different reference gene sets]{Matrices of scatter plots of 
 						normalization factors
 						estimated using different reference gene sets. 
-						The upper-left, upper-right and lower-left plots show
+						The subfigures (a), (b) and (c) show
 						normalization factors estimated for the samples in the
 						seedling, leaf, and multi-tissue groups correspondingly. 
 						In each case, the top 10, 100, 1000, and 10,000 stably
 						expressed genes are used as reference to
 						calculate the normalization factors.
-						The lower right plot shows the normalization factors estimated for a new 
-						root
-						experiment (GSE64410, with sample size 48) using the top 10--10,000
+						The subfigure (d) shows the normalization factors estimated for a new 
+						root experiment (GSE64410, with sample size 48) using the top 10--10,000
 						stably expressed genes identified from the multi-tissue group as
 						reference. The normalization factors are estimated using the
 						method described in Section \ref{section:countNormalization}.}
@@ -1674,9 +1728,9 @@ in each sample and the mean is computed over all samples.
 			%
 			% \begin{figure}[H]
 			%\begin{center}
-			%\includegraphics[scale=0.4]{Figures/C1.eps}
-			%\includegraphics[scale=0.4]{Figures/C2.eps}
-			%\includegraphics[scale=0.4]{Figures/C3.eps}
+			%\includegraphics[scale=0.4]{FigPeerJ/C1.eps}
+			%\includegraphics[scale=0.4]{FigPeerJ/C2.eps}
+			%\includegraphics[scale=0.4]{FigPeerJ/C3.eps}
 			%\caption{{\small{\label{sup:expressinlevel} expression levels of Arabidopsis RNA-Seq 
 			%leaf data: traditional reference genes in set 3 (top)};  5 stably expressed genes by  
 			%Czechowski et. al. (middle); 5 stably expressed genes identified by total variance 
@@ -1687,8 +1741,8 @@ in each sample and the mean is computed over all samples.
 			
 			% \begin{figure}[h!]
 			%\begin{center}
-			%\includegraphics[scale=0.5]{./Figures/rank_sl.eps}
-			%\includegraphics[scale=0.5]{./Figures/rank_st.eps}
+			%\includegraphics[scale=0.5]{./FigPeerJ/rank_sl.eps}
+			%\includegraphics[scale=0.5]{./FigPeerJ/rank_st.eps}
 			%\caption{\label{fig:rankAgainstrank} Rank plot of stably expressed genes,  Set 1 
 			%versus Set 2 and Set 3.}
 			%\end{center}
@@ -1696,8 +1750,8 @@ in each sample and the mean is computed over all samples.
 			%
 			% \begin{figure}[h!]
 			%\begin{center}
-			%\includegraphics[scale=0.3]{Figures/mvalue2.eps}
-			%\includegraphics[scale=0.3]{Figures/mvalue3.eps}
+			%\includegraphics[scale=0.3]{FigPeerJ/mvalue2.eps}
+			%\includegraphics[scale=0.3]{FigPeerJ/mvalue3.eps}
 			%\caption{\label{sup:mvalue} geNORM ranking of reference genes: 5 traditional HKGs, 5 
 			%reference genes identified by Czechowski et. al. and 8 stably expressed genes based on 
 			%seedling RNA-Seq data.  The spearman correlations of $M$-values and total variance  

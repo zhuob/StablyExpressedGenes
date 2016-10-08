@@ -214,7 +214,7 @@ rankReferenceSet <- function(exprData, log = F, print.level = 0){
     id <- which(rownames(stepwiseData) == names(tail(sortMvalue, 1))) 
     stepwiseData <- stepwiseData[-id, ]
     count <- count + 1
-    cat("\r", count)    # show how many iterations have been done
+    # cat("\r", count)    # show how many iterations have been done
   }
   
   rankGene[1:2] <- rownames(stepwiseData)
