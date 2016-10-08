@@ -63,7 +63,7 @@ figure1 <-  plot_grid(A1, A2, A3, labels = c("a", "b", "c"), ncol=3, label_size 
 ggsave(paste(FigurePath, "fig2.eps", sep =""), figure1, width= 3*wd, height= ht)
 
 ## produce 1000 stably-expressed genes for the three groups
-VarCompData <- c("tissue", "leaf", "seedling")
+VarCompData <- c("seedling", "leaf", "tissue")
 for ( i in 1:length(VarCompData)){
   temp <- paste(ResultPath, VarCompData[i], ".columbia.use.reference.iter.1.rds", sep ="") 
   Varcomp <- readRDS(temp) 
