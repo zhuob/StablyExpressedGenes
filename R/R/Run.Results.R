@@ -227,7 +227,7 @@ ggsave(paste(FigurePath, "fig6.eps", sep =""), fig6, width= wd+2, height= 2*ht)
 ############# density plot
 wd <- 10; ht <- 4
 ts <- c(20, 20, 12, 15) # legened, title, axis, axis.title
-A10 <- plot.density(var_seedling, "sedling", textsize = ts, legend=F)
+A10 <- plot.density(var_seedling, "seedling", textsize = ts, legend=F)
 A11 <- plot.density(var_leaf, "leaf", y_label = "", textsize = ts)
 A12 <- plot.density(var_tissue, "multi-tissue", y_label = "", textsize = ts)
 legend <- plot.density(var_tissue, "legend", legend=T, textsize = ts)
@@ -285,5 +285,11 @@ A16 <- plot.pair.normfactor(var_new, text.size)
 print(A16) 
 dev.off()
 
-
-
+#########  SECTION 6 ---------------------------------------
+GSE32216 <- read.table("R/data/GSE32216.Rsubread.txt")
+ids <- apply(GSE32216, 1, mean) >= 3 
+GSE32216_subset <- GSE32216[ids, ]
+nf_use_all <- estimate.norm.factors(as.matrix(GSE32216_subset))
+nf_use_1000 <- norm.factor(var_seedling$var.comp, GSE32216_subset, 1000)
+nf_factor <- data.frame(useAll = round(nf_use_all, 2), use1000 = round(nf_use_1000, 2))
+nf_factor
